@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포르투갈 & 스페인 로맨틱 허니문</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM (Production version) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel (for JSX) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body {
+            font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // --- 안정성을 위한 인라인 SVG 아이콘 컴포넌트 ---
+        const Icon = ({ children, className = "", size = 20, ...props }) => (
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width={size} 
+                height={size} 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className={className}
+                {...props}
+            >
+                {children}
+            </svg>
+        );
+
+        // 아이콘 정의
+        const Calendar = (props) => <Icon {...props}><rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" /></Icon>;
+        const MapPin = (props) => <Icon {...props}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></Icon>;
+        const Plane = (props) => <Icon {...props}><path d="M2 22h20"/><path d="M13 6h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7"/><path d="m13 6-5-5-2 1 3 4"/><path d="m13 20-5 5-2-1 3-4"/></Icon>;
+        const Hotel = (props) => <Icon {...props}><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/><path d="m9 22 9-9"/><path d="m9 2 9 9"/><path d="M9 2v20"/><path d="M15 2v20"/></Icon>;
+        const Coffee = (props) => <Icon {...props}><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></Icon>;
+        const Camera = (props) => <Icon {...props}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></Icon>;
+        const ChevronDown = (props) => <Icon {...props}><path d="m6 9 6 6 6-6"/></Icon>;
+        const ChevronUp = (props) => <Icon {...props}><path d="m18 15-6-6-6 6"/></Icon>;
+        const Clock = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></Icon>;
+        // Map 이름 충돌 방지를 위해 MapIcon으로 변경
+        const MapIcon = (props) => <Icon {...props}><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></Icon>;
+        const DollarSign = (props) => <Icon {...props}><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></Icon>;
+        const Sun = (props) => <Icon {...props}><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></Icon>;
+        const Footprints = (props) => <Icon {...props}><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 11 3.8 11 8c0 1.25-1.25 2-1.25 2H4Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 13 7.8 13 12c0 1.25 1.25 2 1.25 2h5.75Z"/><path d="M7 17v4"/><path d="M17 10v4"/></Icon>;
+        const Utensils = (props) => <Icon {...props}><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></Icon>;
+        const Train = (props) => <Icon {...props}><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h0"/><path d="M16 15h0"/></Icon>;
+        const Bus = (props) => <Icon {...props}><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></Icon>;
+        const Navigation = (props) => <Icon {...props}><polygon points="3 11 22 2 13 21 11 13 3 11"/></Icon>;
+        const Star = (props) => <Icon {...props}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></Icon>;
+        const Heart = (props) => <Icon {...props}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></Icon>;
+        const Anchor = (props) => <Icon {...props}><circle cx="12" cy="5" r="3"/><line x1="12" x2="12" y1="22" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></Icon>;
+        const Info = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></Icon>;
+        const BedDouble = (props) => <Icon {...props}><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/></Icon>;
+        const Car = (props) => <Icon {...props}><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></Icon>;
+        const Ticket = (props) => <Icon {...props}><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></Icon>;
+
+        const TravelCanvas = () => {
+            const [activeTab, setActiveTab] = useState('itinerary');
+            const [expandedDay, setExpandedDay] = useState(1);
+
+            const tripData = {
+                title: "포르투갈 & 스페인 로맨틱 허니문",
+                dates: "2026. 03. 29(일) - 04. 11(토)",
+                route: "리스본(3) - 알부페이라(3) - 세비야(4) - 마드리드(2)",
+                duration: "12박 14일",
+                cities: ["리스본", "알부페이라", "세비야", "마드리드"],
+                participants: "신혼부부 (2인)",
+                theme: "휴양 & 축구 & 드라이빙"
+            };
+
+            const itinerary = [
+                {
+                day: 1,
+                date: "3.29 (일)",
+                city: "리스본",
+                title: "설레는 허니문의 시작",
+                summary: "리스본 도착 및 타임아웃 마켓 저녁",
+                details: [
+                    { 
+                    time: "18:00", 
+                    activity: "리스본 공항(LIS) 도착", 
+                    icon: <Plane size={16} />, 
+                    location: "Humberto Delgado Airport", 
+                    moveInfo: "🚖 볼트(Bolt) 또는 우버 이용 (약 15-20유로)" 
+                    },
+                    { 
+                    time: "19:30", 
+                    activity: "호텔 체크인: 쉐라톤 리스본 or 럭셔리 부티크", 
+                    icon: <Hotel size={16} />, 
+                    location: "Sheraton Lisboa Hotel & Spa", 
+                    moveInfo: null 
+                    },
+                    { 
+                    time: "20:30", 
+                    activity: "저녁: Time Out Market", 
+                    icon: <Utensils size={16} />, 
+                    location: "Time Out Market Lisbon", 
+                    moveInfo: "🚖 볼트 이동",
+                    note: "리스본 힙스터들의 성지, 다양한 해산물 타파스와 와인으로 가볍게 시작" 
+                    }
+                ],
+                spareSpots: [
+                    { title: "핑크 스트리트", desc: "타임아웃 마켓 바로 뒤, 늦은 밤까지 핫한 포토존", location: "Pink Street" }
+                ],
+                stay: "리스본 시내 (1박)"
+                },
+                {
+                day: 2,
+                date: "3.30 (월)",
+                city: "리스본",
+                title: "리스본의 낭만, 노란 트램",
+                summary: "알파마 골목 투어와 전망대 노을",
+                details: [
+                    { 
+                    time: "10:00", 
+                    activity: "28번 트램 타고 알파마 지구로", 
+                    icon: <Train size={16} />, 
+                    location: "Martim Moniz", 
+                    moveInfo: "👣 시점인 Martim Moniz에서 탑승 추천",
+                    note: "소매치기 주의, 창가 자리 사수"
+                    },
+                    { 
+                    time: "11:30", 
+                    activity: "상 조르주 성 & 전망대", 
+                    icon: <Camera size={16} />, 
+                    location: "Castelo de S. Jorge", 
+                    moveInfo: "👣 도보 이동" 
+                    },
+                    { 
+                    time: "13:30", 
+                    activity: "점심: Farol de Santa Luzia", 
+                    icon: <Utensils size={16} />, 
+                    location: "Farol de Santa Luzia", 
+                    moveInfo: "👣 산타 루치아 전망대 근처",
+                    note: "문어 밥(Arroz de Polvo) 맛집" 
+                    },
+                    { 
+                    time: "15:30", 
+                    activity: "코메르시우 광장 & 아우구스타 거리", 
+                    icon: <MapPin size={16} />, 
+                    location: "Praça do Comércio", 
+                    moveInfo: "👣 내리막길 산책하며 이동" 
+                    },
+                    { 
+                    time: "18:00", 
+                    activity: "산타 주스타 엘리베이터 & 카르모 수녀원", 
+                    icon: <Sun size={16} />, 
+                    location: "Santa Justa Lift", 
+                    moveInfo: "👣 도보 이동",
+                    note: "해 질 녘 리스본 전경 감상"
+                    },
+                    { 
+                    time: "20:00", 
+                    activity: "저녁: Pinoquio", 
+                    icon: <Utensils size={16} />, 
+                    location: "Restaurante Pinoquio", 
+                    moveInfo: "👣 호시우 광장 근처",
+                    note: "현지인들도 줄 서는 해산물 밥 맛집 (예약 권장)"
+                    }
+                ],
+                spareSpots: [
+                    { title: "오 뚜르 데 나따", desc: "시내 곳곳에 있는 에그타르트 체인, 간식으로 최고", location: "Manteigaria" },
+                    { title: "비카 엘리베이터", desc: "가장 포르투갈다운 사진을 찍을 수 있는 푸니쿨라", location: "Elevador da Bica" }
+                ],
+                stay: "리스본 시내 (2박)"
+                },
+                {
+                day: 3,
+                date: "3.31 (화)",
+                city: "리스본",
+                title: "대항해시대와 에그타르트",
+                summary: "벨렘 지구 반일 투어 & 자유 시간",
+                details: [
+                    { 
+                    time: "09:30", 
+                    activity: "제로니무스 수도원", 
+                    icon: <Camera size={16} />, 
+                    location: "Jerónimos Monastery", 
+                    moveInfo: "🚖 볼트 이용 (약 10-15유로, 20분 소요)",
+                    note: "오픈런 추천, 웅장한 회랑이 포인트"
+                    },
+                    { 
+                    time: "11:30", 
+                    activity: "파스테이스 드 벨렘 (에그타르트 원조)", 
+                    icon: <Coffee size={16} />, 
+                    location: "Pastéis de Belém", 
+                    moveInfo: "👣 도보 3분",
+                    note: "포장 줄과 매장 줄 확인, 따뜻할 때 시나몬 뿌려 먹기" 
+                    },
+                    { 
+                    time: "13:00", 
+                    activity: "벨렘 탑 & 발견의 기념비 산책", 
+                    icon: <MapPin size={16} />, 
+                    location: "Belém Tower", 
+                    moveInfo: "👣 강변 따라 도보 15분" 
+                    },
+                    { 
+                    time: "15:00", 
+                    activity: "LX Factory", 
+                    icon: <Coffee size={16} />, 
+                    location: "LX Factory", 
+                    moveInfo: "🚖 볼트 이동 (10분)",
+                    note: "폐공장을 개조한 힙한 복합문화공간, 소품샵 구경"
+                    },
+                    { 
+                    time: "19:00", 
+                    activity: "저녁: Ponto Final", 
+                    icon: <Utensils size={16} />, 
+                    location: "Ponto Final", 
+                    moveInfo: "🛳️ Cais do Sodré에서 페리 타고 강 건너 이동",
+                    note: "강 바로 옆 야외 테이블에서 즐기는 최고의 일몰 디너 (예약 필수)"
+                    }
+                ],
+                spareSpots: [
+                    { title: "신트라 당일치기?", desc: "체력이 남는다면 오전에 다녀올 수 있으나, 허니문이니 여유 추천", location: "Pena Palace" }
+                ],
+                stay: "리스본 시내 (3박)"
+                },
+                {
+                day: 4,
+                date: "4.01 (수)",
+                city: "리스본 → 알부페이라",
+                title: "포르투갈의 남쪽, 알가르브로",
+                summary: "기차/버스로 남부 해안 도시 이동 및 휴양 시작",
+                details: [
+                    { 
+                    time: "10:00", 
+                    activity: "리스본 출발", 
+                    icon: <Bus size={16} />, 
+                    location: "Lisboa Sete Rios", 
+                    moveInfo: "🚌 Rede Expressos 버스 또는 기차 (약 2시간 45분)",
+                    note: "기차(Alfa Pendular)도 좋지만 버스가 배차 간격이 좋음"
+                    },
+                    { 
+                    time: "13:00", 
+                    activity: "알부페이라 도착 및 렌트카 픽업(선택)", 
+                    icon: <Car size={16} />, 
+                    location: "Albufeira", 
+                    moveInfo: "🚖 터미널에서 숙소 이동",
+                    note: "남부 지역을 자유롭게 다니려면 렌트 추천 (3일간)"
+                    },
+                    { 
+                    time: "15:00", 
+                    activity: "호텔 체크인 및 휴식", 
+                    icon: <Hotel size={16} />, 
+                    location: "Pine Cliffs Hotel or EPIC SANA", 
+                    moveInfo: null,
+                    note: "해변이 보이는 리조트에서 샴페인 한잔"
+                    },
+                    { 
+                    time: "19:00", 
+                    activity: "올드타운 저녁 산책", 
+                    icon: <Utensils size={16} />, 
+                    location: "Albufeira Old Town", 
+                    moveInfo: "👣 또는 택시",
+                    note: "활기찬 광장 분위기 즐기기"
+                    }
+                ],
+                spareSpots: [],
+                stay: "알부페이라 해변 리조트 (1박)"
+                },
+                {
+                day: 5,
+                date: "4.02 (목)",
+                city: "알부페이라",
+                title: "베나길 동굴 투어",
+                summary: "알가르브 해안의 절경 탐험",
+                details: [
+                    { 
+                    time: "10:00", 
+                    activity: "베나길 동굴 보트 투어", 
+                    icon: <Anchor size={16} />, 
+                    location: "Benagil Caves", 
+                    moveInfo: "🚗 렌트카 30분 또는 투어 픽업",
+                    note: "천장에 구멍이 뚫린 신비로운 해식 동굴 인생샷"
+                    },
+                    { 
+                    time: "13:00", 
+                    activity: "점심: O Pescador (Benagil Beach)", 
+                    icon: <Utensils size={16} />, 
+                    location: "O Pescador Benagil", 
+                    moveInfo: "👣 해변 앞",
+                    note: "신선한 생선 구이" 
+                    },
+                    { 
+                    time: "15:00", 
+                    activity: "마리냐 해변 (Praia da Marinha)", 
+                    icon: <Sun size={16} />, 
+                    location: "Praia da Marinha", 
+                    moveInfo: "🚗 차량 5분",
+                    note: "세계에서 가장 아름다운 해변 중 하나, 절벽 위 산책로 걷기"
+                    },
+                    { 
+                    time: "19:00", 
+                    activity: "리조트 복귀 및 스파/수영", 
+                    icon: <Heart size={16} />, 
+                    location: "Resort", 
+                    moveInfo: "🚗 복귀" 
+                    }
+                ],
+                spareSpots: [
+                    { title: "세븐 행잉 밸리 트레일", desc: "트레킹을 좋아한다면 마리냐 해변에서 시작하는 코스 추천", location: "Seven Hanging Valleys Trail" }
+                ],
+                stay: "알부페이라 해변 리조트 (2박)"
+                },
+                {
+                day: 6,
+                date: "4.03 (금)",
+                city: "알부페이라",
+                title: "세상의 끝, 사그레스",
+                summary: "유럽 최서남단 드라이브",
+                details: [
+                    { 
+                    time: "11:00", 
+                    activity: "라고스(Lagos) 방문", 
+                    icon: <MapPin size={16} />, 
+                    location: "Lagos", 
+                    moveInfo: "🚗 차량 40분",
+                    note: "Ponta da Piedade의 기암괴석 절경 감상"
+                    },
+                    { 
+                    time: "13:30", 
+                    activity: "점심: Casa do Prego", 
+                    icon: <Utensils size={16} />, 
+                    location: "Casa do Prego", 
+                    moveInfo: "👣 라고스 시내",
+                    note: "포르투갈식 스테이크 샌드위치와 튜나 스테이크" 
+                    },
+                    { 
+                    time: "16:00", 
+                    activity: "사그레스 & 성 비센트 곶", 
+                    icon: <Sun size={16} />, 
+                    location: "Cape St. Vincent", 
+                    moveInfo: "🚗 차량 30분",
+                    note: "'세상의 끝'이라 불리는 등대에서 대서양 바라보기"
+                    },
+                    { 
+                    time: "19:30", 
+                    activity: "알부페이라 복귀 및 마지막 밤", 
+                    icon: <Utensils size={16} />, 
+                    location: "Vila Joya (Optional)", 
+                    moveInfo: "🚗 복귀 1시간",
+                    note: "미슐랭 2스타 레스토랑이 있는 빌라 조이아 (예산 넉넉하면 추천)"
+                    }
+                ],
+                spareSpots: [],
+                stay: "알부페이라 해변 리조트 (3박)"
+                },
+                {
+                day: 7,
+                date: "4.04 (토)",
+                city: "알부페이라 → 세비야",
+                title: "국경을 넘어 스페인으로",
+                summary: "안달루시아의 심장, 세비야 입성",
+                details: [
+                    { 
+                    time: "09:30", 
+                    activity: "세비야행 버스 탑승", 
+                    icon: <Bus size={16} />, 
+                    location: "Albufeira Bus Station", 
+                    moveInfo: "🚌 ALSA 버스 (약 3시간 30분 소요)",
+                    note: "포르투갈 렌트카는 반납하고 버스 이동 추천 (국경 반납비 비쌈)"
+                    },
+                    { 
+                    time: "14:00", 
+                    activity: "세비야 도착 및 체크인 (시차 +1시간)", 
+                    icon: <Hotel size={16} />, 
+                    location: "Hotel Alfonso XIII or Cathedral Area", 
+                    moveInfo: "🚖 택시 이동",
+                    note: "스페인은 포르투갈보다 1시간 빠름!"
+                    },
+                    { 
+                    time: "16:00", 
+                    activity: "세비야 대성당 & 히랄다 탑", 
+                    icon: <Camera size={16} />, 
+                    location: "Catedral de Sevilla", 
+                    moveInfo: "👣 숙소 근처",
+                    note: "세계 3대 성당의 위엄, 콜럼버스의 묘"
+                    },
+                    { 
+                    time: "20:00", 
+                    activity: "타파스 투어: El Rinconcillo", 
+                    icon: <Utensils size={16} />, 
+                    location: "El Rinconcillo", 
+                    moveInfo: "👣 도보 또는 택시",
+                    note: "1670년에 오픈한 세비야에서 가장 오래된 타파스 바"
+                    }
+                ],
+                spareSpots: [
+                    { title: "메트로폴 파라솔", desc: "해질녘 버섯 모양 전망대 위 산책", location: "Setas de Sevilla" }
+                ],
+                stay: "세비야 대성당 인근 (1박)"
+                },
+                {
+                day: 8,
+                date: "4.05 (일)",
+                city: "세비야 ↔ 마드리드",
+                title: "⚽ 마드리드 축구 원정 (당일치기)",
+                summary: "AVE 고속열차로 다녀오는 라리가 직관",
+                details: [
+                    { 
+                    time: "08:00", 
+                    activity: "세비야 산타 후스타역 출발", 
+                    icon: <Train size={16} />, 
+                    location: "Sevilla Santa Justa", 
+                    moveInfo: "🚅 AVE 고속열차 (약 2시간 30분 소요)",
+                    note: "아침 일찍 출발하여 마드리드 분위기 즐기기"
+                    },
+                    { 
+                    time: "10:30", 
+                    activity: "마드리드 아토차역 도착", 
+                    icon: <MapPin size={16} />, 
+                    location: "Madrid Atocha", 
+                    moveInfo: null 
+                    },
+                    { 
+                    time: "12:00", 
+                    activity: "솔 광장 & 마요르 광장 산책", 
+                    icon: <Coffee size={16} />, 
+                    location: "Puerta del Sol", 
+                    moveInfo: "🚇 지하철/도보",
+                    note: "경기 전 마드리드 팬들의 열기 느끼기"
+                    },
+                    { 
+                    time: "14:00", 
+                    activity: "경기장 이동 및 직관", 
+                    icon: <Ticket size={16} />, 
+                    location: "Santiago Bernabéu / Metropolitano", 
+                    moveInfo: "🚇 지하철 이동",
+                    note: "경기 시간 확정 후 기차표 예매 필수 (보통 오후/저녁 경기)"
+                    },
+                    { 
+                    time: "20:00", 
+                    activity: "세비야행 막차 탑승", 
+                    icon: <Train size={16} />, 
+                    location: "Madrid Atocha", 
+                    moveInfo: "🚅 AVE 복귀 (22:30 도착 예상)",
+                    note: "경기 시간에 따라 마드리드 1박 후 다음날 복귀로 변경 고려 가능"
+                    }
+                ],
+                spareSpots: [],
+                stay: "세비야 대성당 인근 (2박)"
+                },
+                {
+                day: 9,
+                date: "4.06 (월)",
+                city: "세비야",
+                title: "안달루시아의 꽃, 세비야 즐기기",
+                summary: "알카사르 궁전과 스페인 광장의 여유",
+                details: [
+                    { 
+                    time: "10:00", 
+                    activity: "알카사르(Alcázar) 궁전", 
+                    icon: <Camera size={16} />, 
+                    location: "Royal Alcázar of Seville", 
+                    moveInfo: "👣 도보 이동",
+                    note: "왕좌의 게임 촬영지, 아름다운 정원에서 인생샷 (예약 필수)"
+                    },
+                    { 
+                    time: "13:00", 
+                    activity: "점심: Eslava", 
+                    icon: <Utensils size={16} />, 
+                    location: "Espacio Eslava", 
+                    moveInfo: "👣 도보 15분",
+                    note: "퓨전 타파스로 상을 휩쓴 맛집 (꿀 갈비 추천)" 
+                    },
+                    { 
+                    time: "16:00", 
+                    activity: "스페인 광장 (Plaza de España)", 
+                    icon: <MapPin size={16} />, 
+                    location: "Plaza de España", 
+                    moveInfo: "👣 마차 투어 또는 도보",
+                    note: "김태희가 플라멩코를 추던 그곳, 보트 타기 추천"
+                    },
+                    { 
+                    time: "20:00", 
+                    activity: "플라멩코 공연 관람", 
+                    icon: <Star size={16} />, 
+                    location: "Museo del Baile Flamenco", 
+                    moveInfo: "👣 구시가지 내",
+                    note: "본고장에서 보는 정열적인 공연"
+                    }
+                ],
+                spareSpots: [
+                    { title: "황금의 탑", desc: "과달키비르 강변 산책하며 야경 감상", location: "Torre del Oro" }
+                ],
+                stay: "세비야 대성당 인근 (3박)"
+                },
+                {
+                day: 10,
+                date: "4.07 (화)",
+                city: "세비야 (근교)",
+                title: "🚗 론다 & 하얀 마을 드라이브",
+                summary: "렌트카로 떠나는 론다 당일치기",
+                details: [
+                    { 
+                    time: "09:00", 
+                    activity: "렌트카 픽업 & 출발", 
+                    icon: <Car size={16} />, 
+                    location: "Santa Justa Station Car Rental", 
+                    moveInfo: "🚗 1일 렌트 (세비야-론다 왕복 약 260km)",
+                    note: "세비야 시내는 운전이 어려우므로 역에서 빌려 외곽으로 바로 나가기"
+                    },
+                    { 
+                    time: "11:00", 
+                    activity: "사하라 (Zahara de la Sierra)", 
+                    icon: <Camera size={16} />, 
+                    location: "Zahara de la Sierra", 
+                    moveInfo: "🚗 경유지",
+                    note: "호수 위에 떠 있는 듯한 아름다운 하얀 마을"
+                    },
+                    { 
+                    time: "12:30", 
+                    activity: "론다(Ronda) 도착 & 누에보 다리", 
+                    icon: <MapPin size={16} />, 
+                    location: "Puente Nuevo", 
+                    moveInfo: "🚗 이동",
+                    note: "절벽 위에 세워진 다리의 압도적인 풍경"
+                    },
+                    { 
+                    time: "13:30", 
+                    activity: "점심: Parador de Ronda", 
+                    icon: <Utensils size={16} />, 
+                    location: "Parador de Ronda", 
+                    moveInfo: "👣 다리 바로 옆",
+                    note: "절벽 뷰를 보며 식사 (예약 권장)" 
+                    },
+                    { 
+                    time: "16:00", 
+                    activity: "세테닐 (Setenil de las Bodegas)", 
+                    icon: <MapPin size={16} />, 
+                    location: "Setenil de las Bodegas", 
+                    moveInfo: "🚗 차량 30분",
+                    note: "거대한 바위 아래 지어진 독특한 동굴 마을"
+                    },
+                    { 
+                    time: "19:00", 
+                    activity: "세비야 복귀 및 차량 반납", 
+                    icon: <Car size={16} />, 
+                    location: "Sevilla", 
+                    moveInfo: "🚗 1시간 30분 소요" 
+                    }
+                ],
+                spareSpots: [],
+                stay: "세비야 대성당 인근 (4박)"
+                },
+                {
+                day: 11,
+                date: "4.08 (수)",
+                city: "세비야 → 마드리드",
+                title: "다시, 마드리드로",
+                summary: "마드리드 입성 및 프라도 미술관",
+                details: [
+                    { 
+                    time: "10:00", 
+                    activity: "마드리드행 기차 탑승", 
+                    icon: <Train size={16} />, 
+                    location: "Sevilla Santa Justa", 
+                    moveInfo: "🚅 AVE 이동 (짐 챙겨서 완전 이동)" 
+                    },
+                    { 
+                    time: "13:00", 
+                    activity: "호텔 체크인: 그란 비아 근처", 
+                    icon: <Hotel size={16} />, 
+                    location: "Hyatt Centric Gran Via or Principal Madrid", 
+                    moveInfo: "🚖 택시 이동",
+                    note: "쇼핑과 이동이 편리한 그란 비아 지역 추천"
+                    },
+                    { 
+                    time: "15:00", 
+                    activity: "프라도 미술관 투어", 
+                    icon: <Camera size={16} />, 
+                    location: "Museo Nacional del Prado", 
+                    moveInfo: "👣 또는 버스",
+                    note: "벨라스케스, 고야 등 스페인 거장들의 작품 감상"
+                    },
+                    { 
+                    time: "18:00", 
+                    activity: "레티로 공원 산책", 
+                    icon: <Sun size={16} />, 
+                    location: "El Retiro Park", 
+                    moveInfo: "👣 미술관 뒤편",
+                    note: "크리스탈 궁전과 호수에서 여유로운 오후"
+                    },
+                    { 
+                    time: "20:30", 
+                    activity: "저녁: Botín", 
+                    icon: <Utensils size={16} />, 
+                    location: "Sobrino de Botín", 
+                    moveInfo: "🚖 택시 이동",
+                    note: "기네스북 등재 '세계에서 가장 오래된 식당', 새끼 돼지 구이"
+                    }
+                ],
+                spareSpots: [
+                    { title: "산 미겔 시장", desc: "마요르 광장 옆, 다양한 타파스를 골라 먹는 재미", location: "Mercado de San Miguel" }
+                ],
+                stay: "마드리드 그란 비아 인근 (1박)"
+                },
+                {
+                day: 12,
+                date: "4.09 (목)",
+                city: "마드리드",
+                title: "왕궁과 쇼핑 데이",
+                summary: "마드리드 왕궁 관람 및 마지막 쇼핑",
+                details: [
+                    { 
+                    time: "10:00", 
+                    activity: "마드리드 왕궁", 
+                    icon: <Camera size={16} />, 
+                    location: "Royal Palace of Madrid", 
+                    moveInfo: "👣 도보/버스",
+                    note: "베르사유 궁전에 버금가는 화려함"
+                    },
+                    { 
+                    time: "12:30", 
+                    activity: "점심 & 카페", 
+                    icon: <Coffee size={16} />, 
+                    location: "Café de Oriente", 
+                    moveInfo: "👣 왕궁 앞",
+                    note: "왕궁 뷰를 보며 우아한 식사" 
+                    },
+                    { 
+                    time: "14:30", 
+                    activity: "살라망카 지구 쇼핑 / 기념품 구매", 
+                    icon: <DollarSign size={16} />, 
+                    location: "Salamanca District", 
+                    moveInfo: "🚖 택시 이동",
+                    note: "명품 거리 및 현지 브랜드(Loewe, Zara 등) 쇼핑"
+                    },
+                    { 
+                    time: "19:30", 
+                    activity: "마지막 만찬: Ten Con Ten", 
+                    icon: <Utensils size={16} />, 
+                    location: "Ten Con Ten", 
+                    moveInfo: "🚖 택시 이동",
+                    note: "마드리드 멋쟁이들이 모이는 핫플레이스 레스토랑"
+                    }
+                ],
+                spareSpots: [
+                    { title: "데보드 신전", desc: "이집트 신전에서 보는 마드리드 최고의 석양", location: "Temple of Debod" }
+                ],
+                stay: "마드리드 그란 비아 인근 (2박)"
+                },
+                {
+                day: 13,
+                date: "4.10 (금)",
+                city: "마드리드 → 귀국",
+                title: "안녕, 스페인",
+                summary: "공항 이동 및 출국",
+                details: [
+                    { 
+                    time: "09:00", 
+                    activity: "체크아웃 및 공항 이동", 
+                    icon: <Plane size={16} />, 
+                    location: "Adolfo Suárez Madrid-Barajas Airport", 
+                    moveInfo: "🚖 공항 택시 정액제 (30유로) / 약 30분 소요",
+                    note: "텍스 리펀을 위해 여유 있게 공항 도착 (T4 터미널 확인)"
+                    },
+                    { 
+                    time: "12:00", 
+                    activity: "인천행 비행기 탑승", 
+                    icon: <Plane size={16} />, 
+                    location: "Gate", 
+                    moveInfo: "🛫 12박 14일간의 꿈같은 허니문 종료",
+                    note: "안전 귀국 (4/11 토요일 인천 도착)"
+                    }
+                ],
+                spareSpots: [],
+                stay: "기내 숙박"
+                }
+            ];
+
+            const accommodations = [
+                {
+                city: "리스본 (Lisbon)",
+                desc: "언덕이 많으므로 이동이 편한 '리베르다데 대로' 주변 호텔 추천",
+                spots: [
+                    { name: "포르투베이 리베르다데", type: "호텔", price: "30만원대", reason: "위치 최상, 조식 맛집, 허니문 어메니티 훌륭" },
+                    { name: "코르포 산토 히스토리컬", type: "호텔", price: "40만원대", reason: "서비스 평점 1위, 무료 스낵 타임, 강변 위치" },
+                    { name: "알파마 리버뷰 아파트", type: "에어비앤비", price: "25만원대", reason: "테라스에서 보는 일출/일몰, 현지 감성" }
+                ]
+                },
+                {
+                city: "알부페이라 (Albufeira)",
+                desc: "휴양이 목적이므로 프라이빗 비치가 있는 리조트 강력 추천",
+                spots: [
+                    { name: "파인 클리프 호텔", type: "리조트", price: "40-50만원대", reason: "럭셔리 컬렉션, 절벽 위 환상적인 뷰, 골프 코스" },
+                    { name: "에픽 사나 알가르브", type: "리조트", price: "30-40만원대", reason: "5개 수영장, 숲과 바다가 어우러진 힐링 스팟" }
+                ]
+                },
+                {
+                city: "세비야 (Seville)",
+                desc: "관광지 접근성이 좋은 대성당 근처가 베스트",
+                spots: [
+                    { name: "호텔 알폰소 XIII", type: "호텔", price: "60만원대~", reason: "세비야 최고의 럭셔리 랜드마크 호텔, 왕실 분위기" },
+                    { name: "호텔 카사 1800", type: "호텔", price: "30만원대", reason: "루프탑 수영장에서 대성당 야경 감상 가능, 무료 애프터눈 티" }
+                ]
+                },
+                {
+                city: "마드리드 (Madrid)",
+                desc: "쇼핑과 맛집이 모여있는 그란 비아 또는 살라망카 지구",
+                spots: [
+                    { name: "하얏트 센트릭 그란 비아", type: "호텔", price: "40만원대", reason: "마드리드 중심, 힙한 인테리어, 루프탑 바" },
+                    { name: "더 프린시펄 마드리드", type: "호텔", price: "30만원대", reason: "스몰 럭셔리, 조용하고 고급스러운 분위기" }
+                ]
+                }
+            ];
+
+            const budget = [
+                { category: "항공권", amount: 1600000, desc: "리스본 IN / 마드리드 OUT (직항/경유)" },
+                { category: "숙박비", amount: 2400000, desc: "12박 (1박 평균 40만원, 2인 1/2 기준)" },
+                { category: "교통비", amount: 600000, desc: "도시 간 버스/기차, 렌트카(2일+기름), 우버/택시" },
+                { category: "식비/입장료", amount: 1200000, desc: "1일 10만원, 파인 다이닝 및 공연 포함" },
+                { category: "쇼핑/예비비", amount: 500000, desc: "개인 쇼핑 제외, 비상금" },
+                { category: "총계", amount: 6300000, desc: "1인 기준 (허니문 퀄리티 반영)" }
+            ];
+
+            const openGoogleMaps = (location) => {
+                window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, '_blank');
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto bg-white min-h-screen font-sans text-gray-800">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-rose-500 to-orange-500 text-white p-6 shadow-lg rounded-b-xl">
+                    <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                    <Heart className="inline-block fill-white text-white" /> {tripData.title}
+                    </h1>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base opacity-90">
+                    <div className="flex items-center gap-2"><Calendar size={18} /> {tripData.dates} ({tripData.duration})</div>
+                    <div className="flex items-center gap-2"><MapIcon size={18} /> {tripData.route}</div>
+                    <div className="flex items-center gap-2"><Star size={18} /> {tripData.participants} | {tripData.theme}</div>
+                    </div>
+                </div>
+
+                {/* Tabs */}
+                <div className="flex justify-center my-6 gap-2 px-4 sticky top-0 z-10 bg-white/95 backdrop-blur py-3 border-b border-gray-100">
+                    <button 
+                    onClick={() => setActiveTab('itinerary')}
+                    className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${activeTab === 'itinerary' ? 'bg-rose-500 text-white shadow-lg transform scale-105' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >
+                    상세 일정
+                    </button>
+                    <button 
+                    onClick={() => setActiveTab('accommodation')}
+                    className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${activeTab === 'accommodation' ? 'bg-rose-500 text-white shadow-lg transform scale-105' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >
+                    숙소 추천
+                    </button>
+                    <button 
+                    onClick={() => setActiveTab('budget')}
+                    className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all ${activeTab === 'budget' ? 'bg-rose-500 text-white shadow-lg transform scale-105' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                    >
+                    예상 경비
+                    </button>
+                </div>
+
+                {/* Content */}
+                <div className="px-4 pb-12">
+                    
+                    {/* Itinerary Tab */}
+                    {activeTab === 'itinerary' && (
+                    <div className="space-y-6">
+                        {itinerary.map((day) => (
+                        <div key={day.day} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md">
+                            <div 
+                            className={`p-5 cursor-pointer flex justify-between items-center ${expandedDay === day.day ? 'bg-rose-50/50' : ''}`}
+                            onClick={() => setExpandedDay(expandedDay === day.day ? null : day.day)}
+                            >
+                            <div className="flex items-center gap-5">
+                                <div className="flex flex-col items-center justify-center bg-gray-100 rounded-xl w-16 h-16 border border-gray-200">
+                                <span className="text-xs font-bold text-gray-500 uppercase">Day</span>
+                                <span className="text-2xl font-black text-gray-800">{day.day}</span>
+                                </div>
+                                <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="text-xs font-bold bg-rose-100 text-rose-600 px-2 py-0.5 rounded-md">{day.date}</span>
+                                    <span className="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">{day.city}</span>
+                                </div>
+                                <h3 className="font-bold text-lg text-gray-800">{day.title}</h3>
+                                </div>
+                            </div>
+                            {expandedDay === day.day ? <ChevronUp className="text-rose-400" /> : <ChevronDown className="text-gray-300" />}
+                            </div>
+
+                            {expandedDay === day.day && (
+                            <div className="p-5 border-t border-gray-100">
+                                <div className="mb-6 p-4 bg-gray-50 rounded-xl text-sm text-gray-600 flex gap-2 items-start">
+                                <Info className="text-rose-400 shrink-0 mt-0.5" size={16} />
+                                {day.summary}
+                                </div>
+
+                                <div className="space-y-6 relative ml-2 before:absolute before:left-[15px] before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-rose-200 before:to-orange-100">
+                                {day.details.map((detail, idx) => (
+                                    <div key={idx} className="relative flex gap-4 items-start pl-8">
+                                    <div className="absolute left-[9px] top-[6px] w-3.5 h-3.5 rounded-full bg-white border-2 border-rose-400 z-10"></div>
+                                    <div className="min-w-[50px] text-sm font-bold text-gray-400 pt-0.5">{detail.time}</div>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-start mb-1">
+                                        <h4 className="font-bold text-gray-800 flex items-center gap-2">
+                                            {detail.activity}
+                                        </h4>
+                                        <button 
+                                            onClick={(e) => { e.stopPropagation(); openGoogleMaps(detail.location); }}
+                                            className="text-gray-300 hover:text-rose-500 transition-colors"
+                                        >
+                                            <MapPin size={18} />
+                                        </button>
+                                        </div>
+                                        
+                                        {detail.note && (
+                                        <p className="text-sm text-gray-600 mb-2">{detail.note}</p>
+                                        )}
+
+                                        {detail.moveInfo && (
+                                        <div className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-600 bg-rose-50 px-2 py-1 rounded">
+                                            {detail.icon} {detail.moveInfo}
+                                        </div>
+                                        )}
+                                    </div>
+                                    </div>
+                                ))}
+                                </div>
+
+                                {/* Spare Spots */}
+                                {day.spareSpots.length > 0 && (
+                                <div className="mt-8 bg-gradient-to-r from-orange-50 to-rose-50 rounded-xl p-4 border border-rose-100/50">
+                                    <h4 className="font-bold text-gray-800 flex items-center gap-2 mb-3 text-sm">
+                                    <Star className="text-orange-400" size={16} /> 놓치기 아쉬운 히든 스팟
+                                    </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {day.spareSpots.map((spot, idx) => (
+                                        <div key={idx} className="bg-white/80 p-3 rounded-lg border border-rose-100 flex justify-between items-center group hover:bg-white transition-colors">
+                                        <div>
+                                            <div className="font-bold text-gray-800 text-sm group-hover:text-rose-600 transition-colors">{spot.title}</div>
+                                            <div className="text-xs text-gray-500 mt-0.5">{spot.desc}</div>
+                                        </div>
+                                        </div>
+                                    ))}
+                                    </div>
+                                </div>
+                                )}
+                                
+                                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-end items-center gap-2 text-xs font-medium text-gray-400">
+                                <BedDouble size={14} /> {day.stay}
+                                </div>
+                            </div>
+                            )}
+                        </div>
+                        ))}
+                    </div>
+                    )}
+
+                    {/* Accommodation Tab */}
+                    {activeTab === 'accommodation' && (
+                    <div className="space-y-8">
+                        {accommodations.map((city, idx) => (
+                        <div key={idx} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="bg-gray-50 p-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="font-bold text-lg text-gray-800 flex items-center gap-2">
+                                <MapPin className="text-rose-500" size={20} /> {city.city}
+                            </h3>
+                            <span className="text-xs bg-white border border-gray-200 px-2 py-1 rounded text-gray-500">
+                                {city.desc}
+                            </span>
+                            </div>
+                            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {city.spots.map((spot, sIdx) => (
+                                <div key={sIdx} className="group border border-gray-200 rounded-xl p-4 hover:border-rose-300 hover:shadow-md transition-all">
+                                <div className="flex justify-between items-start mb-3">
+                                    <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded ${spot.type.includes('리조트') ? 'bg-cyan-100 text-cyan-700' : 'bg-rose-100 text-rose-700'}`}>
+                                    {spot.type}
+                                    </span>
+                                    <span className="text-sm font-bold text-gray-700">{spot.price}</span>
+                                </div>
+                                <h4 className="font-bold text-gray-800 mb-2 group-hover:text-rose-600 transition-colors">{spot.name}</h4>
+                                <p className="text-xs text-gray-500 leading-relaxed">{spot.reason}</p>
+                                </div>
+                            ))}
+                            </div>
+                        </div>
+                        ))}
+                    </div>
+                    )}
+
+                    {/* Budget Tab */}
+                    {activeTab === 'budget' && (
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="bg-gray-800 text-white p-6 text-center">
+                        <h3 className="text-xl font-bold mb-1">총 예상 경비</h3>
+                        <p className="text-3xl font-black text-yellow-400">₩6,300,000</p>
+                        <p className="text-xs text-gray-400 mt-2">1인 기준 / 항공권 포함 / 쇼핑 제외</p>
+                        </div>
+                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {budget.filter(b => b.category !== '총계').map((item, idx) => (
+                            <div key={idx} className="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-200 text-gray-400 mr-4 shrink-0">
+                                <DollarSign size={18} />
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex justify-between items-center mb-1">
+                                <span className="font-bold text-gray-700">{item.category}</span>
+                                <span className="font-bold text-gray-900">{item.amount.toLocaleString()}원</span>
+                                </div>
+                                <p className="text-xs text-gray-400">{item.desc}</p>
+                            </div>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+                    )}
+
+                </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<TravelCanvas />);
+    </script>
+</body>
+</html>
