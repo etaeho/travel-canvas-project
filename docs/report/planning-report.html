@@ -170,6 +170,16 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
+  <span class="eyebrow">화면</span>
+  <h2>사용자는 열 화면을 쓴다</h2>
+  <p>여섯 화면으로 여행 하나를 만든다. 네 화면은 필요할 때 연다. 화면을 눌러 보라.</p>
+  <div class="tabs" id="uiTabs" role="tablist"></div>
+  <div class="steps" id="uiSteps" role="tablist"></div>
+  <div class="panel" id="uiBody"></div>
+  <p><a href="https://claude.ai/artifact/Tv8e3NMk2Uomoo7oHjVy32" target="_blank" rel="noopener">화면 시안 열기</a> · 시안은 공유해야 다른 사람이 볼 수 있다.</p>
+</section>
+
+<section>
   <span class="eyebrow">방식</span>
   <h2>AI가 초안을 쓰고, 다른 단계가 사실을 확인한다</h2>
   <p>세 가지 길이 있다. 두 번째를 권한다.</p>
@@ -340,12 +350,31 @@ const STEPS = [
   {n:'0', t:'샘플 확인', done:true, what:'AI가 만든 일정을 웹 검색으로 확인했다.', end:'끝났다. 56개 중 19개를 확인했고 결과를 파일로 남겼다.', need:'없음'},
   {n:'1', t:'토큰 측정', what:'조건을 넣으면 초안을 쓰고 확인까지 하는 스크립트를 만든다. 호출마다 토큰을 기록한다.', end:'샘플 여행을 다시 돌려 일정 한 건의 토큰과 비용이 나온다.', need:'Anthropic API 키'},
   {n:'2', t:'구글 연결', what:'장소와 경로 API를 확인 수단으로 붙인다.', end:'같은 여행으로 1단계와 정확도, 비용을 비교한 표가 나온다.', need:'결제가 설정된 Google Cloud API 키'},
-  {n:'3', t:'앱', what:'프로필, 여행 만들기, 일정 화면, 장소 교체, DB를 만든다.', end:'한 사람이 가입부터 장소 교체까지 마칠 수 있다.', need:'남은 결정 네 가지'},
-  {n:'4', t:'공유', what:'일정을 공유하고 동행자의 취향을 합친다.', end:'범위는 3단계가 끝난 뒤 다시 정한다.', need:'3단계 결과'}
+  {n:'3', t:'앱', what:'화면 1부터 9까지와 DB를 만든다.', end:'한 사람이 가입부터 장소 교체까지 마칠 수 있다.', need:'남은 결정 네 가지'},
+  {n:'4', t:'공유', what:'화면 10(공유)을 만들고 동행자의 취향을 합친다.', end:'범위는 3단계가 끝난 뒤 다시 정한다.', need:'3단계 결과'}
 ];
 let st = 1;
 function renderSteps(){ const b = $('steps'); b.replaceChildren(); STEPS.forEach((s,i) => { const x = el('button', {class:'step' + (s.done ? ' done' : ''), role:'tab', 'aria-selected': String(i === st)}, el('b', {text:s.n}), el('span', {text:s.t})); x.onclick = () => { st = i; renderSteps(); }; b.append(x); });
   const s = STEPS[st]; $('stepBody').replaceChildren(el('div', {class:'pc'}, ...[['하는 일', s.what], ['끝났다고 보는 기준', s.end], ['필요한 것', s.need]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p}))))); }
 
-renderVerify(); renderAp(); renderCov(); renderMerge(); renderCost(); renderSteps();
+/* 화면 */
+const UI = [
+  [['1','취향 등록','처음 한 번만 한다. 걷는 시간, 웨이팅, 주종, 분위기를 고른다.','슬라이더와 선택 칩.','새 여행'],
+   ['2','새 여행','어디로, 언제, 누구와, 얼마로. 네 가지를 넣는다.','기간과 겹치는 행사를 바로 알린다.','이번 여행 조건'],
+   ['3','이번 조건','평소와 다른 것만 고친다.','기본값이 채워진 목록. 고친 항목은 색으로 구분한다.','만들고 확인하기'],
+   ['4','확인 중','기다린다. 확인된 것부터 볼 수도 있다.','지금 무엇을 확인하는지, 문제를 몇 건 찾았는지.','일정 화면'],
+   ['5','일정','일차를 넘기며 카드를 본다.','카드마다 확인 결과. 문제 카드에는 이유 한 줄.','장소 교체, 근거, 지도, 공유'],
+   ['6','장소 교체','대안을 고른다. 다른 날로 옮길 수도 있다.','대안마다 확인 상태와 앞뒤 이동 시간.','일정 화면']],
+  [['7','내 여행','여행을 고르거나 새로 만든다.','여행마다 문제가 몇 건인지.','앱을 열면 처음 보인다'],
+   ['8','확인 근거','근거를 읽는다. 직접 확인했으면 그대로 둔다.','검사별 결과, 출처, 확인 시각.','일정 카드의 근거 보기'],
+   ['9','지도','하루 동선을 본다.','순서가 붙은 장소. 문제 장소는 모양이 다르다.','일정 화면의 지도 아이콘'],
+   ['10','공유','볼 사람과 범위를 정한다.','받은 사람은 보기만 한다. 예산과 취향은 숨긴다.','일정 화면의 공유 아이콘']]
+];
+let ug = 0, us = 4;
+function renderUi(){ const t = $('uiTabs'); t.replaceChildren(); ['여행을 만드는 여섯 화면','필요할 때 여는 네 화면'].forEach((n,i) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(i === ug), text:n}); b.onclick = () => { ug = i; us = 0; renderUi(); }; t.append(b); });
+  const list = UI[ug]; if (us >= list.length) us = 0; const s = $('uiSteps'); s.style.gridTemplateColumns = `repeat(${list.length}, minmax(0, 1fr))`; s.replaceChildren();
+  list.forEach((u,i) => { const x = el('button', {class:'step', role:'tab', 'aria-selected': String(i === us)}, el('b', {text:u[0]}), el('span', {text:u[1]})); x.onclick = () => { us = i; renderUi(); }; s.append(x); });
+  const u = list[us]; $('uiBody').replaceChildren(el('div', {class:'pc'}, ...[['사용자가 하는 일', u[2]], ['화면이 보여 주는 것', u[3]], [ug === 0 ? '다음 화면' : '여는 곳', u[4]]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p}))))); }
+
+renderUi(); renderVerify(); renderAp(); renderCov(); renderMerge(); renderCost(); renderSteps();
 </script>
