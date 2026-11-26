@@ -1,5 +1,5 @@
 <meta name="claude:viewport-fit-sides" content="cover">
-<title>여행 일정 도우미 기획 보고서</title>
+<title>여행 일정 도우미 기획안</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* 배치: 한 단 보고서. 주장 한 줄 → 그 주장을 뒷받침하는 조작 가능한 자료 하나. 시간표처럼 왼쪽에 번호 대신 상태 표시를 둔다. */
@@ -39,6 +39,16 @@ a{color:var(--accent)}
 .lead{font-size:1.15rem;font-weight:500}
 section{display:flex;flex-direction:column;gap:16px;min-width:0}
 .muted{color:var(--muted);font-size:.9rem}
+.toc{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:12px}
+.toc a{text-decoration:none;white-space:nowrap}
+.toc a:hover{text-decoration:underline}
+.plain{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;max-width:38em}
+.who{font-size:.72rem;font-weight:500;padding:1px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;margin-left:4px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.flow span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-weight:500}
+.flow small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
+.flow i{color:var(--muted);font-style:normal}
+.states{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;font-size:.92rem}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .three{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:0;padding:0;list-style:none}
 .three li{border-top:3px solid var(--accent);padding-top:10px;font-weight:500}
@@ -142,19 +152,24 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:14px">
-  <span class="eyebrow">기획 보고서 · 2026-11-26</span>
-  <h1>일정은 AI가 짠다. 우리는 그 일정이 맞는지 확인한다.</h1>
-  <p class="lead">AI가 만든 일정을 검색으로 확인했다. 확인한 19개 가운데 7개는 그대로 따르면 실패한다.</p>
+  <span class="eyebrow">앱 기획안 · 초안 · 2026-11-26</span>
+  <h1>여행 일정 도우미 기획안</h1>
+  <p class="lead">일정은 AI가 짠다. 이 앱은 그 일정이 맞는지 확인한다.</p>
   <ul class="three">
     <li>만들 것<span>취향과 조건을 넣으면 일정을 짜고, 항목마다 맞는지 확인해 주는 앱.</span></li>
     <li>다른 점<span>확인한 것과 확인 못 한 것을 구분해서 보여 준다.</span></li>
     <li>먼저 정할 것<span>국내가 먼저인가, 해외가 먼저인가.</span></li>
   </ul>
+  <nav class="toc" aria-label="차례">
+    <a href="#why">1 왜 만드는가</a><a href="#scope">2 목표와 범위</a><a href="#screens">3 화면</a><a href="#approach">4 구현 방식</a><a href="#verify">5 구조와 검증</a><a href="#prefs">6 조건</a><a href="#data">7 데이터</a><a href="#cost">8 비용</a><a href="#steps-sec">9 단계</a><a href="#open">10 남은 결정</a><a href="#calls">11 작성자가 정한 것</a>
+  </nav>
+  <p class="muted"><span class="who" style="margin-left:0">결정</span> 은 대화에서 정한 것이다. <span class="who">제안</span> 은 작성자가 정했고 바꿀 수 있다. <span class="who">미정</span> 은 답이 필요하다.</p>
 </header>
 
 <section>
-  <span class="eyebrow">근거</span>
+  <span class="eyebrow" id="why">1 · 왜 만드는가</span>
   <h2>틀린 것은 장소가 아니라 날짜였다</h2>
+  <p>Gemini에 물으면 일정은 나온다. 그러나 그 일정은 AI가 쓴 글이다. 아무도 확인하지 않았다.</p>
   <p>Gemini가 만든 포르투갈·스페인 13일 일정을 골랐다. 항목은 56개다. 그중 19개를 웹 검색으로 확인했다. 휴무일에 잡힌 식당, 축제와 겹친 날, 경기가 없는 날의 직관이 나왔다. 막대와 날짜를 눌러 직접 보라.</p>
   <div class="panel">
     <div class="bar" id="bar" role="group" aria-label="상태별 개수"></div>
@@ -170,37 +185,106 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
-  <span class="eyebrow">화면</span>
+  <span class="eyebrow" id="scope">2 · 목표와 범위</span>
+  <h2>다섯 가지를 한다. 네 가지는 하지 않는다</h2>
+  <div class="panel">
+    <div class="pc">
+      <div><h3>목표</h3>
+        <ol class="plain">
+          <li>취향은 한 번만 적는다. 여행마다 바뀐 것만 고친다.<span class="who">결정</span></li>
+          <li>조건에 맞는 일정을 날짜별 카드로 만든다.<span class="who">결정</span></li>
+          <li>카드마다 대안을 두고 바꿀 수 있게 한다.<span class="who">결정</span></li>
+          <li>카드와 이동마다 확인 결과, 근거, 확인 시각을 붙인다.<span class="who">결정</span></li>
+          <li>일정 한 건에 드는 토큰과 비용을 잰다.<span class="who">결정</span></li>
+        </ol>
+      </div>
+      <div><h3>하지 않는 것<span class="who">제안</span></h3>
+        <ul class="plain">
+          <li>예약과 결제 대행</li>
+          <li>항공권, 숙소 가격 비교</li>
+          <li>실시간 위치 추적과 길 안내</li>
+          <li>여러 명이 동시에 고치기. 공유해서 보기까지만 한다.</li>
+        </ul>
+      </div>
+      <div><h3>실패로 보는 경우</h3>
+        <ul class="plain">
+          <li>확인하지 않은 것을 확인한 것처럼 보여 준다.</li>
+          <li>일정 한 건의 비용을 모르고 사용자에게 연다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow" id="screens">3 · 화면<span class="who">제안</span></span>
   <h2>사용자는 열 화면을 쓴다</h2>
   <p>여섯 화면으로 여행 하나를 만든다. 네 화면은 필요할 때 연다. 화면을 눌러 보라.</p>
   <div class="tabs" id="uiTabs" role="tablist"></div>
   <div class="steps" id="uiSteps" role="tablist"></div>
   <div class="panel" id="uiBody"></div>
+  <h3>화면 규칙</h3>
+  <ul class="plain">
+    <li>확인 상태를 색만으로 나누지 않는다. 글자를 같이 쓴다. 지도에서는 모양도 다르게 한다.</li>
+    <li>문제 카드에는 해결책 둘을 같이 둔다. 장소를 바꾸거나, 다른 날로 옮긴다.</li>
+    <li>사용자가 직접 확인했다고 덮으면 그 기록을 남긴다.</li>
+    <li>공유할 때 예산과 취향은 숨긴 채로 시작한다.</li>
+    <li>지도는 처음에는 약도다. 실제 지도는 지도 API를 붙인 뒤에 넣는다.</li>
+  </ul>
+  <h3>화면 때문에 데이터에 더할 것</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>화면</th><th>필요한 데이터</th></tr></thead>
+    <tbody>
+      <tr><td>2 새 여행의 행사 알림</td><td>여행 단위 확인 기록</td></tr>
+      <tr><td>3 "이번만 변경" 표시</td><td><code>pref_overrides</code>에 그 항목이 있는지</td></tr>
+      <tr><td>4 진행 표시</td><td><code>trips</code>에 <code>generation_status</code>, <code>generation_progress</code></td></tr>
+      <tr><td>5 카드 사이 이동</td><td><code>trip_legs</code></td></tr>
+      <tr><td>6 다른 날로 옮기기</td><td>날짜를 바꾸고 그 카드와 앞뒤 이동을 다시 확인</td></tr>
+      <tr><td>8 직접 확인했다</td><td><code>verifications.provider = user</code></td></tr>
+      <tr><td>10 공개 범위</td><td><code>trip_members</code>에 <code>share_scope</code></td></tr>
+    </tbody>
+  </table></div>
   <p><a href="https://claude.ai/artifact/Tv8e3NMk2Uomoo7oHjVy32" target="_blank" rel="noopener">화면 시안 열기</a> · 시안은 공유해야 다른 사람이 볼 수 있다.</p>
 </section>
 
 <section>
-  <span class="eyebrow">방식</span>
+  <span class="eyebrow" id="approach">4 · 구현 방식<span class="who">제안</span></span>
   <h2>AI가 초안을 쓰고, 다른 단계가 사실을 확인한다</h2>
-  <p>세 가지 길이 있다. 두 번째를 권한다.</p>
+  <p>세 가지 길이 있다. 두 번째를 권한다. 첫째는 Gemini와 같은 결과라 만들 이유가 없다. 셋째는 데이터가 쌓이기 전에는 쓸 수 없다. 둘째로 시작하고, 사용자가 확정한 장소와 확인 결과를 쌓아 가면 셋째의 장점도 얻는다.</p>
   <div class="tabs" id="apTabs" role="tablist"></div>
   <div class="panel"><div class="pc" id="apBody"></div></div>
 </section>
 
 <section>
-  <span class="eyebrow">검증</span>
+  <span class="eyebrow" id="verify">5 · 구조와 검증</span>
   <h2>구글을 붙여도 웹 검색은 남는다</h2>
   <p>지도는 축제, 경기, 규정 변경을 알려 주지 않는다. 검색은 거리와 이동 시간을 모른다. 둘을 같이 써야 빈칸이 없다.</p>
+  <div class="flow" role="img" aria-label="조건 병합, 초안 쓰기, 확인, 보정, 저장과 표시 순서">
+    <span>조건 합치기<small>프로필 + 여행</small></span><i>→</i>
+    <span>초안 쓰기<small>AI</small></span><i>→</i>
+    <span>확인<small>웹 검색 / 지도 API</small></span><i>→</i>
+    <span>보정<small>문제 항목 교체</small></span><i>→</i>
+    <span>저장·표시</span>
+  </div>
+  <p>확인 수단은 바꿔 끼울 수 있게 만든다.<span class="who">제안</span> 그래야 같은 여행으로 웹 검색과 지도 API의 정확도와 비용을 비교할 수 있다. 아래에서 수단을 바꿔 보라.</p>
   <div class="tabs" id="covTabs" role="tablist"></div>
   <div class="panel">
     <div class="cov" id="cov"></div>
     <p class="muted" id="covSum"></p>
   </div>
   <p>확인 단위는 장소가 아니다. <strong>장소와 방문 일시</strong>다. 같은 식당도 화요일 저녁이면 문제이고 수요일이면 정상이다.</p>
+  <h3>확인 상태 다섯 가지</h3>
+  <div class="states">
+    <span class="tag t-verified">확인됨</span><span>일정과 사실이 같다.</span>
+    <span class="tag t-corrected">정정</span><span>갈 수는 있다. 값이 틀려서 고쳤다.</span>
+    <span class="tag t-problem">문제</span><span>일정대로 하면 실패한다.</span>
+    <span class="tag t-partial">일부 확인</span><span>일부만 확인했다. 출처가 엇갈린다.</span>
+    <span class="tag t-unverified">미검증</span><span>아직 확인하지 않았다.</span>
+  </div>
 </section>
 
 <section>
-  <span class="eyebrow">조건</span>
+  <span class="eyebrow" id="prefs">6 · 조건<span class="who">제안</span></span>
   <h2>취향은 한 번 적고, 여행마다 바뀐 것만 고친다</h2>
   <p>규칙은 셋이다. 고치지 않으면 기본값을 따른다. 고치면 그 값으로 바꾼다. 비우면 이번 여행은 제한이 없다. 아래에서 바꿔 보라.</p>
   <div class="panel">
@@ -216,9 +300,9 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
-  <span class="eyebrow">데이터</span>
+  <span class="eyebrow" id="data">7 · 데이터</span>
   <h2>주신 설계에 다섯 개를 더한다</h2>
-  <p>기존 다섯 테이블은 그대로 쓴다. 이동, 검증, 비용, 동행, 교체 기록이 빠져 있어서 더했다.</p>
+  <p>PostgreSQL 하나로 간다. 위치는 PostGIS, 바뀌기 쉬운 취향은 JSONB에 둔다.<span class="who">결정</span> 기존 다섯 테이블은 그대로 쓴다. 이동, 검증, 비용, 동행, 교체 기록이 빠져 있어서 더했다.<span class="who">제안</span></p>
   <div class="tblwrap"><table>
     <thead><tr><th>테이블</th><th>담는 것</th><th></th></tr></thead>
     <tbody>
@@ -233,13 +317,38 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
       <tr><td><code>trip_item_alternatives</code></td><td>대안 장소와 교체 기록. 배열 대신 표로 둔다.</td><td class="new">추가</td></tr>
     </tbody>
   </table></div>
+  <h3>기존 설계에서 고치는 것 세 가지</h3>
+  <ol class="plain">
+    <li><strong>조건을 합치는 규칙을 적는다.</strong> 항목이 없으면 기본값이다. 있으면 그 값으로 바꾼다. 목록은 합치지 않고 통째로 바꾼다. <code>null</code>이면 제한이 없다. 합친 결과는 <code>trips.effective_prefs</code>에 저장한다.</li>
+    <li><strong>장소를 셋으로 나눈다.</strong> 우리 데이터(<code>places</code>), 지도 API에서 받은 값과 기한(<code>place_provider_cache</code>), 우리만의 속성(<code>place_attributes</code>: 웨이팅, 주종, 분위기, 주차). 속성마다 출처와 확인 시각을 둔다.</li>
+    <li><strong>대안 장소를 배열에서 표로 옮긴다.</strong> 배열은 참조가 깨져도 모른다. 순위와 이유도 담지 못한다.</li>
+  </ol>
+  <h3>더하는 테이블의 주요 컬럼</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>테이블</th><th>주요 컬럼</th></tr></thead>
+    <tbody>
+      <tr><td><code>trip_legs</code></td><td><code>from_item_id</code> <code>to_item_id</code> <code>mode</code> <code>duration_min</code> <code>distance_m</code> <code>cost</code> <code>source</code></td></tr>
+      <tr><td><code>verifications</code></td><td><code>target_type</code> <code>target_id</code> <code>check_type</code> <code>status</code> <code>finding</code> <code>sources</code> <code>provider</code> <code>checked_at</code> <code>expires_at</code></td></tr>
+      <tr><td><code>llm_usage_log</code></td><td><code>trip_id</code> <code>step</code> <code>provider</code> <code>model</code> <code>input_tokens</code> <code>output_tokens</code> <code>search_count</code> <code>api_calls</code> <code>cost</code></td></tr>
+      <tr><td><code>trip_members</code></td><td><code>trip_id</code> <code>user_id</code> <code>role</code> <code>share_scope</code></td></tr>
+      <tr><td><code>trip_item_alternatives</code></td><td><code>item_id</code> <code>place_id</code> <code>rank</code> <code>reason</code></td></tr>
+      <tr><td><code>swap_history</code></td><td><code>item_id</code> <code>from_place_id</code> <code>to_place_id</code> <code>reason</code> <code>swapped_at</code></td></tr>
+      <tr><td><code>trip_items</code>에 추가</td><td><code>start_at</code> <code>end_at</code> <code>timezone</code> <code>status</code> <code>reservation_status</code> <code>currency</code></td></tr>
+      <tr><td><code>trips</code>에 추가</td><td><code>effective_prefs</code> <code>anchor_item_id</code> <code>base_currency</code> <code>generation_status</code> <code>generation_progress</code></td></tr>
+    </tbody>
+  </table></div>
   <p class="muted">구글 장소 데이터는 장소 ID 말고는 오래 저장할 수 없다. 약관 원문은 다시 확인해야 한다.</p>
 </section>
 
 <section>
-  <span class="eyebrow">비용</span>
+  <span class="eyebrow" id="cost">8 · 비용</span>
   <h2>일정 한 건에 토큰이 얼마나 드는가</h2>
   <p>아직 정확한 값은 없다. 19개를 확인하는 데 검색을 16번 했고, 검색 결과로 받은 양이 3~4만 토큰쯤이었다. 이 추정을 기준으로 계산해 보라.</p>
+  <ul class="plain">
+    <li>AI와 API를 부를 때마다 기록한다. 초안, 확인, 보정으로 나눠 적는다.</li>
+    <li>보는 값은 넷이다. 일정 한 건의 토큰, 검색 횟수, 항목 하나의 확인 비용, 단계별 비중.</li>
+    <li>줄이는 방법은 둘이다. 날짜에 걸리는 항목부터 확인한다. 같은 장소와 날짜의 확인은 기한까지 다시 쓴다.</li>
+  </ul>
   <div class="panel">
     <div class="sliders">
       <div class="sl"><label for="nItems">일정 항목 수 <output id="oItems"></output></label><input type="range" id="nItems" min="10" max="120" step="1" value="56"></div>
@@ -257,14 +366,14 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
-  <span class="eyebrow">순서</span>
+  <span class="eyebrow" id="steps-sec">9 · 진행 단계</span>
   <h2>재고, 비교하고, 그다음에 앱을 만든다</h2>
   <div class="steps" id="steps" role="tablist"></div>
   <div class="panel" id="stepBody"></div>
 </section>
 
 <section>
-  <span class="eyebrow">남은 결정</span>
+  <span class="eyebrow" id="open">10 · 남은 결정<span class="who">미정</span></span>
   <h2>네 가지를 정해야 한다</h2>
   <ol class="ask">
     <li><div><strong>국내가 먼저인가, 해외가 먼저인가.</strong>설계의 태그는 소주, 청하, 1차, 2차, 해장이다. 국내 여행이다. 샘플은 해외다. 한국에서는 구글 지도의 도보·자동차 길찾기가 제한되어 왔다. 국내가 먼저라면 카카오나 네이버를 써야 할 수 있다. 지금 상태는 확인이 필요하다.</div></li>
@@ -272,6 +381,22 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
     <li><div><strong>혼자 쓰는가, 공개하는가.</strong>공개하면 가입, 권한, 비용 상한이 필요하다.</div></li>
     <li><div><strong>웹 앱으로 충분한가.</strong>휴대폰 화면에 맞춘 웹 앱을 제안한다. 지금 결과물을 이어 쓸 수 있고 바로 써 볼 수 있다.</div></li>
   </ol>
+</section>
+
+<section>
+  <span class="eyebrow" id="calls">11 · 작성자가 정한 것</span>
+  <h2>아래는 내가 정했다. 틀리면 바꾼다</h2>
+  <ul class="plain">
+    <li>AI가 초안을 쓰고 다른 단계가 확인하는 방식</li>
+    <li>확인 수단을 바꿔 끼울 수 있는 구조</li>
+    <li>확인 단위는 장소와 방문 일시, 상태는 다섯 가지</li>
+    <li>조건을 합치는 규칙과 합친 결과의 저장</li>
+    <li>장소를 우리 데이터, 받은 값, 우리만의 속성으로 나누기</li>
+    <li>대안 장소를 배열에서 표로 옮기기</li>
+    <li>하지 않는 것 네 가지</li>
+    <li>휴대폰 화면에 맞춘 웹 앱</li>
+    <li>화면 열 개의 구성과 화면 규칙</li>
+  </ul>
 </section>
 </div>
 
