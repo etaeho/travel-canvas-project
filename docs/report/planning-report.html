@@ -86,6 +86,17 @@ th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);verti
 th{font-family:var(--mono);font-size:.76rem;color:var(--muted);font-weight:500;letter-spacing:.04em}
 td.c{text-align:center;font-family:var(--mono)}
 td strong{white-space:nowrap}
+.dm{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.dm-row{display:grid;grid-template-columns:6.5em 1fr auto;gap:10px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--line)}
+.dm-row time{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.dm-row b{font-weight:500;min-width:0;overflow-wrap:anywhere}
+.dm-row small{display:block;color:var(--muted);font-weight:400;font-size:.82rem}
+.dm-alts{display:flex;flex-direction:column;gap:8px;padding:10px 2px 14px;border-bottom:1px solid var(--line)}
+.dm-alt{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;background:var(--sunk);border-radius:8px;padding:10px 12px}
+.dm-alt small{grid-column:1;color:var(--muted);font-size:.82rem}
+.dm-alt .tab{grid-row:1/3;grid-column:2}
+.delta{font-family:var(--mono);font-size:.8rem}
+@media (max-width:520px){.dm-row{grid-template-columns:1fr auto}.dm-row time{grid-column:1/-1}}
 td.me{background:var(--accent-soft);font-weight:500}
 code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 5px;border-radius:4px}
 
@@ -154,22 +165,22 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
 <header>
   <span class="eyebrow">앱 개발 기획안 · 초안 · 2026-11-26</span>
   <h1>여행 일정 도우미 기획안</h1>
-  <p class="lead">먹고 마시는 국내 여행의 코스를 짜 준다. 그리고 그 코스가 실제로 되는지 확인해 준다.</p>
+  <p class="lead">AI가 가장 좋은 경로와 일정을 짠다. 항목마다 대안도 AI가 추천한다.</p>
   <ul class="three">
-    <li>누구에게<span>친구나 연인과 1박 2일로 떠나는 직장인.</span></li>
-    <li>무엇을<span>숙소, 1차, 2차, 해장까지 걸어서 다니는 코스.</span></li>
-    <li>무엇이 다른가<span>가는 날 문을 여는지, 걸어갈 수 있는지 확인해서 보여 준다.</span></li>
+    <li>핵심 1 · 최적 경로와 일정<span>조건을 넣으면 AI가 순서, 시간, 이동을 짠다.</span></li>
+    <li>핵심 2 · 항목별 대안<span>일정의 항목마다 AI가 바꿀 곳을 추천한다. 누르면 바뀐다.</span></li>
+    <li>기본 · 확인<span>가는 날 여는지, 갈 수 있는 거리인지. 자랑이 아니라 당연히 되어야 하는 것이다.</span></li>
   </ul>
   <nav class="toc" aria-label="차례">
-    <a href="#what">1 어떤 앱인가</a><a href="#why">2 왜 만드는가</a><a href="#target">3 누가 쓰는가</a><a href="#diff">4 무엇이 다른가</a><a href="#features">5 주요 기능</a><a href="#screens">6 화면 구성</a><a href="#structure">7 서비스 구조</a><a href="#money">8 수익 모델</a><a href="#roadmap">9 개발 단계</a><a href="#kpi">10 성공 지표</a><a href="#risk">11 위험</a><a href="#open">12 남은 결정</a>
+    <a href="#what">1 어떤 앱인가</a><a href="#why">2 왜 만드는가</a><a href="#target">3 누가 쓰는가</a><a href="#diff">4 무엇이 다른가</a><a href="#legacy">5 기존 앱에서 가져올 것</a><a href="#features">6 주요 기능</a><a href="#screens">7 화면 구성</a><a href="#structure">8 서비스 구조</a><a href="#money">9 수익 모델</a><a href="#roadmap">10 개발 단계</a><a href="#kpi">11 성공 지표</a><a href="#risk">12 위험</a><a href="#open">13 남은 결정</a>
   </nav>
   <p class="muted"><span class="who" style="margin-left:0">결정</span> 은 대화에서 정한 것이다. <span class="who">제안</span> 은 작성자가 정했고 바꿀 수 있다. <span class="who">미정</span> 은 답이 필요하다.</p>
 </header>
 
 <section>
   <span class="eyebrow" id="what">1 · 어떤 앱인가</span>
-  <h2>취향을 한 번 적으면, 여행마다 코스를 짜고 확인해 준다</h2>
-  <p class="quote">"금요일 퇴근하고 전주에 간다. 숙소에서 걸어서 15분 안. 1차는 막걸리, 2차는 조용한 바, 다음 날은 해장국."<br>이 한 줄을 넣으면 시간표가 나온다. 가게마다 그날 여는지 확인한 결과가 붙는다.</p>
+  <h2>조건을 넣으면 AI가 경로와 일정을 짜고, 항목마다 대안을 준다</h2>
+  <p class="quote">"금요일 퇴근하고 전주에 간다. 숙소에서 걸어서 15분 안. 1차는 막걸리, 2차는 조용한 바, 다음 날은 해장국."<br>이 한 줄을 넣으면 시간표가 나온다. 순서는 이동이 가장 적게 잡힌다. 가게마다 바꿀 곳이 두세 개 붙는다.</p>
   <div class="panel">
     <h3>정해진 것<span class="who">결정</span></h3>
     <div class="cols">
@@ -197,42 +208,122 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
     <div class="list" id="list"></div>
   </div>
   <p class="muted">확인한 일정은 해외 여행이다. 2026년 11월에 웹 검색으로 확인했다. 국내 일정으로도 같은 확인을 다시 한다.</p>
-  <p><strong>목적은 하나다.</strong> 헛걸음하지 않는 코스를 몇 분 안에 얻게 한다.</p>
+  <p><strong>목적은 하나다.</strong> 일정 짜는 일을 AI에게 맡기고, 사람은 고르기만 한다. 맘에 안 들면 대안을 누른다.</p>
 </section>
 
 <section>
-  <span class="eyebrow" id="target">3 · 누가 쓰는가<span class="who">제안</span></span>
-  <h2>술과 음식이 여행의 중심인 사람</h2>
+  <span class="eyebrow" id="target">3 · 누가 쓰는가<span class="who">미정</span></span>
+  <h2>일정을 직접 짜는 자유여행자</h2>
   <div class="tabs" id="tgTabs" role="tablist"></div>
   <div class="panel"><div class="cols" id="tgBody"></div></div>
-  <p class="muted">타겟은 설계안의 조건(주종, 1차·2차·해장, 걷는 시간, 웨이팅)에서 뽑았다. 시장 규모는 조사하지 않았다.</p>
+  <p class="muted">타겟은 아직 정하지 않았다. 아래는 작성자의 가정이다. 시장 규모도 조사하지 않았다. 술과 음식 중심으로 좁힐지는 13장에서 정한다.</p>
 </section>
 
 <section>
   <span class="eyebrow" id="diff">4 · 무엇이 다른가</span>
-  <h2>확인한 것과 확인 못 한 것을 나눠서 보여 준다</h2>
+  <h2>순서에 근거가 있고, 항목마다 대안이 있다</h2>
   <div class="tblwrap"><table>
     <thead><tr><th></th><th>직접 검색</th><th>AI 챗봇</th><th>일정 앱</th><th>이 앱</th></tr></thead>
     <tbody>
-      <tr><td>코스를 대신 짜 준다</td><td class="c">×</td><td class="c">○</td><td class="c">△</td><td class="c me">○</td></tr>
+      <tr><td>일정을 대신 짜 준다</td><td class="c">×</td><td class="c">○</td><td class="c">△</td><td class="c me">○</td></tr>
+      <tr><td><strong>이동 시간을 계산해 순서를 정한다</strong></td><td class="c">직접</td><td class="c">×</td><td class="c">△</td><td class="c me">○</td></tr>
       <tr><td>내 취향을 기억한다</td><td class="c">×</td><td class="c">△</td><td class="c">△</td><td class="c me">○</td></tr>
       <tr><td>가는 날 기준으로 확인한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
       <tr><td>근거와 확인 시각을 보여 준다</td><td class="c">×</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
-      <tr><td>문제가 있으면 대안을 준다</td><td class="c">×</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
-      <tr><td>술과 2차까지 조건으로 건다</td><td class="c">직접</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td><strong>항목마다 대안을 주고 바로 바꾼다</strong></td><td class="c">×</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td>바꾸면 이동과 경비를 다시 계산한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td>숙소와 경비가 일정과 같이 움직인다</td><td class="c">×</td><td class="c">×</td><td class="c">△</td><td class="c me">○</td></tr>
     </tbody>
   </table></div>
   <p class="muted">○ 된다, △ 일부 된다, × 안 된다. 다른 서비스의 칸은 제품별 조사 전의 일반적인 구분이다. 경쟁 앱 조사는 따로 해야 한다.</p>
 </section>
 
 <section>
-  <span class="eyebrow" id="features">5 · 주요 기능</span>
-  <h2>여섯 가지를 만든다</h2>
+  <span class="eyebrow" id="legacy">5 · 기존 앱에서 가져올 것</span>
+  <h2>보기는 좋다. 그러나 읽기만 할 수 있다</h2>
+  <p>지금 저장소에 올라간 앱은 Gemini가 만든 허니문 일정 페이지다. 화면은 잘 짜여 있다. 핵심 기능 둘은 없다.</p>
+  <div class="panel">
+    <div class="cols">
+      <div><h3>장점</h3>
+        <ul class="plain">
+          <li>탭이 셋뿐이다. 일정, 숙소, 경비.</li>
+          <li>날짜별 카드를 누르면 펼쳐진다. 13일도 길지 않다.</li>
+          <li>시간, 활동, 메모, 이동이 항목마다 같은 순서다.</li>
+          <li>항목마다 지도 핀이 있다.</li>
+          <li>날마다 예비 장소가 있다.</li>
+          <li>숙소마다 추천 이유와 가격대가 있다.</li>
+          <li>경비를 항목별로 나눠 보여 준다.</li>
+        </ul>
+      </div>
+      <div><h3>단점</h3>
+        <ul class="plain">
+          <li>조건을 넣는 곳이 없다. 다른 여행에는 못 쓴다.</li>
+          <li>왜 이 순서인지 근거가 없다. 이동 시간은 AI가 쓴 글이다.</li>
+          <li>날짜와 안 맞는 항목이 있다. 확인한 19개 중 7개다.</li>
+          <li>예비 장소가 어느 항목의 대안인지 모른다. 바꿀 수도 없다.</li>
+          <li>지도에 동선을 그리지 않는다.</li>
+          <li>일정과 숙소 탭이 다른 말을 한다. 경비 표기도 엇갈린다.</li>
+          <li>저장, 로그인, 공유가 없다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>가져올 것</th><th>바꿀 점</th></tr></thead>
+    <tbody>
+      <tr><td>탭 셋: 일정, 숙소, 경비</td><td>셋이 같은 데이터에서 나온다. 서로 다른 말을 하지 않는다.</td></tr>
+      <tr><td>날짜별 카드와 시간표</td><td>이동 시간을 계산한 값으로 바꾼다. 순서의 이유를 보여 준다.</td></tr>
+      <tr><td>항목별 지도 핀</td><td>앱 안 지도에 하루 동선을 그린다.</td></tr>
+      <tr><td>예비 장소</td><td>날짜 단위에서 항목 단위로 바꾼다. 누르면 교체된다.</td></tr>
+      <tr><td>숙소 추천 이유와 가격대</td><td>예약 페이지로 연결한다. 숙소를 바꾸면 동선을 다시 짠다.</td></tr>
+      <tr><td>경비 분해</td><td>일정을 바꾸면 다시 계산한다.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">코드를 가져오는 것이 아니다. 화면의 좋은 점만 가져온다. 기존 페이지는 고치지 않는다.</p>
+</section>
+
+<section>
+  <span class="eyebrow" id="features">6 · 주요 기능</span>
+  <h2>핵심은 둘이다. 나머지는 그것을 받친다</h2>
+  <div class="panel">
+    <div class="cols">
+      <div><h3>핵심 1 · 최적 경로와 일정</h3>
+        <p>AI가 갈 곳을 고르고 순서를 정한다. "최적"의 기준은 다섯 가지다.</p>
+        <ol class="plain">
+          <li>이동이 적다. 같은 동네를 묶는다.</li>
+          <li>여는 시간에 맞는다.</li>
+          <li>내 한도를 넘지 않는다. 걷는 시간, 웨이팅.</li>
+          <li>예산 안에 든다.</li>
+          <li>하루의 흐름이 자연스럽다. 밥 때에 밥을 먹는다.</li>
+        </ol>
+      </div>
+      <div><h3>핵심 2 · 항목별 대안</h3>
+        <p>일정의 항목마다 AI가 바꿀 곳을 두세 개 붙인다.</p>
+        <ul class="plain">
+          <li>대안마다 이유를 적는다. 더 가깝다, 더 싸다, 더 조용하다.</li>
+          <li>바꾸면 무엇이 달라지는지 미리 보여 준다. 이동 몇 분, 비용 얼마.</li>
+          <li>누르면 바뀐다. 앞뒤 이동과 경비를 다시 계산한다.</li>
+          <li>경로에도 대안이 있다. 걸어서, 택시로, 버스로.</li>
+          <li>문제가 생긴 항목은 먼저 알리고 대안을 내민다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <h3>대안을 눌러 보라</h3>
+  <div class="panel">
+    <div class="result">
+      <div><b id="dmWalk"></b><span>걷는 시간 합계</span></div>
+      <div><b id="dmCost"></b><span>1인 예상 비용</span></div>
+    </div>
+    <div class="dm" id="dm"></div>
+    <p class="muted">예시다. 가게, 시간, 금액은 지어낸 것이다.</p>
+  </div>
+  <h3>받치는 기능</h3>
   <div class="feat">
     <div><h3>취향 프로필<span class="who">초대 단계</span></h3><p>걷는 시간, 웨이팅, 주종, 분위기, 자차 여부. 한 번 적으면 모든 여행의 기본값이 된다.</p></div>
-    <div><h3>코스 만들기<span class="who">초대 단계</span></h3><p>지역, 날짜, 동행, 예산을 넣는다. 숙소를 중심으로 1차, 2차, 해장, 카페, 놀거리를 시간표로 짠다.</p></div>
+    <div><h3>숙소 추천<span class="who">초대 단계</span></h3><p>숙소가 동선의 중심이다. 추천 이유와 가격대를 보여 준다. 숙소를 바꾸면 일정을 다시 짠다.</p></div>
+    <div><h3>예상 경비<span class="who">초대 단계</span></h3><p>숙박, 식비, 이동, 놀거리로 나눠 보여 준다. 일정을 바꾸면 다시 계산한다.</p></div>
     <div><h3>확인<span class="who">초대 단계</span></h3><p>가는 날 여는지, 걸어갈 수 있는지, 그 지역에 행사가 있는지 확인한다. 결과와 근거를 카드에 붙인다.</p></div>
-    <div><h3>대안 교체<span class="who">초대 단계</span></h3><p>문제가 있는 카드에 대안을 준다. 바꾸면 앞뒤 이동을 다시 확인한다.</p></div>
     <div><h3>지도 동선<span class="who">초대 단계</span></h3><p>하루 동선을 지도에 그린다. 걷는 한도를 넘는 구간을 표시한다.</p></div>
     <div><h3>공유<span class="who">공개 단계</span></h3><p>동행자에게 링크로 보낸다. 나중에는 여러 사람의 취향을 합쳐 코스를 짠다.</p></div>
   </div>
@@ -246,8 +337,8 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
 </section>
 
 <section>
-  <span class="eyebrow" id="screens">6 · 화면 구성<span class="who">제안</span></span>
-  <h2>여섯 화면이면 코스 하나가 끝난다</h2>
+  <span class="eyebrow" id="screens">7 · 화면 구성<span class="who">제안</span></span>
+  <h2>일정, 숙소, 경비. 탭 셋이 중심이다</h2>
   <p>화면을 눌러 보라. 오른쪽에 그 화면이 나온다.</p>
   <div class="screens">
     <div class="snav" id="snav" role="tablist"></div>
@@ -258,29 +349,36 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
   <pre class="tree">내 여행 (첫 화면)
 ├ 내 취향
 ├ 새 여행 ─ 이번 여행 조건 ─ 만들고 확인하기
-└ 일정 (날짜별 코스)
-   ├ 확인 근거
-   ├ 장소 교체
-   ├ 지도 보기
+└ 여행 하나
+   ├ 일정 탭 (날짜별 시간표)
+   │  ├ 항목별 대안 ─ 교체
+   │  ├ 확인 근거
+   │  └ 지도 보기 (하루 동선)
+   ├ 숙소 탭
+   ├ 경비 탭
    └ 공유</pre>
   <h3>화면 규칙</h3>
   <ul class="plain">
     <li>확인 상태는 다섯 가지다. 확인됨, 정정, 문제, 일부 확인, 확인 전.</li>
     <li>상태를 색만으로 나누지 않는다. 글자를 같이 쓴다.</li>
-    <li>문제 카드에는 해결책 둘을 같이 둔다. 장소를 바꾸거나, 다른 시간으로 옮긴다.</li>
+    <li>모든 카드에 대안 버튼이 있다. 문제가 있는 카드는 대안을 먼저 펼쳐 보인다.</li>
+    <li>대안에는 바꾸면 달라지는 값을 같이 적는다. 이동 몇 분, 비용 얼마.</li>
+    <li>일정, 숙소, 경비 탭은 같은 데이터를 본다. 하나를 바꾸면 셋이 다 바뀐다.</li>
     <li>한 화면에서 하나만 묻는다. 버튼은 엄지가 닿는 아래쪽에 둔다.</li>
     <li>공유할 때 예산과 취향은 숨긴 채로 시작한다.</li>
   </ul>
 </section>
 
 <section>
-  <span class="eyebrow" id="structure">7 · 서비스 구조</span>
-  <h2>AI가 초안을 쓰고, 다른 단계가 사실을 확인한다</h2>
+  <span class="eyebrow" id="structure">8 · 서비스 구조</span>
+  <h2>AI가 고르고 짠다. 계산과 확인이 그것을 받친다</h2>
+  <p>AI는 갈 곳과 순서를 정한다. 이동 시간은 AI가 쓰지 않는다. 지도 API로 계산한다. 그래야 "최적"이라고 말할 수 있다.</p>
   <div class="flow" role="img" aria-label="조건 합치기, 초안 쓰기, 확인, 문제 항목 교체, 일정 표시 순서">
     <span>조건 합치기<small>취향 + 이번 여행</small></span><i>→</i>
-    <span>초안 쓰기<small>AI</small></span><i>→</i>
+    <span>후보 고르기<small>AI</small></span><i>→</i>
+    <span>경로와 일정 짜기<small>AI + 이동 시간 계산</small></span><i>→</i>
     <span>확인<small>지도 API, 웹 검색</small></span><i>→</i>
-    <span>교체<small>문제 항목에 대안</small></span><i>→</i>
+    <span>대안 붙이기<small>항목마다 두세 개</small></span><i>→</i>
     <span>일정 화면</span>
   </div>
   <div class="tblwrap"><table>
@@ -297,7 +395,7 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
 </section>
 
 <section>
-  <span class="eyebrow" id="money">8 · 수익 모델<span class="who">제안</span></span>
+  <span class="eyebrow" id="money">9 · 수익 모델<span class="who">제안</span></span>
   <h2>처음에는 무료다. 공개할 때 구독과 제휴로 번다</h2>
   <div class="tblwrap"><table>
     <thead><tr><th>수익원</th><th>내용</th><th>언제</th></tr></thead>
@@ -332,20 +430,22 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
 </section>
 
 <section>
-  <span class="eyebrow" id="roadmap">9 · 개발 단계</span>
+  <span class="eyebrow" id="roadmap">10 · 개발 단계</span>
   <h2>재고, 비교하고, 초대하고, 연다</h2>
   <div class="steps" id="steps" role="tablist"></div>
   <div class="panel" id="stepBody"></div>
 </section>
 
 <section>
-  <span class="eyebrow" id="kpi">10 · 성공 지표<span class="who">제안</span></span>
+  <span class="eyebrow" id="kpi">11 · 성공 지표<span class="who">제안</span></span>
   <h2>만든 코스대로 실제로 다녀왔는가</h2>
   <div class="tblwrap"><table>
     <thead><tr><th>단계</th><th>보는 것</th><th>왜</th></tr></thead>
     <tbody>
       <tr><td>초대</td><td>만든 코스 가운데 실제로 다녀온 비율</td><td>코스가 쓸 만한지 알려 준다.</td></tr>
-      <tr><td>초대</td><td>"확인됨"이 현장에서 틀린 횟수</td><td>확인의 신뢰가 이 앱의 전부다.</td></tr>
+      <tr><td>초대</td><td>AI가 짠 일정을 고치지 않고 쓴 비율</td><td>경로와 일정이 정말 좋은지 알려 준다.</td></tr>
+      <tr><td>초대</td><td>대안을 열어 본 비율, 대안으로 바꾼 비율</td><td>대안 추천이 쓸모 있는지 알려 준다.</td></tr>
+      <tr><td>초대</td><td>"확인됨"이 현장에서 틀린 횟수</td><td>확인은 기본이다. 틀리면 나머지도 믿지 않는다.</td></tr>
       <tr><td>초대</td><td>코스 한 건의 비용과 걸리는 시간</td><td>가격과 무료 한도를 정하는 근거다.</td></tr>
       <tr><td>공개</td><td>두 번째 여행을 만든 사람의 비율</td><td>한 번 쓰고 마는 앱인지 알려 준다.</td></tr>
       <tr><td>공개</td><td>구독하는 비율, 제휴 링크를 누른 비율</td><td>수익 모델이 서는지 알려 준다.</td></tr>
@@ -355,11 +455,13 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
 </section>
 
 <section>
-  <span class="eyebrow" id="risk">11 · 위험과 대응</span>
-  <h2>가장 큰 위험은 틀린 확인이다</h2>
+  <span class="eyebrow" id="risk">12 · 위험과 대응</span>
+  <h2>AI가 짠 경로를 그대로 믿지 않는다</h2>
   <div class="tblwrap"><table>
     <thead><tr><th>위험</th><th>대응</th></tr></thead>
     <tbody>
+      <tr><td>AI가 짠 순서가 최적이 아니다.</td><td>이동 시간은 지도 API로 계산한다. 순서를 바꿔 가며 비교한 뒤 가장 짧은 것을 고른다. 왜 이 순서인지 보여 준다.</td></tr>
+      <tr><td>대안이 비슷비슷하거나 엉뚱하다.</td><td>대안마다 무엇이 다른지 적게 한다. 사용자가 고른 대안을 다음 추천에 반영한다.</td></tr>
       <tr><td>확인했다고 했는데 틀린다.</td><td>근거와 확인 시각을 보여 준다. 출처가 엇갈리면 "일부 확인"으로 낮춘다. 사용자가 틀렸다고 알릴 수 있게 한다.</td></tr>
       <tr><td>코스 한 건의 비용이 구독료보다 크다.</td><td>날짜에 걸리는 항목부터 확인한다. 같은 가게와 날짜의 확인은 다시 쓴다. 무료 한도를 둔다.</td></tr>
       <tr><td>지도 API가 받은 데이터를 저장하지 못하게 한다.</td><td>받은 값은 기한을 두고 쓴다. 오래 둘 값은 직접 확인해서 쌓는다.</td></tr>
@@ -371,12 +473,12 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
 </section>
 
 <section>
-  <span class="eyebrow" id="open">12 · 남은 결정<span class="who">미정</span></span>
+  <span class="eyebrow" id="open">13 · 남은 결정<span class="who">미정</span></span>
   <h2>다섯 가지를 정해야 한다</h2>
   <ol class="ask">
     <li><div><strong>앱 이름.</strong>지금은 "여행 일정 도우미"라고 부른다. 이름이 없다.</div></li>
     <li><div><strong>어느 도시부터 하는가.</strong>웨이팅과 주종 같은 값은 도시마다 따로 쌓아야 한다. 첫 도시 하나를 정해야 한다.</div></li>
-    <li><div><strong>타겟이 맞는가.</strong>술과 음식 중심의 1박 2일 여행자로 잡았다. 다르면 기능과 화면이 바뀐다.</div></li>
+    <li><div><strong>타겟을 어디까지 좁히는가.</strong>지금은 일정을 직접 짜는 국내 여행자로 넓게 잡았다. 술과 음식 중심으로 좁히는 길도 있다. 좁히면 추천이 정확해지고, 넓히면 쓸 사람이 늘어난다.</div></li>
     <li><div><strong>수익 모델의 순서.</strong>구독을 먼저 하고 제휴를 붙이는 순서로 잡았다. 무료로 두고 제휴만 하는 길도 있다.</div></li>
     <li><div><strong>웨이팅과 주종은 어디서 얻는가.</strong>직접 모으거나, 리뷰에서 AI로 뽑거나, 사용자에게 받는다.</div></li>
   </ol>
@@ -408,7 +510,7 @@ function renderVerify(){
 
 /* 3장: 타겟 */
 const TG = [
-  {n:'핵심 · 둘이 가는 직장인', who:'20대 후반에서 30대. 연인이나 친구와 금요일 밤이나 주말에 1박 2일로 간다.', pain:'가게는 많은데 고를 시간이 없다. 블로그를 믿고 갔다가 문이 닫혀 있다.', gain:'취향에 맞는 1차, 2차, 해장을 걸어서 다니는 코스로 받는다. 가는 날 여는지 미리 안다.'},
+  {n:'핵심 · 주말 국내 여행자', who:'친구, 연인, 가족과 1박 2일로 간다. 패키지를 쓰지 않고 일정을 직접 짠다.', pain:'갈 곳을 고르고 순서를 정하는 데 몇 시간이 든다. 한 곳이 틀어지면 다시 짜야 한다.', gain:'AI가 짠 일정을 받는다. 맘에 안 드는 항목은 대안을 눌러 바꾼다.'},
   {n:'다음 · 모임 총무', who:'친구 네댓 명의 여행을 맡은 사람. 숙소와 식당을 혼자 정한다.', pain:'취향이 제각각이다. 일정이 틀어지면 책임이 돌아온다.', gain:'동행자의 취향을 합쳐 코스를 짠다. 링크 하나로 일정을 돌린다.'},
   {n:'나중 · 해외 자유여행자', who:'해외에서 일주일 넘게 다니는 사람. 지금은 대상이 아니다.', pain:'현지 휴무일, 축제, 임시 폐쇄를 알기 어렵다.', gain:'날짜 기준의 확인을 해외 일정에도 쓴다. 휴대폰 앱 단계에서 연다.'}
 ];
@@ -421,9 +523,11 @@ const SC = [
   {n:'내 여행', d:'앱을 열면 처음 본다. 여행마다 문제가 몇 건인지 보인다.', b:[['h','내 여행'],['card','','전주 1박 2일','unverified','확인 전 2','12/12 ~ 12/13 · 친구 3명'],['card','','강릉 당일','verified','다녀옴','11/08 · 연인'],['btn','새 여행 만들기']]},
   {n:'내 취향', d:'처음 한 번만 적는다. 모든 여행의 기본값이 된다.', b:[['h','어떤 여행을 좋아하나요?'],['row','한 번에 걷는 시간','15분까지'],['row','기다릴 수 있는 웨이팅','20분까지'],['sub','즐겨 마시는 술'],['chips',['소주·청하','위스키','전통주','와인'],[0,1]],['sub','좋아하는 분위기'],['chips',['조용한 바','이자카야','포장마차','루프톱'],[0,1]],['btn','저장']]},
   {n:'새 여행', d:'어디로, 언제, 누구와. 그리고 이번에만 다른 조건을 고친다.', b:[['h','어디로, 언제, 누구와?'],['row','어디로','전주'],['row','언제','12/12 (금) ~ 12/13 (토)'],['row','누구와','친구 3명'],['row','예산','1인 15만 원'],['sub','이번 여행만 다른 것'],['row','웨이팅','40분까지',1],['row','술','전통주',1],['btn','코스 만들기']]},
-  {n:'일정', d:'핵심 화면이다. 카드마다 확인 결과가 붙는다. 문제 카드에는 이유가 보인다.', b:[['h','1일차 · 12/12 (금)'],['card','15:00','숙소 체크인','verified','확인됨'],['leg','도보 6분'],['card','18:00','1차 · 막걸리 [가게 이름]','verified','확인됨'],['leg','도보 8분'],['card','20:30','2차 · 조용한 바 [가게 이름]','problem','문제','이 날은 쉰다. 대안 2곳 보기'],['leg','도보 9분 · 숙소'],['card','다음 날 10:00','해장 · 콩나물국밥 [가게 이름]','unverified','확인 전']]},
+  {n:'일정', d:'핵심 화면이다. 카드마다 확인 결과가 붙는다. 문제 카드에는 이유가 보인다.', b:[['h','1일차 · 12/12 (금)'],['chips',['일정','숙소','경비'],[0]],['card','15:00','숙소 체크인','verified','확인됨'],['leg','도보 6분'],['card','18:00','1차 · 막걸리 [가게 이름]','verified','확인됨','대안 2곳'],['leg','도보 8분'],['card','20:30','2차 · 조용한 바 [가게 이름]','problem','문제','이 날은 쉰다. 대안 2곳 보기'],['leg','도보 9분 · 숙소'],['card','다음 날 10:00','해장 · 콩나물국밥 [가게 이름]','unverified','확인 전']]},
   {n:'확인 근거', d:'카드를 누르면 연다. 무엇을 확인했고 무엇을 못 했는지 나눠 보여 준다.', b:[['h','2차 · 조용한 바'],['alert','이 날은 갈 수 없다. 금요일은 쉰다.'],['card','','지금 영업하는 가게','verified','확인'],['card','','금요일 휴무','problem','문제','출처 2곳이 같은 말을 한다'],['card','','숙소에서 도보 9분','verified','확인'],['card','','웨이팅','unverified','확인 전'],['sub','출처 2곳 · 오늘 확인'],['btn','대안 2곳 보기']]},
-  {n:'장소 교체', d:'문제 카드에서 연다. 대안을 고르면 앞뒤 이동을 다시 확인한다.', b:[['h','무엇으로 바꿀까요?'],['chips',['조용한 바','숙소에서 15분','금요일 영업'],[0,1,2]],['card','','[대안 1]','verified','확인됨','도보 7분 · 위스키 · 웨이팅 없음'],['card','','[대안 2]','partial','일부 확인','도보 12분 · 웨이팅은 모른다'],['sub','바꾸면 앞뒤 이동을 다시 확인한다'],['btn','[대안 1]로 바꾸기']]}
+  {n:'항목별 대안', d:'어느 카드에서나 연다. 대안마다 이유와 달라지는 값이 보인다.', b:[['h','무엇으로 바꿀까요?'],['chips',['조용한 바','숙소에서 15분','금요일 영업'],[0,1,2]],['card','','[대안 1]','verified','확인됨','더 가깝다 · 걷기 −1분 · 비용 +1만 원'],['card','','[대안 2]','partial','일부 확인','늦게까지 연다 · 걷기 +4분 · 웨이팅은 모른다'],['sub','바꾸면 앞뒤 이동과 경비를 다시 계산한다'],['btn','[대안 1]로 바꾸기']]},
+  {n:'숙소', d:'숙소 탭이다. 추천 이유와 가격대가 보인다. 숙소를 바꾸면 일정을 다시 짠다.', b:[['h','숙소 추천'],['chips',['일정','숙소','경비'],[1]],['sub','1차와 2차까지 걸어서 10분 안쪽인 곳'],['card','','[숙소 1] · 한옥','verified','선택됨','동선의 가운데 · 1박 [가격대]'],['card','','[숙소 2] · 호텔','unverified','대안','주차가 된다 · 걷기 +6분'],['card','','[숙소 3] · 게스트하우스','unverified','대안','가장 싸다 · 걷기 +11분'],['btn','예약 페이지 열기']]},
+  {n:'경비', d:'경비 탭이다. 항목별로 나눠 보여 준다. 일정을 바꾸면 다시 계산한다.', b:[['h','예상 경비'],['chips',['일정','숙소','경비'],[2]],['row','숙박','[금액]'],['row','식비와 술','[금액]'],['row','이동','[금액]'],['row','놀거리','[금액]'],['row','1인 합계','[금액]',1],['sub','예산 15만 원 안에 든다'],['sub','장소를 바꾸면 다시 계산한다']]}
 ];
 let sc = 3;
 function renderScreens(){ const nav = $('snav'); nav.replaceChildren();
@@ -435,7 +539,7 @@ function renderScreens(){ const nav = $('snav'); nav.replaceChildren();
     else if (k[0] === 'alert') e = el('div', {class:'ph-alert', text:k[1]});
     else if (k[0] === 'leg') e = el('div', {class:'ph-leg', text:k[1]});
     else if (k[0] === 'btn') e = el('div', {class:'ph-btn', text:k[1]});
-    else if (k[0] === 'row') e = el('div', {class:'ph-row' + (k[3] ? ' chg' : '')}, el('span', {text:k[1] + (k[3] ? ' · 이번만' : '')}), el('span', {text:k[2]}));
+    else if (k[0] === 'row') e = el('div', {class:'ph-row' + (k[3] ? ' chg' : '')}, el('span', {text:k[1] + (k[3] && sc === 2 ? ' · 이번만' : '')}), el('span', {text:k[2]}));
     else if (k[0] === 'chips') e = el('div', {class:'ph-chips'}, ...k[1].map((c,i) => el('span', {class: k[2].includes(i) ? 'on' : '', text:c})));
     else if (k[0] === 'card') { const top = el('div', {class:'ph-top'}); if (k[1]) top.append(el('time', {text:k[1]})); top.append(el('b', {text:k[2]}), el('span', {class:'tag t-'+k[3], text:k[4]})); e = el('div', {class:'ph-card' + (k[3] === 'problem' && k[1] ? ' bad' : '')}, top); if (k[5]) e.append(el('div', {class:'ph-sub', text:k[5]})); }
     ph.append(e); }); }
@@ -464,5 +568,19 @@ let st = 1;
 function renderSteps(){ const b = $('steps'); b.replaceChildren(); STEPS.forEach((s,i) => { const x = el('button', {class:'step' + (s.done ? ' done' : ''), role:'tab', 'aria-selected': String(i === st)}, el('b', {text:s.n}), el('span', {text:s.t})); x.onclick = () => { st = i; renderSteps(); }; b.append(x); });
   const s = STEPS[st]; $('stepBody').replaceChildren(el('div', {class:'cols'}, ...[['하는 일', s.what], ['끝났다고 보는 기준', s.end], ['필요한 것', s.need]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p}))))); }
 
-renderVerify(); renderTg(); renderScreens(); renderMoney(); renderSteps();
+/* 6장: 대안 교체 예시 */
+const DM = [
+  {t:'18:00 · 1차', cur:{n:'[막걸리집 A]', walk:6, cost:25000, why:'처음 추천'}, alts:[{n:'[막걸리집 B]', walk:4, cost:30000, why:'더 가깝다. 웨이팅이 짧다.'},{n:'[한정식 C]', walk:11, cost:35000, why:'조용하다. 예약이 된다.'}]},
+  {t:'20:30 · 2차', cur:{n:'[조용한 바 D]', walk:8, cost:30000, why:'처음 추천'}, alts:[{n:'[위스키 바 E]', walk:7, cost:40000, why:'위스키가 많다.'},{n:'[이자카야 F]', walk:12, cost:25000, why:'늦게까지 연다. 더 싸다.'}]},
+  {t:'다음 날 10:00 · 해장', cur:{n:'[콩나물국밥 G]', walk:9, cost:9000, why:'처음 추천'}, alts:[{n:'[해장국 H]', walk:5, cost:10000, why:'숙소에서 가장 가깝다.'}]}
+];
+let dmOpen = 1;
+function renderDemo(){ const box = $('dm'); box.replaceChildren();
+  $('dmWalk').textContent = DM.reduce((a,x) => a + x.cur.walk, 0) + '분'; $('dmCost').textContent = won(DM.reduce((a,x) => a + x.cur.cost, 0));
+  DM.forEach((x,i) => { const btn = el('button', {class:'tab', 'aria-expanded': String(dmOpen === i), text:`대안 ${x.alts.length}곳`}); btn.onclick = () => { dmOpen = dmOpen === i ? -1 : i; renderDemo(); };
+    box.append(el('div', {class:'dm-row'}, el('time', {text:x.t}), el('b', {}, x.cur.n, el('small', {text:`걷기 ${x.cur.walk}분 · ${won(x.cur.cost)}`})), btn));
+    if (dmOpen === i) { const alts = el('div', {class:'dm-alts'}); x.alts.forEach((a,j) => { const dw = a.walk - x.cur.walk, dc = a.cost - x.cur.cost; const sw = el('button', {class:'tab', text:'바꾸기'}); sw.onclick = () => { x.alts[j] = x.cur; x.cur = a; renderDemo(); };
+      alts.append(el('div', {class:'dm-alt'}, el('span', {}, el('b', {text:a.n + ' '}), a.why), el('small', {class:'delta', text:`걷기 ${dw > 0 ? '+' : ''}${dw}분 · 비용 ${dc > 0 ? '+' : ''}${dc.toLocaleString('ko-KR')}원`}), sw)); }); box.append(alts); } }); }
+
+renderVerify(); renderTg(); renderScreens(); renderMoney(); renderSteps(); renderDemo();
 </script>
