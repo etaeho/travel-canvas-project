@@ -1,0 +1,351 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>여행 일정 도우미 기획 보고서</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 배치: 한 단 보고서. 주장 한 줄 → 그 주장을 뒷받침하는 조작 가능한 자료 하나. 시간표처럼 왼쪽에 번호 대신 상태 표시를 둔다. */
+:root{
+  --bg:#f5f7f9; --surface:#ffffff; --sunk:#e9eef2; --line:#d3dbe2;
+  --fg:#16222c; --muted:#566673; --accent:#0d5c75; --accent-soft:#d9ecf2; --on-accent:#ffffff;
+  --problem:#b3261e; --corrected:#9a5b00; --verified:#1c6b3c; --partial:#2f5aa8; --unverified:#7b8792;
+  --problem-bg:#fbe6e4; --corrected-bg:#fbefd6; --verified-bg:#dcf1e3; --partial-bg:#e0e9f8; --unverified-bg:#e7ebee;
+  --display:"IBM Plex Sans KR","Noto Sans KR",system-ui,sans-serif;
+  --body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f161b; --surface:#172028; --sunk:#1f2a33; --line:#30404c;
+  --fg:#e6edf2; --muted:#9aabb8; --accent:#6cc4dc; --accent-soft:#17343f; --on-accent:#08222b;
+  --problem:#ff8a80; --corrected:#f0b452; --verified:#6fd195; --partial:#8fb4f5; --unverified:#93a1ad;
+  --problem-bg:#3b1a18; --corrected-bg:#3a2a0c; --verified-bg:#143222; --partial-bg:#18294a; --unverified-bg:#26323b;
+  color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f161b; --surface:#172028; --sunk:#1f2a33; --line:#30404c;
+  --fg:#e6edf2; --muted:#9aabb8; --accent:#6cc4dc; --accent-soft:#17343f; --on-accent:#08222b;
+  --problem:#ff8a80; --corrected:#f0b452; --verified:#6fd195; --partial:#8fb4f5; --unverified:#93a1ad;
+  --problem-bg:#3b1a18; --corrected-bg:#3a2a0c; --verified-bg:#143222; --partial-bg:#18294a; --unverified-bg:#26323b;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 72px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(1.7rem,5vw,2.4rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.35rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
+p{margin:0;max-width:38em}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.04em}
+.lead{font-size:1.15rem;font-weight:500}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+.muted{color:var(--muted);font-size:.9rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.three li{border-top:3px solid var(--accent);padding-top:10px;font-weight:500}
+.three span{display:block;font-weight:400;color:var(--muted);font-size:.9rem;margin-top:4px}
+
+button,select,input{font:inherit;color:inherit}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.88rem;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.chip b{font-family:var(--mono);font-weight:500}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.s-problem{background:var(--problem)} .s-corrected{background:var(--corrected)} .s-verified{background:var(--verified)} .s-partial{background:var(--partial)} .s-unverified{background:var(--unverified)}
+
+/* 상태 막대 */
+.bar{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar button{border:0;padding:0;cursor:pointer;color:var(--on-accent);font-family:var(--mono);font-size:.85rem;min-width:0;transition:flex-grow .5s ease}
+:root .bar button{color:#fff}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .bar button{color:#0f161b} }
+:root[data-theme="dark"] .bar button{color:#0f161b}
+/* 일차별 격자 */
+.days{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;align-items:end}
+.daycol{display:flex;flex-direction:column;gap:3px;align-items:stretch;border:0;background:none;padding:4px 2px;border-radius:6px;cursor:pointer}
+.daycol[aria-pressed="true"]{background:var(--accent-soft)}
+.daycol i{display:block;height:12px;border-radius:3px}
+.daycol span{font-family:var(--mono);font-size:.72rem;color:var(--muted);text-align:center;margin-top:3px}
+.list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.item{border-bottom:1px solid var(--line)}
+.item summary{display:grid;grid-template-columns:auto auto 1fr auto;gap:10px;align-items:center;padding:9px 2px;cursor:pointer;list-style:none}
+.item summary::-webkit-details-marker{display:none}
+.item .when{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.item .what{min-width:0;overflow-wrap:anywhere}
+.tag{font-size:.75rem;padding:2px 8px;border-radius:4px;white-space:nowrap;font-weight:500}
+.t-problem{background:var(--problem-bg);color:var(--problem)} .t-corrected{background:var(--corrected-bg);color:var(--corrected)}
+.t-verified{background:var(--verified-bg);color:var(--verified)} .t-partial{background:var(--partial-bg);color:var(--partial)} .t-unverified{background:var(--unverified-bg);color:var(--unverified)}
+.item .body{padding:0 2px 12px 2px;font-size:.92rem;display:flex;flex-direction:column;gap:6px}
+.item .src{display:flex;flex-wrap:wrap;gap:6px 12px;font-family:var(--mono);font-size:.78rem}
+.count{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+
+/* 탭 */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pc div{min-width:0}
+.pc h3{font-size:.8rem;color:var(--muted);font-family:var(--mono);font-weight:500;letter-spacing:.04em;margin-bottom:4px}
+
+/* 검증 범위 */
+.cov{display:flex;flex-direction:column;gap:8px}
+.covrow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 3.2em;gap:10px;align-items:center;font-size:.92rem}
+.track{height:10px;background:var(--sunk);border-radius:5px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:5px;transition:width .45s ease,background .3s}
+.covrow em{font-style:normal;font-size:.8rem;color:var(--muted);text-align:right}
+
+/* 병합 */
+.merge{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.field{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.field label{font-weight:500}
+.field .base{grid-column:1/-1;font-size:.8rem;color:var(--muted);font-family:var(--mono)}
+.field select,.field input[type=number]{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.field input[type=number]{width:5.5em}
+.field .edit{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+pre{margin:0;background:var(--sunk);border-radius:8px;padding:12px;font-family:var(--mono);font-size:.82rem;line-height:1.55;overflow-x:auto}
+.out h3{margin-bottom:6px}
+.out{display:flex;flex-direction:column;gap:12px;min-width:0}
+.from-o{color:var(--accent);font-weight:500}
+
+/* 표 */
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.76rem;color:var(--muted);font-weight:500;letter-spacing:.04em}
+td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 5px;border-radius:4px}
+.new{color:var(--accent);font-size:.75rem;font-weight:500;white-space:nowrap}
+
+/* 추정기 */
+.sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 22px}
+.sl label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem}
+.sl output{font-family:var(--mono)}
+.sl input[type=range]{width:100%;accent-color:var(--accent)}
+.result{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.result div{background:var(--sunk);border-radius:8px;padding:12px}
+.result b{display:block;font-family:var(--mono);font-size:1.5rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.2}
+.result span{font-size:.82rem;color:var(--muted)}
+
+/* 단계 */
+.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.step{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:center;min-width:0}
+.step b{font-family:var(--mono);font-weight:500}
+.step span{font-size:.78rem;color:var(--muted);text-align:center;overflow-wrap:anywhere}
+.step[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.step.done b::after{content:" ✓";color:var(--verified)}
+.ask{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;counter-reset:q}
+.ask li{display:grid;grid-template-columns:2em 1fr;gap:4px}
+.ask li::before{counter-increment:q;content:counter(q);font-family:var(--mono);color:var(--accent);font-weight:500}
+.ask strong{display:block}
+.ask div{min-width:0}
+@media (max-width:520px){ .item summary{grid-template-columns:auto 1fr auto} .item .when{grid-column:2/-1;grid-row:2} .item .what{grid-column:2} .covrow{grid-template-columns:1fr 3.2em} .covrow .track{grid-column:1/-1;grid-row:2} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:14px">
+  <span class="eyebrow">기획 보고서 · 2026-11-26</span>
+  <h1>일정은 AI가 짠다. 우리는 그 일정이 맞는지 확인한다.</h1>
+  <p class="lead">AI가 만든 일정을 검색으로 확인했다. 확인한 19개 가운데 7개는 그대로 따르면 실패한다.</p>
+  <ul class="three">
+    <li>만들 것<span>취향과 조건을 넣으면 일정을 짜고, 항목마다 맞는지 확인해 주는 앱.</span></li>
+    <li>다른 점<span>확인한 것과 확인 못 한 것을 구분해서 보여 준다.</span></li>
+    <li>먼저 정할 것<span>국내가 먼저인가, 해외가 먼저인가.</span></li>
+  </ul>
+</header>
+
+<section>
+  <span class="eyebrow">근거</span>
+  <h2>틀린 것은 장소가 아니라 날짜였다</h2>
+  <p>Gemini가 만든 포르투갈·스페인 13일 일정을 골랐다. 항목은 56개다. 그중 19개를 웹 검색으로 확인했다. 휴무일에 잡힌 식당, 축제와 겹친 날, 경기가 없는 날의 직관이 나왔다. 막대와 날짜를 눌러 직접 보라.</p>
+  <div class="panel">
+    <div class="bar" id="bar" role="group" aria-label="상태별 개수"></div>
+    <div class="chips" id="statusChips"></div>
+    <div>
+      <div class="days" id="days" role="group" aria-label="일차별 항목"></div>
+      <p class="muted" style="margin-top:6px">칸 하나가 일정 한 항목이다. 일차를 누르면 그날만 본다.</p>
+    </div>
+    <div class="count" id="count"></div>
+    <div class="list" id="list"></div>
+  </div>
+  <p class="muted">검색은 2026년 11월 기준이다. 좌표, 거리, 도보 시간은 검색으로 확인할 수 없었다. 휴무일은 출처끼리 엇갈린 곳이 있다.</p>
+</section>
+
+<section>
+  <span class="eyebrow">방식</span>
+  <h2>AI가 초안을 쓰고, 다른 단계가 사실을 확인한다</h2>
+  <p>세 가지 길이 있다. 두 번째를 권한다.</p>
+  <div class="tabs" id="apTabs" role="tablist"></div>
+  <div class="panel"><div class="pc" id="apBody"></div></div>
+</section>
+
+<section>
+  <span class="eyebrow">검증</span>
+  <h2>구글을 붙여도 웹 검색은 남는다</h2>
+  <p>지도는 축제, 경기, 규정 변경을 알려 주지 않는다. 검색은 거리와 이동 시간을 모른다. 둘을 같이 써야 빈칸이 없다.</p>
+  <div class="tabs" id="covTabs" role="tablist"></div>
+  <div class="panel">
+    <div class="cov" id="cov"></div>
+    <p class="muted" id="covSum"></p>
+  </div>
+  <p>확인 단위는 장소가 아니다. <strong>장소와 방문 일시</strong>다. 같은 식당도 화요일 저녁이면 문제이고 수요일이면 정상이다.</p>
+</section>
+
+<section>
+  <span class="eyebrow">조건</span>
+  <h2>취향은 한 번 적고, 여행마다 바뀐 것만 고친다</h2>
+  <p>규칙은 셋이다. 고치지 않으면 기본값을 따른다. 고치면 그 값으로 바꾼다. 비우면 이번 여행은 제한이 없다. 아래에서 바꿔 보라.</p>
+  <div class="panel">
+    <div class="merge">
+      <div id="fields"></div>
+      <div class="out">
+        <div><h3>이번 여행에 적용되는 조건</h3><pre id="eff"></pre></div>
+        <div><h3>DB에 저장되는 변경분</h3><pre id="ovr"></pre></div>
+      </div>
+    </div>
+  </div>
+  <p class="muted">일정을 만들 때 적용된 조건을 함께 저장한다. 나중에 프로필을 고쳐도 이미 만든 일정의 근거는 변하지 않는다.</p>
+</section>
+
+<section>
+  <span class="eyebrow">데이터</span>
+  <h2>주신 설계에 다섯 개를 더한다</h2>
+  <p>기존 다섯 테이블은 그대로 쓴다. 이동, 검증, 비용, 동행, 교체 기록이 빠져 있어서 더했다.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>테이블</th><th>담는 것</th><th></th></tr></thead>
+    <tbody>
+      <tr><td><code>users</code> · <code>user_profiles</code></td><td>회원과 기본 취향</td><td></td></tr>
+      <tr><td><code>trips</code></td><td>여행과 이번에 바꾼 조건. 적용된 조건과 기준 숙소를 더한다.</td><td></td></tr>
+      <tr><td><code>places</code></td><td>장소. 구글에서 받은 값은 따로 두고 기한을 붙인다.</td><td></td></tr>
+      <tr><td><code>trip_items</code></td><td>일정 카드. 시간대, 상태, 예약 여부를 더한다.</td><td></td></tr>
+      <tr><td><code>trip_legs</code></td><td>카드 사이 이동. 수단, 시간, 거리.</td><td class="new">추가</td></tr>
+      <tr><td><code>verifications</code></td><td>무엇을 확인했고 결과가 어땠는지. 출처와 확인 시각.</td><td class="new">추가</td></tr>
+      <tr><td><code>llm_usage_log</code></td><td>단계별 토큰, 검색 횟수, 비용.</td><td class="new">추가</td></tr>
+      <tr><td><code>trip_members</code></td><td>동행자와 공유 권한.</td><td class="new">추가</td></tr>
+      <tr><td><code>trip_item_alternatives</code></td><td>대안 장소와 교체 기록. 배열 대신 표로 둔다.</td><td class="new">추가</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">구글 장소 데이터는 장소 ID 말고는 오래 저장할 수 없다. 약관 원문은 다시 확인해야 한다.</p>
+</section>
+
+<section>
+  <span class="eyebrow">비용</span>
+  <h2>일정 한 건에 토큰이 얼마나 드는가</h2>
+  <p>아직 정확한 값은 없다. 19개를 확인하는 데 검색을 16번 했고, 검색 결과로 받은 양이 3~4만 토큰쯤이었다. 이 추정을 기준으로 계산해 보라.</p>
+  <div class="panel">
+    <div class="sliders">
+      <div class="sl"><label for="nItems">일정 항목 수 <output id="oItems"></output></label><input type="range" id="nItems" min="10" max="120" step="1" value="56"></div>
+      <div class="sl"><label for="nRate">항목당 검색 횟수 <output id="oRate"></output></label><input type="range" id="nRate" min="0.3" max="2" step="0.05" value="0.85"></div>
+      <div class="sl"><label for="nTok">검색 1회당 토큰 <output id="oTok"></output></label><input type="range" id="nTok" min="1000" max="4000" step="100" value="2200"></div>
+      <div class="sl"><label for="nReuse">이전 검증 재사용 <output id="oReuse"></output></label><input type="range" id="nReuse" min="0" max="80" step="5" value="0"></div>
+    </div>
+    <div class="result">
+      <div><b id="rSearch"></b><span>검색 횟수</span></div>
+      <div><b id="rTok"></b><span>검색 결과 토큰</span></div>
+      <div><b id="rPer"></b><span>항목 1개당 토큰</span></div>
+    </div>
+    <p class="muted">초안 작성과 보정에 드는 토큰은 빠져 있다. 정확한 값은 1단계에서 호출마다 기록해서 얻는다.</p>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">순서</span>
+  <h2>재고, 비교하고, 그다음에 앱을 만든다</h2>
+  <div class="steps" id="steps" role="tablist"></div>
+  <div class="panel" id="stepBody"></div>
+</section>
+
+<section>
+  <span class="eyebrow">남은 결정</span>
+  <h2>네 가지를 정해야 한다</h2>
+  <ol class="ask">
+    <li><div><strong>국내가 먼저인가, 해외가 먼저인가.</strong>설계의 태그는 소주, 청하, 1차, 2차, 해장이다. 국내 여행이다. 샘플은 해외다. 한국에서는 구글 지도의 도보·자동차 길찾기가 제한되어 왔다. 국내가 먼저라면 카카오나 네이버를 써야 할 수 있다. 지금 상태는 확인이 필요하다.</div></li>
+    <li><div><strong>웨이팅과 주종은 어디서 얻는가.</strong>구글은 이 값을 주지 않는다. 직접 모으거나, 리뷰에서 AI로 뽑거나, 사용자에게 받아야 한다.</div></li>
+    <li><div><strong>혼자 쓰는가, 공개하는가.</strong>공개하면 가입, 권한, 비용 상한이 필요하다.</div></li>
+    <li><div><strong>웹 앱으로 충분한가.</strong>휴대폰 화면에 맞춘 웹 앱을 제안한다. 지금 결과물을 이어 쓸 수 있고 바로 써 볼 수 있다.</div></li>
+  </ol>
+</section>
+</div>
+
+<script>
+const DATA = [{"d":1,"date":"3.29","t":"18:00","a":"리스본 공항(LIS) 도착","s":"unverified","f":null,"src":[]},{"d":1,"date":"3.29","t":"19:30","a":"호텔 체크인: 쉐라톤 리스본 or 럭셔리 부티크","s":"unverified","f":null,"src":[]},{"d":1,"date":"3.29","t":"20:30","a":"저녁: Time Out Market","s":"verified","f":"일요일 10:00–24:00 영업. 20:30 방문 가능.","src":["https://www.timeout.com/lisbon/restaurants/time-out-market-lisboa"]},{"d":2,"date":"3.30","t":"10:00","a":"28번 트램 타고 알파마 지구로","s":"unverified","f":null,"src":[]},{"d":2,"date":"3.30","t":"11:30","a":"상 조르주 성 & 전망대","s":"unverified","f":null,"src":[]},{"d":2,"date":"3.30","t":"13:30","a":"점심: Farol de Santa Luzia","s":"partial","f":"실존 확인(Largo de Santa Luzia 5). 영업시간은 출처마다 달라(11–23시 / 24시 마감) 월요일 영업 미확정.","src":["https://lifecooler.com/artigo/comer/restaurante-farol-de-santa-luzia/405728/"]},{"d":2,"date":"3.30","t":"15:30","a":"코메르시우 광장 & 아우구스타 거리","s":"unverified","f":null,"src":[]},{"d":2,"date":"3.30","t":"18:00","a":"산타 주스타 엘리베이터 & 카르모 수녀원","s":"problem","f":"산타 주스타 엘리베이터는 2026년 중반 기준 정비로 임시 폐쇄(재개일 미정)로 보고됨. 카르모 수녀원은 11–4월 18:00 마감(최종 입장 17:40)이라 18:00 방문은 불가. 월요일 자체는 영업(일요일 휴무).","src":["https://www.carris.pt/en/discover/elevador-de-santa-justa-reduced-hours","https://thebettervacation.com/lisbon/carmo-convent/amp/"]},{"d":2,"date":"3.30","t":"20:00","a":"저녁: Pinoquio","s":"verified","f":"월요일 12:00–23:00(일부 출처 24:00). Praça dos Restauradores 79. 호시우 광장 인근 맞음.","src":["https://www.timeout.pt/lisboa/pt/restaurantes/pinoquio","https://foodle.pro/restaurants/lisbon/pinoquio"]},{"d":3,"date":"3.31","t":"09:30","a":"제로니무스 수도원","s":"corrected","f":"화요일 영업(월요일 휴무). 다만 개장은 10:00(10–4월 10:00–17:30)이므로 09:30은 입장이 아니라 줄 서는 시각.","src":["https://thebettervacation.com/lisbon/jeronimos-monastery/"]},{"d":3,"date":"3.31","t":"11:30","a":"파스테이스 드 벨렘 (에그타르트 원조)","s":"unverified","f":null,"src":[]},{"d":3,"date":"3.31","t":"13:00","a":"벨렘 탑 & 발견의 기념비 산책","s":"problem","f":"벨렘 탑 내부는 2025년 4월부터 보수로 폐쇄, 2026년 5월 말~6월 초 재개장. 여행일(2026-03-31)에는 내부 입장 불가, 외부 산책만 가능. 재개장 후에는 시간대별 사전 예약제(30분당 60명).","src":["https://www.theportugalnews.com/news/2025-04-27/belem-tower-closes-for-renovations/97209","https://www.portugalresident.com/over-15000-visit-lisbons-iconic-belem-tower-since-major-renovation/"]},{"d":3,"date":"3.31","t":"15:00","a":"LX Factory","s":"unverified","f":null,"src":[]},{"d":3,"date":"3.31","t":"19:00","a":"저녁: Ponto Final","s":"problem","f":"다수 출처가 화요일 휴무로 표기(1개 출처는 상반). 3일차(3/31)는 화요일. 디너 19:00–23:00. 예약 가능 여부도 출처 간 상충(예약 권장 vs 줄 서기).","src":["https://www.smart-travelling.net/en/locations/ponto-final/","https://www.enprimeurclub.com/restaurants/ponto-final-almada-restaurant","https://www.timeout.pt/lisboa/pt/restaurantes/ponto-final"]},{"d":4,"date":"4.01","t":"10:00","a":"리스본 출발","s":"verified","f":"Rede Expressos 세트 히우스→알부페이라 통상 2시간 45분(일부 편 3시간 5–15분). 10:00 출발편 존재 여부는 미확인.","src":["https://www.rome2rio.com/s/Lisboa-Sete-Rios/Albufeira","https://omio.com/buses/lisbon/albufeira"]},{"d":4,"date":"4.01","t":"13:00","a":"알부페이라 도착 및 렌트카 픽업(선택)","s":"unverified","f":null,"src":[]},{"d":4,"date":"4.01","t":"15:00","a":"호텔 체크인 및 휴식","s":"unverified","f":null,"src":[]},{"d":4,"date":"4.01","t":"19:00","a":"올드타운 저녁 산책","s":"unverified","f":null,"src":[]},{"d":5,"date":"4.02","t":"10:00","a":"베나길 동굴 보트 투어","s":"corrected","f":"면허 보트 투어 또는 가이드 동반 카약/SUP로만 접근 가능. 2024년 8월부터 동굴 내부 해변 상륙·수영 진입 금지(벌금 최대 약 2,500유로). 보트에서 관람만 가능.","src":["https://www.portugalresident.com/new-rules-for-benagil-caves-come-into-force-on-august-13/","https://earthtrekkers.com/benagil-cave/"]},{"d":5,"date":"4.02","t":"13:00","a":"점심: O Pescador (Benagil Beach)","s":"unverified","f":null,"src":[]},{"d":5,"date":"4.02","t":"15:00","a":"마리냐 해변 (Praia da Marinha)","s":"unverified","f":null,"src":[]},{"d":5,"date":"4.02","t":"19:00","a":"리조트 복귀 및 스파/수영","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"11:00","a":"라고스(Lagos) 방문","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"13:30","a":"점심: Casa do Prego","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"16:00","a":"사그레스 & 성 비센트 곶","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"19:30","a":"알부페이라 복귀 및 마지막 밤","s":"partial","f":"미슐랭 2스타 유지 확인(2026 가이드). 4월 초 시즌 영업 여부는 미확인.","src":["https://guide.michelin.com/pt/pt_PT/faro-region/albufeira/restaurant/vila-joya"]},{"d":7,"date":"4.04","t":"09:30","a":"세비야행 버스 탑승","s":"partial","f":"버스 최단 약 3시간 30분, 대부분 직행. 09:30 출발 + 3.5시간 + 시차 1시간 = 14:00 도착은 계산상 일치. 단 운행사가 ALSA인지 불명확(ALSA 노선 페이지는 있으나 Rome2rio는 Rede Expressos로 표기), 09:30 출발편 미확인.","src":["https://www.alsa.com/en/ruta/albufeira-sevilla","https://www.rome2rio.com/Bus/Albufeira/Seville"]},{"d":7,"date":"4.04","t":"14:00","a":"세비야 도착 및 체크인 (시차 +1시간)","s":"problem","f":"4/4는 성토요일로 세마나 산타(2026-03-29~04-05) 기간. 행렬로 대성당 주변 도로가 통제되어 택시 접근이 어려울 수 있음.","src":["https://www.seville-traveller.com/semana-santa-dates","https://www.idealista.com/en/news/lifestyle-in-spain/2026/02/03/837044-holy-week-2026-in-seville"]},{"d":7,"date":"4.04","t":"16:00","a":"세비야 대성당 & 히랄다 탑","s":"problem","f":"세마나 산타 기간 대성당·히랄다는 오후에 관람객 입장을 막는 것으로 보고됨(2차 출처). 공식 시간표는 확인 못 함. 16:00 방문 위험.","src":["https://www.seville-traveller.com/easter-in-seville/","https://www.seville-traveller.com/semana-santa-dates"]},{"d":7,"date":"4.04","t":"20:00","a":"타파스 투어: El Rinconcillo","s":"unverified","f":null,"src":[]},{"d":8,"date":"4.05","t":"08:00","a":"세비야 산타 후스타역 출발","s":"corrected","f":"AVE 소요 약 2시간 37–39분(일정은 2시간 30분). 08:00 출발이면 10:40 전후 도착.","src":["https://www.rome2rio.com/Train/Madrid/Seville","https://www.thetrainline.com/train-times/madrid-to-seville"]},{"d":8,"date":"4.05","t":"10:30","a":"마드리드 아토차역 도착","s":"unverified","f":null,"src":[]},{"d":8,"date":"4.05","t":"12:00","a":"솔 광장 & 마요르 광장 산책","s":"unverified","f":null,"src":[]},{"d":8,"date":"4.05","t":"14:00","a":"경기장 이동 및 직관","s":"problem","f":"그 주말 마드리드 홈경기는 아틀레티코–바르셀로나(4/4 토, 메트로폴리타노)였고, 4/5(일) 마드리드 홈경기는 찾지 못함. 레알–아틀레티코 더비는 3/22에 이미 치러짐. 일정대로면 경기를 못 봄. 4/5는 부활절 일요일이기도 함.","src":["https://www.espn.com/soccer/match/_/gameId/748434","https://www.laliga.com/en-AR/match/temporada-2025-2026-laliga-ea-sports-real-madrid-atletico-de-madrid-29"]},{"d":8,"date":"4.05","t":"20:00","a":"세비야행 막차 탑승","s":"partial","f":"마드리드→세비야 막차는 날짜에 따라 19:54~21:25. 20:00 출발편과 22:30 도착은 가능 범위지만 당일 시간표 확인 필요.","src":["https://www.thetrainline.com/train-times/madrid-to-seville","https://omio.com/trains/madrid-atocha/sevilla-santa-justa"]},{"d":9,"date":"4.06","t":"10:00","a":"알카사르(Alcázar) 궁전","s":"unverified","f":"성금요일(4/3) 휴관은 보고됨. 4/6(월) 영업 여부는 확인하지 않음.","src":["https://www.seville-traveller.com/easter-in-seville/"]},{"d":9,"date":"4.06","t":"13:00","a":"점심: Eslava","s":"problem","f":"복수 출처가 월요일 휴무로 표기. 9일차(4/6)는 월요일. 예약 불가·줄 서기 방식.","src":["https://www.enprimeurclub.com/restaurants/espacio-eslava-seville-restaurant","https://tablejourney.com/spain/seville/restaurants/espacio-eslava/"]},{"d":9,"date":"4.06","t":"16:00","a":"스페인 광장 (Plaza de España)","s":"unverified","f":null,"src":[]},{"d":9,"date":"4.06","t":"20:00","a":"플라멩코 공연 관람","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"09:00","a":"렌트카 픽업 & 출발","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"11:00","a":"사하라 (Zahara de la Sierra)","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"12:30","a":"론다(Ronda) 도착 & 누에보 다리","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"13:30","a":"점심: Parador de Ronda","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"16:00","a":"세테닐 (Setenil de las Bodegas)","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"19:00","a":"세비야 복귀 및 차량 반납","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"10:00","a":"마드리드행 기차 탑승","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"13:00","a":"호텔 체크인: 그란 비아 근처","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"15:00","a":"프라도 미술관 투어","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"18:00","a":"레티로 공원 산책","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"20:30","a":"저녁: Botín","s":"verified","f":"매일 13:00–16:00, 20:00–24:00 영업. 20:30 가능.","src":["https://timeout.com/madrid/restaurants-and-cafes/el-sobrino-de-botin"]},{"d":12,"date":"4.09","t":"10:00","a":"마드리드 왕궁","s":"unverified","f":null,"src":[]},{"d":12,"date":"4.09","t":"12:30","a":"점심 & 카페","s":"unverified","f":null,"src":[]},{"d":12,"date":"4.09","t":"14:30","a":"살라망카 지구 쇼핑 / 기념품 구매","s":"unverified","f":null,"src":[]},{"d":12,"date":"4.09","t":"19:30","a":"마지막 만찬: Ten Con Ten","s":"unverified","f":null,"src":[]},{"d":13,"date":"4.10","t":"09:00","a":"체크아웃 및 공항 이동","s":"corrected","f":"공항↔M-30 안쪽 정액 요금은 2026-01-01부터 33유로(일정은 30유로).","src":["https://www.madridtourism.org/madrid-taxis-fares/","https://madridsecreto.co/en/madrid-raises-cab-fares-in-2026-these-are-the-new-prices/"]},{"d":13,"date":"4.10","t":"12:00","a":"인천행 비행기 탑승","s":"unverified","f":null,"src":[]}];
+const ST = {problem:'문제',corrected:'정정',verified:'확인됨',partial:'일부 확인',unverified:'미검증'};
+const ORDER = ['problem','corrected','verified','partial','unverified'];
+const $ = id => document.getElementById(id);
+const el = (t, a = {}, ...kids) => { const e = document.createElement(t); for (const k in a) { if (k === 'class') e.className = a[k]; else if (k === 'text') e.textContent = a[k]; else e.setAttribute(k, a[k]); } kids.forEach(k => e.append(k)); return e; };
+
+/* 검증 결과 */
+let fStatus = 'problem', fDay = null;
+function renderVerify(){
+  const counts = {}; ORDER.forEach(s => counts[s] = DATA.filter(d => d.s === s).length);
+  const bar = $('bar'); bar.replaceChildren();
+  ORDER.forEach(s => { const b = el('button', {class:'s-'+s, title:ST[s]+' '+counts[s]+'개', 'aria-label':ST[s]+' '+counts[s]+'개', text:counts[s]}); b.style.flexGrow = counts[s]; b.style.flexBasis = '0'; b.onclick = () => { fStatus = fStatus === s ? null : s; renderVerify(); }; b.style.opacity = fStatus && fStatus !== s ? .35 : 1; bar.append(b); });
+  const chips = $('statusChips'); chips.replaceChildren();
+  ORDER.forEach(s => { const c = el('button', {class:'chip', 'aria-pressed': String(fStatus === s)}, el('i', {class:'dot s-'+s}), ST[s]+' ', el('b', {text:counts[s]})); c.onclick = () => { fStatus = fStatus === s ? null : s; renderVerify(); }; chips.append(c); });
+  const days = $('days'); days.replaceChildren();
+  for (let d = 1; d <= 13; d++) { const col = el('button', {class:'daycol', 'aria-pressed': String(fDay === d), 'aria-label': d+'일차'}); DATA.filter(x => x.d === d).sort((a,b) => ORDER.indexOf(b.s) - ORDER.indexOf(a.s)).forEach(x => { const i = el('i', {class:'s-'+x.s}); i.style.opacity = fStatus && fStatus !== x.s ? .2 : 1; col.append(i); }); col.append(el('span', {text:d})); col.onclick = () => { fDay = fDay === d ? null : d; renderVerify(); }; days.append(col); }
+  const rows = DATA.filter(x => (!fStatus || x.s === fStatus) && (!fDay || x.d === fDay));
+  $('count').textContent = `${rows.length}개 표시` + (fDay ? ` · ${fDay}일차` : '') + (fStatus ? ` · ${ST[fStatus]}` : '') + (fStatus || fDay ? ' · 다시 누르면 전체' : '');
+  const list = $('list'); list.replaceChildren();
+  rows.forEach(x => { const body = el('div', {class:'body'}); body.append(el('div', {text: x.f || '아직 검색하지 않았다.'})); if (x.src.length) { const s = el('div', {class:'src'}); x.src.forEach(u => { let h = u; try { h = new URL(u).hostname.replace(/^www\./,''); } catch(e){} s.append(el('a', {href:u, target:'_blank', rel:'noopener', text:h})); }); body.append(s); }
+    list.append(el('details', {class:'item'}, el('summary', {}, el('i', {class:'dot s-'+x.s}), el('span', {class:'when', text:`${x.d}일차 ${x.date} ${x.t}`}), el('span', {class:'what', text:x.a}), el('span', {class:'tag t-'+x.s, text:ST[x.s]})), body)); });
+}
+
+/* 방식 비교 */
+const AP = [
+  {n:'AI만 쓴다', how:'AI가 일정을 쓰고 그대로 보여 준다.', good:'가장 빠르고 싸다.', bad:'위에서 본 오류가 그대로 나간다. Gemini에 묻는 것과 같다.', pick:false},
+  {n:'AI 초안 + 확인', how:'AI가 초안을 쓴다. 다른 단계가 항목마다 사실을 확인한다. 문제가 나오면 대안으로 바꾼다.', good:'어느 지역이든 된다. 오류를 잡는다. 확인 수단을 바꿔 끼울 수 있다.', bad:'호출이 늘어 비용이 든다.', pick:true},
+  {n:'장소부터 모은다', how:'장소를 먼저 모으고 손본다. 규칙으로 골라 일정을 짠다.', good:'웨이팅, 주종 같은 우리만의 조건이 정확하다.', bad:'지역마다 데이터를 먼저 쌓아야 한다. 시작이 느리다.', pick:false}
+];
+let ap = 1;
+function renderAp(){ const t = $('apTabs'); t.replaceChildren(); AP.forEach((a,i) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(i === ap), text: a.n + (a.pick ? ' · 권장' : '')}); b.onclick = () => { ap = i; renderAp(); }; t.append(b); });
+  const a = AP[ap]; $('apBody').replaceChildren(...[['어떻게', a.how], ['좋은 점', a.good], ['나쁜 점', a.bad]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p})))); }
+
+/* 검증 범위: 0 불가, 1 일부, 2 가능 */
+const COV = [['실존·폐업',2,2],['요일 휴무·영업시간',1,2],['임시 폐쇄·보수',2,1],['축제·공휴일·경기 일정',2,0],['좌표·반경·도보 거리',0,2],['구간 이동 시간',1,2],['날짜별 열차·버스편',0,1],['요금·규정 변경',2,0]];
+const CM = ['웹 검색만','구글 지도만','둘 다']; let cm = 0;
+function renderCov(){ const t = $('covTabs'); t.replaceChildren(); CM.forEach((n,i) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(i === cm), text:n}); b.onclick = () => { cm = i; renderCov(); }; t.append(b); });
+  const box = $('cov'); const first = !box.children.length; let full = 0, none = 0;
+  COV.forEach((r,i) => { const v = cm === 0 ? r[1] : cm === 1 ? r[2] : Math.max(r[1], r[2]); if (v === 2) full++; if (v === 0) none++;
+    let row = box.children[i]; if (first) { row = el('div', {class:'covrow'}, el('span', {text:r[0]}), el('div', {class:'track'}, el('i')), el('em')); box.append(row); }
+    const bar = row.querySelector('i'); bar.style.width = [4,50,100][v] + '%'; bar.style.background = ['var(--problem)','var(--corrected)','var(--verified)'][v]; row.querySelector('em').textContent = ['불가','일부','가능'][v]; });
+  $('covSum').textContent = `8가지 가운데 ${full}가지를 확인할 수 있다.` + (none ? ` ${none}가지는 못 한다.` : ' 못 하는 것은 없다.'); }
+
+/* 조건 병합 */
+const PREF = [
+  {k:'max_walk_min', n:'걷는 시간 한도', u:'분', base:15, type:'num'},
+  {k:'max_wait_min', n:'웨이팅 한도', u:'분', base:20, type:'num'},
+  {k:'drinks', n:'주종', base:['소주·청하','위스키'], opts:['소주·청하','위스키','전통주','와인','맥주'], type:'arr'},
+  {k:'atmosphere', n:'분위기', base:['조용한 바','이자카야'], opts:['조용한 바','이자카야','루프톱','포장마차'], type:'arr'}
+];
+const state = {max_wait_min:{mode:'set', v:40}, drinks:{mode:'set', v:['전통주']}};
+function renderMerge(){ const f = $('fields'); f.replaceChildren(); const eff = {}, ovr = {};
+  PREF.forEach(p => { const s = state[p.k] || (state[p.k] = {mode:'inherit', v: p.type === 'arr' ? [...p.base] : p.base});
+    const sel = el('select', {id:'m_'+p.k, 'aria-label':p.n+' 적용 방식'}); [['inherit','기본값 따름'],['set','이번만 변경'],['none','제한 없음']].forEach(([v,t]) => { const o = el('option', {value:v, text:t}); if (s.mode === v) o.selected = true; sel.append(o); }); sel.onchange = () => { s.mode = sel.value; renderMerge(); };
+    const row = el('div', {class:'field'}, el('label', {for:'m_'+p.k, text:p.n}), sel, el('div', {class:'base', text:'기본값 ' + (p.type === 'arr' ? p.base.join(', ') : p.base + p.u)}));
+    if (s.mode === 'set') { const e = el('div', {class:'edit'}); if (p.type === 'num') { const i = el('input', {type:'number', id:'v_'+p.k, min:0, max:180, value:s.v, 'aria-label':p.n+' 값'}); i.oninput = () => { s.v = Number(i.value) || 0; out(); }; e.append(i, p.u); } else p.opts.forEach(o => { const c = el('button', {class:'chip', 'aria-pressed': String(s.v.includes(o)), text:o}); c.onclick = () => { s.v = s.v.includes(o) ? s.v.filter(x => x !== o) : [...s.v, o]; renderMerge(); }; e.append(c); }); row.append(e); }
+    f.append(row); });
+  function out(){ PREF.forEach(p => { const s = state[p.k]; if (s.mode === 'inherit') { eff[p.k] = p.base; delete ovr[p.k]; } else if (s.mode === 'none') eff[p.k] = ovr[p.k] = null; else eff[p.k] = ovr[p.k] = s.v; });
+    const e = $('eff'); e.replaceChildren(); PREF.forEach(p => { const line = el('div', {}); const changed = p.k in ovr; line.append(el('span', {class: changed ? 'from-o' : '', text: `${p.k}: ${JSON.stringify(eff[p.k])}`}), el('span', {class:'muted', text: changed ? (eff[p.k] === null ? '  ← 제한 없음' : '  ← 이번 여행') : '  ← 기본값'})); e.append(line); });
+    $('ovr').textContent = JSON.stringify(ovr, null, 2); }
+  out(); }
+
+/* 비용 추정 */
+function renderCost(){ const n = +$('nItems').value, r = +$('nRate').value, t = +$('nTok').value, u = +$('nReuse').value;
+  $('oItems').textContent = n + '개'; $('oRate').textContent = r.toFixed(2) + '회'; $('oTok').textContent = t.toLocaleString() + ' 토큰'; $('oReuse').textContent = u + '%';
+  const searches = Math.round(n * r * (1 - u/100)), tok = searches * t;
+  $('rSearch').textContent = searches + '회'; $('rTok').textContent = tok.toLocaleString(); $('rPer').textContent = Math.round(tok / n).toLocaleString(); }
+['nItems','nRate','nTok','nReuse'].forEach(id => $(id).addEventListener('input', renderCost));
+
+/* 단계 */
+const STEPS = [
+  {n:'0', t:'샘플 확인', done:true, what:'AI가 만든 일정을 웹 검색으로 확인했다.', end:'끝났다. 56개 중 19개를 확인했고 결과를 파일로 남겼다.', need:'없음'},
+  {n:'1', t:'토큰 측정', what:'조건을 넣으면 초안을 쓰고 확인까지 하는 스크립트를 만든다. 호출마다 토큰을 기록한다.', end:'샘플 여행을 다시 돌려 일정 한 건의 토큰과 비용이 나온다.', need:'Anthropic API 키'},
+  {n:'2', t:'구글 연결', what:'장소와 경로 API를 확인 수단으로 붙인다.', end:'같은 여행으로 1단계와 정확도, 비용을 비교한 표가 나온다.', need:'결제가 설정된 Google Cloud API 키'},
+  {n:'3', t:'앱', what:'프로필, 여행 만들기, 일정 화면, 장소 교체, DB를 만든다.', end:'한 사람이 가입부터 장소 교체까지 마칠 수 있다.', need:'남은 결정 네 가지'},
+  {n:'4', t:'공유', what:'일정을 공유하고 동행자의 취향을 합친다.', end:'범위는 3단계가 끝난 뒤 다시 정한다.', need:'3단계 결과'}
+];
+let st = 1;
+function renderSteps(){ const b = $('steps'); b.replaceChildren(); STEPS.forEach((s,i) => { const x = el('button', {class:'step' + (s.done ? ' done' : ''), role:'tab', 'aria-selected': String(i === st)}, el('b', {text:s.n}), el('span', {text:s.t})); x.onclick = () => { st = i; renderSteps(); }; b.append(x); });
+  const s = STEPS[st]; $('stepBody').replaceChildren(el('div', {class:'pc'}, ...[['하는 일', s.what], ['끝났다고 보는 기준', s.end], ['필요한 것', s.need]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p}))))); }
+
+renderVerify(); renderAp(); renderCov(); renderMerge(); renderCost(); renderSteps();
+</script>
