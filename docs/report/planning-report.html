@@ -135,7 +135,7 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 .result span{font-size:.82rem;color:var(--muted)}
 
 /* 단계 */
-.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:6px}
 .step{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:center;min-width:0}
 .step b{font-family:var(--mono);font-weight:500}
 .step span{font-size:.78rem;color:var(--muted);text-align:center;overflow-wrap:anywhere}
@@ -158,18 +158,28 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
   <ul class="three">
     <li>만들 것<span>취향과 조건을 넣으면 일정을 짜고, 항목마다 맞는지 확인해 주는 앱.</span></li>
     <li>다른 점<span>확인한 것과 확인 못 한 것을 구분해서 보여 준다.</span></li>
-    <li>먼저 정할 것<span>국내가 먼저인가, 해외가 먼저인가.</span></li>
+    <li>시작하는 곳<span>새 프로젝트로 만든다. 국내 여행, 웹 앱, 초대한 사람부터.</span></li>
   </ul>
   <nav class="toc" aria-label="차례">
-    <a href="#why">1 왜 만드는가</a><a href="#scope">2 목표와 범위</a><a href="#screens">3 화면</a><a href="#approach">4 구현 방식</a><a href="#verify">5 구조와 검증</a><a href="#prefs">6 조건</a><a href="#data">7 데이터</a><a href="#cost">8 비용</a><a href="#steps-sec">9 단계</a><a href="#open">10 남은 결정</a><a href="#calls">11 작성자가 정한 것</a>
+    <a href="#why">1 왜 만드는가</a><a href="#scope">2 목표와 범위</a><a href="#screens">3 화면</a><a href="#approach">4 구현 방식</a><a href="#project">5 프로젝트 구성</a><a href="#verify">6 구조와 검증</a><a href="#prefs">7 조건</a><a href="#data">8 데이터</a><a href="#cost">9 비용</a><a href="#steps-sec">10 단계</a><a href="#open">11 남은 결정</a><a href="#calls">12 작성자가 정한 것</a>
   </nav>
   <p class="muted"><span class="who" style="margin-left:0">결정</span> 은 대화에서 정한 것이다. <span class="who">제안</span> 은 작성자가 정했고 바꿀 수 있다. <span class="who">미정</span> 은 답이 필요하다.</p>
+  <div class="panel">
+    <h3>정해진 것 네 가지<span class="who">결정</span></h3>
+    <div class="states">
+      <span class="tag t-verified">새 프로젝트</span><span>기존 페이지를 고치지 않는다. 처음부터 새로 만든다.</span>
+      <span class="tag t-verified">웹 먼저</span><span>웹 앱으로 시작한다. 휴대폰 앱은 나중에 붙인다.</span>
+      <span class="tag t-verified">국내 먼저</span><span>첫 버전은 국내 여행이다. 해외는 그다음이다.</span>
+      <span class="tag t-verified">공개가 목표</span><span>구조는 공개 서비스로 짠다. 여는 것은 나와 지인부터 한다.</span>
+    </div>
+  </div>
 </header>
 
 <section>
   <span class="eyebrow" id="why">1 · 왜 만드는가</span>
   <h2>틀린 것은 장소가 아니라 날짜였다</h2>
   <p>Gemini에 물으면 일정은 나온다. 그러나 그 일정은 AI가 쓴 글이다. 아무도 확인하지 않았다.</p>
+  <p>아래 해외 일정은 왜 확인이 필요한지 보여 주는 근거다. 새 프로젝트의 바탕 코드가 아니다. 국내 일정으로도 같은 확인을 다시 한다.</p>
   <p>Gemini가 만든 포르투갈·스페인 13일 일정을 골랐다. 항목은 56개다. 그중 19개를 웹 검색으로 확인했다. 휴무일에 잡힌 식당, 축제와 겹친 날, 경기가 없는 날의 직관이 나왔다. 막대와 날짜를 눌러 직접 보라.</p>
   <div class="panel">
     <div class="bar" id="bar" role="group" aria-label="상태별 개수"></div>
@@ -220,6 +230,7 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
   <span class="eyebrow" id="screens">3 · 화면<span class="who">제안</span></span>
   <h2>사용자는 열 화면을 쓴다</h2>
   <p>여섯 화면으로 여행 하나를 만든다. 네 화면은 필요할 때 연다. 화면을 눌러 보라.</p>
+  <p class="muted">시안에 넣은 예시는 해외 일정이다. 국내 일정으로 바꿔야 한다.</p>
   <div class="tabs" id="uiTabs" role="tablist"></div>
   <div class="steps" id="uiSteps" role="tablist"></div>
   <div class="panel" id="uiBody"></div>
@@ -256,9 +267,59 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
-  <span class="eyebrow" id="verify">5 · 구조와 검증</span>
-  <h2>구글을 붙여도 웹 검색은 남는다</h2>
-  <p>지도는 축제, 경기, 규정 변경을 알려 주지 않는다. 검색은 거리와 이동 시간을 모른다. 둘을 같이 써야 빈칸이 없다.</p>
+  <span class="eyebrow" id="project">5 · 프로젝트 구성<span class="who">제안</span></span>
+  <h2>화면과 서버를 나눈다. 그래야 나중에 앱을 붙인다</h2>
+  <p>서버는 데이터만 내준다. 웹 화면은 그 데이터를 받아 그린다. 나중에 휴대폰 앱을 만들 때 서버는 그대로 두고 화면만 새로 만든다.</p>
+  <div class="flow" role="img" aria-label="웹 화면과 나중의 앱이 서버 API를 부르고, 서버는 작업 처리와 DB, 바깥 API를 쓴다">
+    <span>웹 화면<small>지금</small></span><span>휴대폰 앱<small>나중</small></span><i>→</i>
+    <span>서버 API</span><i>→</i>
+    <span>작업 처리<small>일정 만들기, 확인</small></span><i>→</i>
+    <span>DB</span><span>AI</span><span>지도·장소 API</span>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>부분</th><th>쓰는 것</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td>웹 화면</td><td>Next.js, TypeScript, PWA</td><td>휴대폰 홈 화면에 설치할 수 있다. 스토어 심사가 없다.</td></tr>
+      <tr><td>서버 API</td><td>TypeScript(Fastify), REST</td><td>화면과 같은 언어다. 타입을 같이 쓴다.</td></tr>
+      <tr><td>작업 처리</td><td>PostgreSQL 위의 작업 큐(pg-boss)</td><td>일정 확인은 몇 분 걸린다. 뒤에서 돌리고 진행 상황을 화면에 보낸다. DB 하나로 끝낸다.</td></tr>
+      <tr><td>DB</td><td>PostgreSQL, PostGIS, JSONB</td><td>관계, 위치, 바뀌기 쉬운 취향을 한 곳에 둔다.<span class="who">결정</span></td></tr>
+      <tr><td>AI</td><td>Claude API</td><td>초안을 쓰고 웹 검색으로 확인한다. 호출마다 토큰을 기록한다.</td></tr>
+      <tr><td>지도·장소</td><td>카카오 로컬, 티맵·ODsay, 구글</td><td>국내는 한 곳으로 다 되지 않는다. 6장에서 비교한다.</td></tr>
+      <tr><td>로그인</td><td>카카오 로그인, 초대 코드</td><td>국내 사용자는 카카오 계정이 있다. 초대한 사람만 들어온다.</td></tr>
+      <tr><td>나중의 앱</td><td>React Native(Expo)</td><td>같은 서버와 공용 코드를 쓴다.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>저장소 구조</h3>
+  <pre>trip-helper/              새 저장소. 이름은 미정
+├ apps/
+│  ├ web/                화면
+│  ├ api/                서버 API
+│  └ worker/             일정 만들기, 확인 작업
+├ packages/
+│  ├ core/               조건 합치기, 확인 상태, 공용 타입
+│  ├ providers/          웹 검색, 카카오, 티맵, 구글
+│  └ db/                 테이블 정의, 변경 이력
+└ docs/                  기획안, 결정 기록</pre>
+  <h3>사용자와 권한</h3>
+  <p>구조는 처음부터 공개 서비스로 짠다. 여는 범위만 단계로 나눈다.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>기능</th><th>초대 단계</th><th>공개 단계</th></tr></thead>
+    <tbody>
+      <tr><td>회원, 여행별 권한</td><td>만든다</td><td>그대로 쓴다</td></tr>
+      <tr><td>가입</td><td>초대 코드가 있어야 한다</td><td>누구나</td></tr>
+      <tr><td>사용자별 비용 한도</td><td>만든다. 한도는 넉넉히 둔다</td><td>한도를 정한다</td></tr>
+      <tr><td>약관, 개인정보 처리, 탈퇴</td><td>탈퇴만</td><td>모두</td></tr>
+      <tr><td>신고, 운영 화면</td><td>없다</td><td>만든다</td></tr>
+    </tbody>
+  </table></div>
+  <p class="muted">기존 저장소의 <code>index.html</code>은 고치지 않는다. 확인 근거로만 남긴다.</p>
+</section>
+
+<section>
+  <span class="eyebrow" id="verify">6 · 구조와 검증</span>
+  <h2>지도 API를 붙여도 웹 검색은 남는다</h2>
+  <p>지도는 축제, 경기, 규정 변경을 알려 주지 않는다. 검색은 거리와 이동 시간을 모른다. 같이 써야 빈칸이 없다.</p>
+  <p>국내는 사정이 하나 더 있다. 구글은 2026년 2월에 한국 정밀 지도를 쓸 수 있는 조건부 허가를 받았다. 도보와 자동차 길찾기는 차례로 열릴 예정이다. 지금 되는지는 확인하지 못했다. 그래서 국내 API와 구글을 같은 일정으로 비교한 뒤 고른다.</p>
   <div class="flow" role="img" aria-label="조건 병합, 초안 쓰기, 확인, 보정, 저장과 표시 순서">
     <span>조건 합치기<small>프로필 + 여행</small></span><i>→</i>
     <span>초안 쓰기<small>AI</small></span><i>→</i>
@@ -271,6 +332,7 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
   <div class="panel">
     <div class="cov" id="cov"></div>
     <p class="muted" id="covSum"></p>
+    <p class="muted">국내 API와 구글 칸은 문서를 다 확인하기 전의 추정이다. 2단계에서 실제로 불러 보고 고친다.</p>
   </div>
   <p>확인 단위는 장소가 아니다. <strong>장소와 방문 일시</strong>다. 같은 식당도 화요일 저녁이면 문제이고 수요일이면 정상이다.</p>
   <h3>확인 상태 다섯 가지</h3>
@@ -284,7 +346,7 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
-  <span class="eyebrow" id="prefs">6 · 조건<span class="who">제안</span></span>
+  <span class="eyebrow" id="prefs">7 · 조건<span class="who">제안</span></span>
   <h2>취향은 한 번 적고, 여행마다 바뀐 것만 고친다</h2>
   <p>규칙은 셋이다. 고치지 않으면 기본값을 따른다. 고치면 그 값으로 바꾼다. 비우면 이번 여행은 제한이 없다. 아래에서 바꿔 보라.</p>
   <div class="panel">
@@ -300,7 +362,7 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
-  <span class="eyebrow" id="data">7 · 데이터</span>
+  <span class="eyebrow" id="data">8 · 데이터</span>
   <h2>주신 설계에 다섯 개를 더한다</h2>
   <p>PostgreSQL 하나로 간다. 위치는 PostGIS, 바뀌기 쉬운 취향은 JSONB에 둔다.<span class="who">결정</span> 기존 다섯 테이블은 그대로 쓴다. 이동, 검증, 비용, 동행, 교체 기록이 빠져 있어서 더했다.<span class="who">제안</span></p>
   <div class="tblwrap"><table>
@@ -337,11 +399,11 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
       <tr><td><code>trips</code>에 추가</td><td><code>effective_prefs</code> <code>anchor_item_id</code> <code>base_currency</code> <code>generation_status</code> <code>generation_progress</code></td></tr>
     </tbody>
   </table></div>
-  <p class="muted">구글 장소 데이터는 장소 ID 말고는 오래 저장할 수 없다. 약관 원문은 다시 확인해야 한다.</p>
+  <p class="muted">구글도 카카오도 받은 장소 데이터를 따로 저장하지 못하게 한다. 그래서 받은 값에는 기한을 둔다. 오래 둘 값은 우리가 직접 확인해서 쌓는다. 약관 원문은 다시 확인해야 한다.</p>
 </section>
 
 <section>
-  <span class="eyebrow" id="cost">8 · 비용</span>
+  <span class="eyebrow" id="cost">9 · 비용</span>
   <h2>일정 한 건에 토큰이 얼마나 드는가</h2>
   <p>아직 정확한 값은 없다. 19개를 확인하는 데 검색을 16번 했고, 검색 결과로 받은 양이 3~4만 토큰쯤이었다. 이 추정을 기준으로 계산해 보라.</p>
   <ul class="plain">
@@ -366,25 +428,25 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
 </section>
 
 <section>
-  <span class="eyebrow" id="steps-sec">9 · 진행 단계</span>
+  <span class="eyebrow" id="steps-sec">10 · 진행 단계</span>
   <h2>재고, 비교하고, 그다음에 앱을 만든다</h2>
   <div class="steps" id="steps" role="tablist"></div>
   <div class="panel" id="stepBody"></div>
 </section>
 
 <section>
-  <span class="eyebrow" id="open">10 · 남은 결정<span class="who">미정</span></span>
+  <span class="eyebrow" id="open">11 · 남은 결정<span class="who">미정</span></span>
   <h2>네 가지를 정해야 한다</h2>
   <ol class="ask">
-    <li><div><strong>국내가 먼저인가, 해외가 먼저인가.</strong>설계의 태그는 소주, 청하, 1차, 2차, 해장이다. 국내 여행이다. 샘플은 해외다. 한국에서는 구글 지도의 도보·자동차 길찾기가 제한되어 왔다. 국내가 먼저라면 카카오나 네이버를 써야 할 수 있다. 지금 상태는 확인이 필요하다.</div></li>
-    <li><div><strong>웨이팅과 주종은 어디서 얻는가.</strong>구글은 이 값을 주지 않는다. 직접 모으거나, 리뷰에서 AI로 뽑거나, 사용자에게 받아야 한다.</div></li>
-    <li><div><strong>혼자 쓰는가, 공개하는가.</strong>공개하면 가입, 권한, 비용 상한이 필요하다.</div></li>
-    <li><div><strong>웹 앱으로 충분한가.</strong>휴대폰 화면에 맞춘 웹 앱을 제안한다. 지금 결과물을 이어 쓸 수 있고 바로 써 볼 수 있다.</div></li>
+    <li><div><strong>어느 도시부터 하는가.</strong>국내 전체를 한 번에 할 수 없다. 웨이팅과 주종 같은 값은 도시마다 따로 쌓아야 한다. 첫 도시 하나를 정해야 한다.</div></li>
+    <li><div><strong>웨이팅과 주종은 어디서 얻는가.</strong>지도 API는 이 값을 주지 않는다. 직접 모으거나, 리뷰에서 AI로 뽑거나, 사용자에게 받아야 한다.</div></li>
+    <li><div><strong>로그인은 카카오로 하는가.</strong>카카오 로그인과 초대 코드를 제안했다. 다른 방식을 원하면 바꾼다.</div></li>
+    <li><div><strong>새 저장소의 이름과 서버를 둘 곳.</strong>저장소 이름, DB와 서버를 올릴 서비스를 정해야 한다. 1단계를 시작하기 전에 필요하다.</div></li>
   </ol>
 </section>
 
 <section>
-  <span class="eyebrow" id="calls">11 · 작성자가 정한 것</span>
+  <span class="eyebrow" id="calls">12 · 작성자가 정한 것</span>
   <h2>아래는 내가 정했다. 틀리면 바꾼다</h2>
   <ul class="plain">
     <li>AI가 초안을 쓰고 다른 단계가 확인하는 방식</li>
@@ -396,6 +458,11 @@ td code,p code,li code{font-family:var(--mono);font-size:.85em;background:var(--
     <li>하지 않는 것 네 가지</li>
     <li>휴대폰 화면에 맞춘 웹 앱</li>
     <li>화면 열 개의 구성과 화면 규칙</li>
+    <li>기술 구성: Next.js, Fastify, pg-boss, React Native</li>
+    <li>저장소를 화면, 서버, 작업, 공용 코드로 나누는 구조</li>
+    <li>카카오 로그인과 초대 코드</li>
+    <li>초대 단계와 공개 단계에 넣을 기능의 구분</li>
+    <li>국내 API와 구글을 비교한 뒤 고르는 순서</li>
   </ul>
 </section>
 </div>
@@ -435,14 +502,14 @@ function renderAp(){ const t = $('apTabs'); t.replaceChildren(); AP.forEach((a,i
   const a = AP[ap]; $('apBody').replaceChildren(...[['어떻게', a.how], ['좋은 점', a.good], ['나쁜 점', a.bad]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p})))); }
 
 /* 검증 범위: 0 불가, 1 일부, 2 가능 */
-const COV = [['실존·폐업',2,2],['요일 휴무·영업시간',1,2],['임시 폐쇄·보수',2,1],['축제·공휴일·경기 일정',2,0],['좌표·반경·도보 거리',0,2],['구간 이동 시간',1,2],['날짜별 열차·버스편',0,1],['요금·규정 변경',2,0]];
-const CM = ['웹 검색만','구글 지도만','둘 다']; let cm = 0;
+const COV = [['실존·폐업',2,2,1],['요일 휴무·영업시간',1,0,1],['임시 폐쇄·보수',2,0,1],['축제·공휴일·행사',2,0,0],['좌표·반경·거리',0,2,2],['도보·자동차 이동 시간',1,2,1],['대중교통편',0,2,1],['요금·규정 변경',2,0,0],['웨이팅·주종·분위기',1,0,0]];
+const CM = ['웹 검색','국내 API (카카오·티맵)','구글','모두']; let cm = 0;
 function renderCov(){ const t = $('covTabs'); t.replaceChildren(); CM.forEach((n,i) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(i === cm), text:n}); b.onclick = () => { cm = i; renderCov(); }; t.append(b); });
   const box = $('cov'); const first = !box.children.length; let full = 0, none = 0;
-  COV.forEach((r,i) => { const v = cm === 0 ? r[1] : cm === 1 ? r[2] : Math.max(r[1], r[2]); if (v === 2) full++; if (v === 0) none++;
+  COV.forEach((r,i) => { const v = cm < 3 ? r[cm + 1] : Math.max(r[1], r[2], r[3]); if (v === 2) full++; if (v === 0) none++;
     let row = box.children[i]; if (first) { row = el('div', {class:'covrow'}, el('span', {text:r[0]}), el('div', {class:'track'}, el('i')), el('em')); box.append(row); }
     const bar = row.querySelector('i'); bar.style.width = [4,50,100][v] + '%'; bar.style.background = ['var(--problem)','var(--corrected)','var(--verified)'][v]; row.querySelector('em').textContent = ['불가','일부','가능'][v]; });
-  $('covSum').textContent = `8가지 가운데 ${full}가지를 확인할 수 있다.` + (none ? ` ${none}가지는 못 한다.` : ' 못 하는 것은 없다.'); }
+  $('covSum').textContent = `${COV.length}가지 가운데 ${full}가지를 확인할 수 있다.` + (none ? ` ${none}가지는 못 한다.` : ' 못 하는 것은 없다.'); }
 
 /* 조건 병합 */
 const PREF = [
@@ -472,11 +539,13 @@ function renderCost(){ const n = +$('nItems').value, r = +$('nRate').value, t = 
 
 /* 단계 */
 const STEPS = [
-  {n:'0', t:'샘플 확인', done:true, what:'AI가 만든 일정을 웹 검색으로 확인했다.', end:'끝났다. 56개 중 19개를 확인했고 결과를 파일로 남겼다.', need:'없음'},
-  {n:'1', t:'토큰 측정', what:'조건을 넣으면 초안을 쓰고 확인까지 하는 스크립트를 만든다. 호출마다 토큰을 기록한다.', end:'샘플 여행을 다시 돌려 일정 한 건의 토큰과 비용이 나온다.', need:'Anthropic API 키'},
-  {n:'2', t:'구글 연결', what:'장소와 경로 API를 확인 수단으로 붙인다.', end:'같은 여행으로 1단계와 정확도, 비용을 비교한 표가 나온다.', need:'결제가 설정된 Google Cloud API 키'},
-  {n:'3', t:'앱', what:'화면 1부터 9까지와 DB를 만든다.', end:'한 사람이 가입부터 장소 교체까지 마칠 수 있다.', need:'남은 결정 네 가지'},
-  {n:'4', t:'공유', what:'화면 10(공유)을 만들고 동행자의 취향을 합친다.', end:'범위는 3단계가 끝난 뒤 다시 정한다.', need:'3단계 결과'}
+  {n:'0', t:'해외 샘플 확인', done:true, what:'AI가 만든 해외 일정을 웹 검색으로 확인했다.', end:'끝났다. 56개 중 19개를 확인했고 결과를 파일로 남겼다.', need:'없음'},
+  {n:'1', t:'국내 샘플과 토큰', what:'새 저장소를 만든다. 국내 1박 2일 조건을 넣으면 초안을 쓰고 확인까지 하는 스크립트를 만든다. 호출마다 토큰을 기록한다.', end:'국내 일정 한 건의 확인 결과와 토큰, 비용이 나온다.', need:'Anthropic API 키, 첫 도시'},
+  {n:'2', t:'지도 API 비교', what:'카카오 로컬, 티맵·ODsay, 구글을 확인 수단으로 붙인다. 같은 일정으로 비교한다.', end:'수단별 정확도와 비용 표가 나온다. 국내에서 쓸 조합을 정한다.', need:'카카오, 티맵, Google Cloud API 키'},
+  {n:'3', t:'초대제 웹 앱', what:'화면 1부터 9까지, 서버, DB, 카카오 로그인, 초대 코드를 만든다.', end:'초대받은 사람이 가입부터 장소 교체까지 마칠 수 있다.', need:'남은 결정 네 가지'},
+  {n:'4', t:'공유', what:'화면 10(공유)을 만들고 동행자의 취향을 합친다.', end:'받은 사람이 링크로 일정을 본다.', need:'3단계 결과'},
+  {n:'5', t:'공개', what:'누구나 가입하게 연다. 비용 한도, 약관, 개인정보 처리, 운영 화면을 만든다.', end:'모르는 사람이 가입해서 쓴다. 한 사람이 쓰는 비용이 한도를 넘지 않는다.', need:'초대 단계에서 잰 사용자당 비용'},
+  {n:'6', t:'휴대폰 앱', what:'같은 서버에 React Native 앱을 붙인다. 해외 여행도 이 무렵 연다.', end:'스토어에서 받을 수 있다.', need:'공개 단계 결과'}
 ];
 let st = 1;
 function renderSteps(){ const b = $('steps'); b.replaceChildren(); STEPS.forEach((s,i) => { const x = el('button', {class:'step' + (s.done ? ' done' : ''), role:'tab', 'aria-selected': String(i === st)}, el('b', {text:s.n}), el('span', {text:s.t})); x.onclick = () => { st = i; renderSteps(); }; b.append(x); });
