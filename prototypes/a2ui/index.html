@@ -1,0 +1,327 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>여행 도우미 A2UI 시연</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 배치: 왼쪽은 앱 화면, 오른쪽은 오간 메시지. 누르면 양쪽이 같이 움직인다. */
+:root{
+  --bg:#f5f7f9; --surface:#ffffff; --sunk:#e9eef2; --line:#d3dbe2;
+  --fg:#16222c; --muted:#566673; --accent:#0d5c75; --accent-soft:#d9ecf2; --on-accent:#ffffff;
+  --down:#2f5aa8; --down-bg:#e0e9f8; --up:#9a5b00; --up-bg:#fbefd6;
+  --display:"IBM Plex Sans KR","Noto Sans KR",system-ui,sans-serif;
+  --body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f161b; --surface:#172028; --sunk:#1f2a33; --line:#30404c;
+  --fg:#e6edf2; --muted:#9aabb8; --accent:#6cc4dc; --accent-soft:#17343f; --on-accent:#08222b;
+  --down:#8fb4f5; --down-bg:#18294a; --up:#f0b452; --up-bg:#3a2a0c; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f161b; --surface:#172028; --sunk:#1f2a33; --line:#30404c;
+  --fg:#e6edf2; --muted:#9aabb8; --accent:#6cc4dc; --accent-soft:#17343f; --on-accent:#08222b;
+  --down:#8fb4f5; --down-bg:#18294a; --up:#f0b452; --up-bg:#3a2a0c; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3,h4,h5{font-family:var(--display);margin:0;line-height:1.3;text-wrap:balance}
+h1{font-size:clamp(1.6rem,4.5vw,2.2rem);font-weight:700}
+p{margin:0;max-width:40em}
+.eyebrow{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.04em}
+.muted{color:var(--muted);font-size:.9rem}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.three li{border-top:3px solid var(--accent);padding-top:10px;font-weight:500}
+.three span{display:block;font-weight:400;color:var(--muted);font-size:.92rem;margin-top:4px}
+.stage{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:24px;align-items:start}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.label{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.04em}
+.phone{border:2px solid var(--fg);border-radius:30px;background:var(--bg);padding:18px 14px;height:640px;overflow-y:auto}
+button,input{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* A2UI 기본 부품을 이 앱의 모양으로 그린다 */
+.a-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.a-row{display:flex;gap:8px;flex-wrap:wrap;min-width:0}
+.a-text{min-width:0;overflow-wrap:anywhere}
+.a-h1{font-family:var(--display);font-size:1.5rem;font-weight:700}
+.a-h2{font-family:var(--display);font-size:1.25rem;font-weight:700;line-height:1.3}
+.a-h3{font-family:var(--display);font-size:1.1rem;font-weight:600}
+.a-h4{font-family:var(--display);font-size:1rem;font-weight:600}
+.a-h5{font-size:.95rem;font-weight:500}
+.a-caption{font-size:.82rem;color:var(--muted)}
+.a-body{font-size:.9rem}
+.a-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.a-btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:500;font-size:.88rem;min-height:40px}
+.a-btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700;padding:12px;width:100%}
+.a-btn.borderless{border-color:transparent;background:none;color:var(--accent);padding-inline:0}
+.a-field{display:flex;flex-direction:column;gap:4px;font-size:.84rem;color:var(--muted)}
+.a-field input[type=text]{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;color:var(--fg);font-size:.95rem}
+.a-field input[type=range]{accent-color:var(--accent);width:100%}
+.a-field b{color:var(--fg);font-weight:700}
+.a-chips{display:flex;flex-wrap:wrap;gap:6px}
+.a-chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:.86rem;color:var(--fg);min-height:36px}
+.a-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.a-tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.a-tab{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 14px;cursor:pointer;font-weight:500;font-size:.88rem}
+.a-tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.a-unknown{font-family:var(--mono);font-size:.78rem;color:var(--up)}
+
+/* 메시지 기록 */
+.log{display:flex;flex-direction:column;gap:8px;height:640px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--surface)}
+.m{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.m summary{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px 10px;cursor:pointer;list-style:none;font-size:.88rem}
+.m summary::-webkit-details-marker{display:none}
+.dir{font-size:.74rem;font-weight:500;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.dir.down{background:var(--down-bg);color:var(--down)} .dir.up{background:var(--up-bg);color:var(--up)}
+.m code{font-family:var(--mono);font-size:.8rem}
+.m small{color:var(--muted);font-size:.78rem}
+.m pre{margin:0;padding:10px;background:var(--sunk);font-family:var(--mono);font-size:.74rem;line-height:1.5;overflow-x:auto;max-height:260px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools button{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:.86rem}
+@media (max-width:760px){ .stage{grid-template-columns:1fr} .phone,.log{height:560px} }
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:14px">
+    <span class="eyebrow">A2UI v0.9 · 시연</span>
+    <h1>에이전트가 화면을 말하고, 앱이 그립니다</h1>
+    <p>여행 도우미의 흐름을 A2UI로 옮겼습니다. 왼쪽 화면을 눌러 보세요. 오른쪽에 오간 메시지가 쌓입니다.</p>
+    <ul class="three">
+      <li>에이전트는 그리지 않습니다<span>무엇을 보여 줄지 JSON으로 말합니다.</span></li>
+      <li>앱이 자기 부품으로 그립니다<span>버튼, 카드, 탭은 앱이 가진 것을 씁니다.</span></li>
+      <li>누르면 다시 에이전트로 갑니다<span>에이전트는 바뀐 값만 다시 보냅니다.</span></li>
+    </ul>
+  </header>
+
+  <div class="stage">
+    <div class="col">
+      <span class="label">앱 화면</span>
+      <div class="phone" id="phone"></div>
+    </div>
+    <div class="col">
+      <div class="tools"><span class="label" id="count"></span><button id="reset">처음부터</button></div>
+      <div class="log" id="log" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <p class="muted">이 시연의 에이전트는 정해진 규칙으로 답합니다. AI를 부르지 않습니다. 가게, 시간, 금액은 예시입니다. 화면을 그리는 부분은 직접 만든 작은 것이고, 공식 렌더러가 아닙니다.</p>
+</div>
+
+<script>
+/*AGENT-START*/
+/* 에이전트: 사용자 행동을 받아 A2UI v0.9 메시지를 돌려준다. 화면 코드는 한 줄도 없다. */
+const CATALOG = 'https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json', SID = 'trip', V = 'v0.9';
+const msg = o => Object.assign({version: V}, o);
+const T = (id, text, variant) => Object.assign({id, component: 'Text', text}, variant ? {variant} : {});
+const won = n => n.toLocaleString('ko-KR') + '원';
+const BUDGET = 150000;
+const MUST = {
+  '한옥마을': {time: '16:00', note: '해 지기 전이 걷기 좋습니다.', walk: 5, cost: 0, cat: 'play'},
+  '경기전': {time: '17:00', note: '한옥마을 안에 있습니다. 40분쯤 봅니다.', walk: 3, cost: 3000, cat: 'play'},
+  '남부시장 야시장': {time: '20:00', note: '금요일과 토요일 밤에 엽니다.', walk: 7, cost: 10000, cat: 'play'}
+};
+const STAYS = [
+  {name: '한옥 숙소', price: 40000, why: '동선의 가운데입니다.', extra: 0},
+  {name: '호텔', price: 55000, why: '주차가 됩니다. 조금 더 걷습니다.', extra: 6},
+  {name: '게스트하우스', price: 25000, why: '가장 쌉니다. 많이 걷습니다.', extra: 11}
+];
+let S = null;
+
+function formMessages(first) {
+  const out = first ? [msg({createSurface: {surfaceId: SID, catalogId: CATALOG}})] : [];
+  out.push(msg({updateDataModel: {surfaceId: SID, value: {form: {city: '전주', who: ['친구'], walk: 15, must: ['한옥마을', '남부시장 야시장']}}}}));
+  out.push(msg({updateComponents: {surfaceId: SID, components: [
+    {id: 'root', component: 'Column', children: ['f-title', 'f-sub', 'f-city', 'f-who', 'f-walk', 'f-must', 'f-go'], align: 'stretch'},
+    T('f-title', '어디로, 누구와 가나요?', 'h2'),
+    T('f-sub', '꼭 갈 곳을 고르면 반드시 넣습니다.', 'caption'),
+    {id: 'f-city', component: 'TextField', label: '어디로', value: {path: '/form/city'}, variant: 'shortText'},
+    {id: 'f-who', component: 'ChoicePicker', label: '누구와', variant: 'mutuallyExclusive', displayStyle: 'chips', value: {path: '/form/who'},
+      options: ['혼자', '연인', '친구', '가족'].map(x => ({label: x, value: x}))},
+    {id: 'f-walk', component: 'Slider', label: '한 번에 걷는 시간(분)', min: 3, max: 30, value: {path: '/form/walk'}},
+    {id: 'f-must', component: 'ChoicePicker', label: '꼭 갈 곳', variant: 'multipleSelection', displayStyle: 'chips', value: {path: '/form/must'},
+      options: Object.keys(MUST).map(x => ({label: x, value: x}))},
+    {id: 'f-go', component: 'Button', variant: 'primary', child: 'f-go-t', action: {event: {name: 'make_plan', context: {
+      city: {path: '/form/city'}, who: {path: '/form/who'}, walk: {path: '/form/walk'}, must: {path: '/form/must'}}}}},
+    T('f-go-t', '일정 만들기')
+  ]}}));
+  return out;
+}
+
+const PLAN_COMPONENTS = [
+  {id: 'root', component: 'Column', children: ['p-title', 'p-stats', 'p-notice', 'p-tabs', 'p-back'], align: 'stretch'},
+  T('p-title', {path: '/title'}, 'h2'),
+  {id: 'p-stats', component: 'Row', children: ['s-walk', 's-cost', 's-check'], justify: 'spaceBetween'},
+  T('s-walk', {path: '/stats/walk'}, 'h5'), T('s-cost', {path: '/stats/cost'}, 'h5'), T('s-check', {path: '/stats/check'}, 'h5'),
+  T('p-notice', {path: '/notice'}, 'caption'),
+  {id: 'p-tabs', component: 'Tabs', tabs: [{title: '일정', child: 't-plan'}, {title: '숙소', child: 't-stay'}, {title: '경비', child: 't-budget'}]},
+  {id: 'p-back', component: 'Button', variant: 'borderless', child: 'p-back-t', action: {event: {name: 'restart', context: {}}}},
+  T('p-back-t', '조건 다시 넣기'),
+
+  {id: 't-plan', component: 'Column', children: ['alt-title', 'alt-list', 'item-list'], align: 'stretch'},
+  T('alt-title', {path: '/altTitle'}, 'h4'),
+  {id: 'alt-list', component: 'List', children: {componentId: 'alt-card', path: '/alts'}},
+  {id: 'alt-card', component: 'Card', child: 'alt-col'},
+  {id: 'alt-col', component: 'Column', children: ['alt-name', 'alt-why', 'alt-delta', 'alt-btn']},
+  T('alt-name', {path: 'name'}, 'h5'), T('alt-why', {path: 'why'}, 'body'), T('alt-delta', {path: 'delta'}, 'caption'),
+  {id: 'alt-btn', component: 'Button', child: 'alt-btn-t', action: {event: {name: 'swap', context: {item: {path: 'item'}, alt: {path: 'alt'}}}}},
+  T('alt-btn-t', '이걸로 바꾸기'),
+  {id: 'item-list', component: 'List', children: {componentId: 'item-card', path: '/items'}},
+  {id: 'item-card', component: 'Card', child: 'item-col'},
+  {id: 'item-col', component: 'Column', children: ['item-top', 'item-note', 'item-foot']},
+  {id: 'item-top', component: 'Row', children: ['i-time', 'i-name', 'i-tag'], align: 'center'},
+  T('i-time', {path: 'time'}, 'caption'), T('i-name', {path: 'name'}, 'h5'), T('i-tag', {path: 'tag'}, 'caption'),
+  T('item-note', {path: 'note'}, 'body'),
+  {id: 'item-foot', component: 'Row', children: ['i-meta', 'i-btn'], justify: 'spaceBetween', align: 'center'},
+  T('i-meta', {path: 'meta'}, 'caption'),
+  {id: 'i-btn', component: 'Button', child: 'i-btn-t', action: {event: {name: 'show_alts', context: {item: {path: 'index'}}}}},
+  T('i-btn-t', {path: 'altLabel'}),
+
+  {id: 't-stay', component: 'List', children: {componentId: 'stay-card', path: '/stays'}},
+  {id: 'stay-card', component: 'Card', child: 'stay-col'},
+  {id: 'stay-col', component: 'Column', children: ['stay-top', 'stay-why', 'stay-btn']},
+  {id: 'stay-top', component: 'Row', children: ['st-name', 'st-price'], justify: 'spaceBetween'},
+  T('st-name', {path: 'name'}, 'h5'), T('st-price', {path: 'price'}, 'caption'), T('stay-why', {path: 'why'}, 'body'),
+  {id: 'stay-btn', component: 'Button', child: 'stay-btn-t', action: {event: {name: 'pick_stay', context: {stay: {path: 'index'}}}}},
+  T('stay-btn-t', {path: 'btn'}),
+
+  {id: 't-budget', component: 'Column', children: ['b-total', 'b-note', 'b-list'], align: 'stretch'},
+  T('b-total', {path: '/budget/total'}, 'h3'), T('b-note', {path: '/budget/note'}, 'caption'),
+  {id: 'b-list', component: 'List', children: {componentId: 'b-row', path: '/budget/rows'}},
+  {id: 'b-row', component: 'Row', children: ['b-label', 'b-amount'], justify: 'spaceBetween'},
+  T('b-label', {path: 'label'}, 'body'), T('b-amount', {path: 'amount'}, 'h5')
+];
+
+function buildItems(form) {
+  const limit = Number(form.walk) || 15;
+  const items = [{time: '15:00', name: '숙소 체크인', note: '짐을 맡기고 가볍게 나갑니다.', walk: 0, cost: 0, cat: 'stay', fixed: '바꿀 곳 없음'}];
+  (form.must || []).forEach(m => { if (MUST[m]) items.push(Object.assign({name: m, mine: true, fixed: '내가 고른 곳'}, MUST[m])); });
+  items.push({time: '18:00', name: '저녁 · 막걸리집', note: '한 상 차림입니다. 웨이팅 20분 안쪽.', walk: 6, cost: 25000, cat: 'food', alts: [
+    {name: '저녁 · 다른 막걸리집', note: '안주를 골라 시킵니다.', walk: 4, cost: 30000, why: '더 가깝습니다. 웨이팅이 짧습니다.'},
+    {name: '저녁 · 한정식집', note: '예약하고 갑니다.', walk: 11, cost: 35000, why: '조용합니다. 예약이 됩니다.'}]});
+  items.push({time: '21:30', name: '2차 · 조용한 바', note: '금요일은 쉽니다. 대안을 골라 주세요.', walk: 8, cost: 30000, cat: 'food', closed: true, alts: [
+    {name: '2차 · 위스키 바', note: '자정까지 엽니다.', walk: 7, cost: 40000, why: '금요일에 엽니다. 위스키가 많습니다.'},
+    {name: '2차 · 이자카야', note: '새벽 1시까지 엽니다.', walk: 12, cost: 25000, why: '늦게까지 엽니다. 더 쌉니다.'}]});
+  items.push({time: '다음 날 09:30', name: '아침 · 콩나물국밥집', note: '아침 6시부터 엽니다.', walk: 9, cost: 9000, cat: 'food', alts: [
+    {name: '아침 · 해장국집', note: '아침 7시부터 엽니다.', walk: 5, cost: 10000, why: '숙소에서 가장 가깝습니다.'}]});
+  /* 걷는 한도를 넘는 항목은 더 가까운 대안으로 먼저 바꿔 둔다 */
+  let moved = 0;
+  items.forEach(x => { if (!x.alts || x.closed || x.walk <= limit) return; const j = x.alts.findIndex(a => a.walk <= limit); if (j < 0) return;
+    const a = x.alts[j]; x.alts[j] = {name: x.name, note: x.note, walk: x.walk, cost: x.cost, why: '처음 고른 곳입니다.'}; Object.assign(x, {name: a.name, note: a.note, walk: a.walk, cost: a.cost}); moved++; });
+  items.sort((a, b) => (a.time.startsWith('다음') ? 'z' + a.time : a.time).localeCompare(b.time.startsWith('다음') ? 'z' + b.time : b.time));
+  return {items, moved, limit};
+}
+
+function view() {
+  const st = STAYS[S.stay], sum = c => S.items.filter(x => x.cat === c).reduce((a, x) => a + x.cost, 0);
+  const walk = S.items.reduce((a, x) => a + x.walk, 0) + st.extra, food = sum('food'), play = sum('play'), total = st.price + food + play;
+  const closed = S.items.filter(x => x.closed).length, over = S.items.filter(x => x.walk > S.limit).length;
+  return {
+    stats: {walk: '걷기 ' + walk + '분', cost: '1인 ' + won(total), check: closed ? '확인할 것 ' + closed + '건' : '모두 확인됨'},
+    items: S.items.map((x, i) => ({index: i, time: x.time, name: x.name, note: x.note,
+      tag: x.closed ? '쉬는 날' : x.mine ? '내가 고른 곳' : x.walk > S.limit ? '한도보다 멉니다' : '확인됨',
+      meta: (x.walk ? '걸어서 ' + x.walk + '분' : '출발') + (x.cost ? ' · ' + won(x.cost) : ''),
+      altLabel: x.alts && x.alts.length ? '대안 ' + x.alts.length + '곳' : x.fixed || '바꿀 곳 없음'})),
+    stays: STAYS.map((s, i) => ({index: i, name: s.name, price: '1박 ' + won(s.price), why: s.why + (s.extra ? ' 걷기 +' + s.extra + '분.' : ''), btn: i === S.stay ? '선택됨' : '이 숙소로'})),
+    budget: {total: '1인 ' + won(total), note: total <= BUDGET ? '예산 15만 원 안에 듭니다.' : '예산 15만 원을 ' + won(total - BUDGET) + ' 넘습니다.',
+      rows: [{label: '숙박 · ' + st.name, amount: won(st.price)}, {label: '식사와 술', amount: won(food)}, {label: '볼거리', amount: won(play)}]},
+    over
+  };
+}
+const put = (path, value) => msg({updateDataModel: {surfaceId: SID, path, value}});
+
+function agent(action) {
+  const c = action ? action.context : null;
+  if (!action) return formMessages(true);
+  if (action.name === 'restart') { S = null; return formMessages(false); }
+  if (action.name === 'make_plan') {
+    const b = buildItems(c); S = {items: b.items, limit: b.limit, stay: 0, form: c}; const v = view();
+    const who = (c.who || [])[0] || '혼자';
+    const notice = (b.moved ? '걷는 한도 ' + b.limit + '분에 맞춰 ' + b.moved + '곳을 더 가까운 곳으로 골랐습니다. ' : '') + '2차는 쉬는 날입니다. 대안을 골라 주세요.';
+    return [msg({updateComponents: {surfaceId: SID, components: PLAN_COMPONENTS}}),
+      msg({updateDataModel: {surfaceId: SID, value: {form: c, title: (c.city || '전주') + ' 1박 2일 · ' + who, notice, altTitle: '', alts: [], stats: v.stats, items: v.items, stays: v.stays, budget: v.budget}}})];
+  }
+  if (!S) return formMessages(false);
+  if (action.name === 'show_alts') {
+    const x = S.items[c.item]; if (!x) return [];
+    if (!x.alts || !x.alts.length) return [put('/alts', []), put('/altTitle', ''), put('/notice', x.mine ? '「' + x.name + '」은 직접 고른 곳이라 바꾸지 않습니다.' : '「' + x.name + '」은 바꿀 곳이 없습니다.')];
+    return [put('/altTitle', '「' + x.name + '」 대신'), put('/alts', x.alts.map((a, j) => { const dw = a.walk - x.walk, dc = a.cost - x.cost;
+      return {item: c.item, alt: j, name: a.name, why: a.why, delta: '걷기 ' + (dw > 0 ? '+' : '') + dw + '분 · 비용 ' + (dc > 0 ? '+' : '') + dc.toLocaleString('ko-KR') + '원'}; })), put('/notice', '바꾸면 걷는 시간과 경비를 다시 계산합니다.')];
+  }
+  if (action.name === 'swap') {
+    const x = S.items[c.item], a = x && x.alts && x.alts[c.alt]; if (!a) return [];
+    const prev = {name: x.name, note: x.note, walk: x.walk, cost: x.cost, why: '처음 고른 곳입니다.'};
+    if (x.closed) x.alts.splice(c.alt, 1); else x.alts[c.alt] = prev;
+    Object.assign(x, {name: a.name, note: a.note, walk: a.walk, cost: a.cost}); delete x.closed; const v = view();
+    return [put('/items/' + c.item, v.items[c.item]), put('/stats', v.stats), put('/budget', v.budget), put('/alts', []), put('/altTitle', ''), put('/notice', '「' + a.name + '」로 바꿨습니다. 걷는 시간과 경비를 다시 계산했습니다.')];
+  }
+  if (action.name === 'pick_stay') {
+    if (!STAYS[c.stay]) return []; S.stay = c.stay; const v = view();
+    return [put('/stays', v.stays), put('/stats', v.stats), put('/budget', v.budget), put('/notice', '숙소를 「' + STAYS[c.stay].name + '」로 바꿨습니다. 다시 계산했습니다.')];
+  }
+  return [];
+}
+/*AGENT-END*/
+</script>
+
+<script>
+/* 앱: A2UI 메시지를 받아 자기 부품으로 그린다. 여행이 무엇인지 모른다. */
+const $ = id => document.getElementById(id);
+const h = (t, a = {}, ...kids) => { const e = document.createElement(t); for (const k in a) { if (k === 'class') e.className = a[k]; else if (k === 'text') e.textContent = a[k]; else e.setAttribute(k, a[k]); } kids.forEach(k => k != null && e.append(k)); return e; };
+const parts = p => p.split('/').filter(Boolean).map(s => s.replace(/~1/g, '/').replace(/~0/g, '~'));
+const getPath = (d, p) => parts(p).reduce((o, k) => (o == null ? undefined : o[k]), d);
+function setPath(root, p, value) { const ks = parts(p); if (!ks.length) return value === undefined ? {} : value; let o = root;
+  ks.slice(0, -1).forEach((k, i) => { if (o[k] == null || typeof o[k] !== 'object') o[k] = /^\d+$/.test(ks[i + 1]) ? [] : {}; o = o[k]; });
+  const last = ks[ks.length - 1]; if (value === undefined) { if (Array.isArray(o)) o.splice(+last, 1); else delete o[last]; } else o[last] = value; return root; }
+const JUST = {start:'flex-start', center:'center', end:'flex-end', spaceBetween:'space-between', spaceAround:'space-around', spaceEvenly:'space-evenly', stretch:'stretch'};
+const ALIGN = {start:'flex-start', center:'center', end:'flex-end', stretch:'stretch'};
+
+class Surface {
+  constructor(el, onAction) { this.el = el; this.onAction = onAction; this.comps = {}; this.data = {}; this.ui = {}; this.id = null; }
+  apply(m) {
+    if (m.createSurface) { this.id = m.createSurface.surfaceId; this.comps = {}; this.data = {}; this.ui = {}; }
+    else if (m.updateComponents) { m.updateComponents.components.forEach(c => { this.comps[c.id] = c; }); }
+    else if (m.updateDataModel) { this.data = setPath(this.data, m.updateDataModel.path || '/', m.updateDataModel.value); }
+    else if (m.deleteSurface) { this.comps = {}; this.data = {}; }
+  }
+  abs(path, base) { return path.startsWith('/') ? path : base + '/' + path; }
+  val(v, base) { if (v && typeof v === 'object' && !Array.isArray(v)) { if ('path' in v) return getPath(this.data, this.abs(v.path, base)); return ''; } return v; }
+  write(v, base, value) { if (v && typeof v === 'object' && 'path' in v) this.data = setPath(this.data, this.abs(v.path, base), value); }
+  kids(list, base) { if (Array.isArray(list)) return list.map(id => this.node(id, base));
+    const p = this.abs(list.path, base), arr = getPath(this.data, p) || []; return arr.map((_, i) => this.node(list.componentId, p + '/' + i)); }
+  render() { const top = this.el.scrollTop; this.el.replaceChildren(this.comps.root ? this.node('root', '') : h('p', {class:'a-caption', text:'화면이 아직 없습니다.'})); this.el.scrollTop = top; }
+  node(id, base) { const c = this.comps[id]; if (!c) return h('span', {class:'a-unknown', text:'없는 부품: ' + id});
+    const t = c.component;
+    if (t === 'Text') { const s = this.val(c.text, base); return h('div', {class:'a-text a-' + (c.variant || 'body'), text: s == null ? '' : String(s)}); }
+    if (t === 'Row' || t === 'Column') { const e = h('div', {class: t === 'Row' ? 'a-row' : 'a-col'}, ...this.kids(c.children, base)); if (c.justify) e.style.justifyContent = JUST[c.justify]; if (c.align) e.style.alignItems = ALIGN[c.align]; return e; }
+    if (t === 'List') { const e = h('div', {class: c.direction === 'horizontal' ? 'a-row' : 'a-col'}, ...this.kids(c.children, base)); return e; }
+    if (t === 'Card') return h('div', {class:'a-card'}, this.node(c.child, base));
+    if (t === 'Divider') return h('hr');
+    if (t === 'Tabs') { const cur = this.ui[id] || 0, bar = h('div', {class:'a-tabs', role:'tablist'});
+      c.tabs.forEach((tab, i) => { const b = h('button', {class:'a-tab', role:'tab', 'aria-selected': String(i === cur), text: String(this.val(tab.title, base))}); b.onclick = () => { this.ui[id] = i; this.render(); }; bar.append(b); });
+      return h('div', {class:'a-col'}, bar, this.node(c.tabs[cur].child, base)); }
+    if (t === 'Button') { const b = h('button', {class:'a-btn ' + (c.variant || 'default')}, this.node(c.child, base));
+      b.onclick = () => { const ev = c.action && c.action.event; if (!ev) return; const ctx = {}; for (const k in (ev.context || {})) ctx[k] = this.val(ev.context[k], base);
+        this.onAction({version:'v0.9', action:{name: ev.name, surfaceId: this.id, sourceComponentId: id, timestamp: new Date().toISOString(), context: JSON.parse(JSON.stringify(ctx))}}); }; return b; }
+    if (t === 'TextField') { const i = h('input', {type:'text', id:'in-' + id, value: this.val(c.value, base) ?? ''}); i.oninput = () => this.write(c.value, base, i.value); return h('label', {class:'a-field'}, String(this.val(c.label, base)), i); }
+    if (t === 'Slider') { const v = Number(this.val(c.value, base) ?? c.min ?? 0), out = h('b', {text:String(v)}), i = h('input', {type:'range', id:'in-' + id, min:String(c.min ?? 0), max:String(c.max), value:String(v)});
+      i.oninput = () => { this.write(c.value, base, Number(i.value)); out.textContent = i.value; }; return h('label', {class:'a-field'}, h('span', {}, String(this.val(c.label, base) ?? '') + ' ', out), i); }
+    if (t === 'CheckBox') { const i = h('input', {type:'checkbox', id:'in-' + id}); i.checked = !!this.val(c.value, base); i.onchange = () => this.write(c.value, base, i.checked); return h('label', {class:'a-row'}, i, String(this.val(c.label, base))); }
+    if (t === 'ChoicePicker') { const sel = this.val(c.value, base) || [], box = h('div', {class:'a-chips'});
+      c.options.forEach(o => { const on = sel.includes(o.value), b = h('button', {class:'a-chip', 'aria-pressed': String(on), text: String(this.val(o.label, base))});
+        b.onclick = () => { const next = c.variant === 'mutuallyExclusive' ? [o.value] : on ? sel.filter(x => x !== o.value) : [...sel, o.value]; this.write(c.value, base, next); this.render(); }; box.append(b); });
+      return h('div', {class:'a-field'}, String(this.val(c.label, base) ?? ''), box); }
+    return h('span', {class:'a-unknown', text:'그리지 못하는 부품: ' + t});
+  }
+}
+
+/* 기록과 연결 */
+let n = 0;
+const KIND = m => m.action ? 'action · ' + m.action.name : Object.keys(m).find(k => k !== 'version');
+const HINT = m => m.createSurface ? '화면 자리를 만든다' : m.updateComponents ? '부품 ' + m.updateComponents.components.length + '개' : m.updateDataModel ? '값 ' + (m.updateDataModel.path || '/ 전체') : m.action ? '사용자가 눌렀다' : '';
+function log(m, up) { n++; const d = h('details', {class:'m'}, h('summary', {}, h('span', {class:'dir ' + (up ? 'up' : 'down'), text: up ? '앱 → 에이전트' : '에이전트 → 앱'}), h('code', {text: KIND(m)}), h('small', {text: HINT(m)})), h('pre', {text: JSON.stringify(m, null, 2)}));
+  $('log').append(d); $('log').scrollTop = $('log').scrollHeight; $('count').textContent = '오간 메시지 ' + n + '개 · 눌러서 내용 보기'; }
+const surface = new Surface($('phone'), act => { log(act, true); setTimeout(() => deliver(agent(act.action)), 250); });
+function deliver(msgs) { msgs.forEach(m => { log(m, false); surface.apply(m); }); surface.render(); if (msgs.some(m => m.updateDataModel && m.updateDataModel.path === '/alts' && (m.updateDataModel.value || []).length)) $('phone').scrollTop = 0; }
+function boot() { n = 0; $('log').replaceChildren(); S = null; deliver(agent(null)); }
+$('reset').onclick = boot; boot();
+</script>
