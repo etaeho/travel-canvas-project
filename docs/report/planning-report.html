@@ -2,12 +2,11 @@
 <title>여행 일정 도우미 기획안</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* 배치: 한 단 기획안. 장마다 주장 한 줄, 그 아래 조작해 볼 자료 하나. 화면 장은 휴대폰 틀 안에 실제 화면을 그린다. */
+/* 배치: 한 단 기획안. 장마다 주장 한 줄, 그 아래 눌러 볼 자료 하나. 쓰는 순서는 휴대폰 틀 안의 화면으로 보여 준다. */
 :root{
   --bg:#f5f7f9; --surface:#ffffff; --sunk:#e9eef2; --line:#d3dbe2;
   --fg:#16222c; --muted:#566673; --accent:#0d5c75; --accent-soft:#d9ecf2; --on-accent:#ffffff;
-  --problem:#b3261e; --corrected:#9a5b00; --verified:#1c6b3c; --partial:#2f5aa8; --unverified:#7b8792;
-  --problem-bg:#fbe6e4; --corrected-bg:#fbefd6; --verified-bg:#dcf1e3; --partial-bg:#e0e9f8; --unverified-bg:#e7ebee;
+  --good:#1c6b3c; --good-bg:#dcf1e3; --bad:#b3261e; --bad-bg:#fbe6e4; --info:#2f5aa8; --info-bg:#e0e9f8; --idle:#45525d; --idle-bg:#e7ebee;
   --display:"IBM Plex Sans KR","Noto Sans KR",system-ui,sans-serif;
   --body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -15,114 +14,64 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#0f161b; --surface:#172028; --sunk:#1f2a33; --line:#30404c;
   --fg:#e6edf2; --muted:#9aabb8; --accent:#6cc4dc; --accent-soft:#17343f; --on-accent:#08222b;
-  --problem:#ff8a80; --corrected:#f0b452; --verified:#6fd195; --partial:#8fb4f5; --unverified:#93a1ad;
-  --problem-bg:#3b1a18; --corrected-bg:#3a2a0c; --verified-bg:#143222; --partial-bg:#18294a; --unverified-bg:#26323b;
+  --good:#6fd195; --good-bg:#143222; --bad:#ff8a80; --bad-bg:#3b1a18; --info:#8fb4f5; --info-bg:#18294a; --idle:#b4c0ca; --idle-bg:#26323b;
   color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#0f161b; --surface:#172028; --sunk:#1f2a33; --line:#30404c;
   --fg:#e6edf2; --muted:#9aabb8; --accent:#6cc4dc; --accent-soft:#17343f; --on-accent:#08222b;
-  --problem:#ff8a80; --corrected:#f0b452; --verified:#6fd195; --partial:#8fb4f5; --unverified:#93a1ad;
-  --problem-bg:#3b1a18; --corrected-bg:#3a2a0c; --verified-bg:#143222; --partial-bg:#18294a; --unverified-bg:#26323b;
+  --good:#6fd195; --good-bg:#143222; --bad:#ff8a80; --bad-bg:#3b1a18; --info:#8fb4f5; --info-bg:#18294a; --idle:#b4c0ca; --idle-bg:#26323b;
   color-scheme:dark }
 
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.75;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 72px}
-.wrap{max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+.wrap{max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:60px}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
-h1{font-size:clamp(1.7rem,5vw,2.4rem);font-weight:700}
-h2{font-size:1.35rem;font-weight:600}
+h1{font-size:clamp(1.8rem,5.5vw,2.6rem);font-weight:700}
+h2{font-size:1.4rem;font-weight:600}
 h3{font-size:1rem;font-weight:600}
 p{margin:0;max-width:38em}
-a{color:var(--accent)}
 .eyebrow{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.04em}
-.lead{font-size:1.15rem;font-weight:500}
+.lead{font-size:1.18rem;font-weight:500}
 section,header{display:flex;flex-direction:column;gap:16px;min-width:0}
 .muted{color:var(--muted);font-size:.9rem}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.toc{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:12px}
-.toc a{text-decoration:none;white-space:nowrap}
+.toc{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.92rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:12px}
+.toc a{text-decoration:none;white-space:nowrap;color:var(--accent)}
 .toc a:hover{text-decoration:underline}
 .plain{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;max-width:38em}
-.who{font-size:.72rem;font-weight:500;padding:1px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;margin-left:4px;font-family:var(--body);letter-spacing:0}
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-.cols>div{min-width:0}
-.cols h3{font-size:.8rem;color:var(--muted);font-family:var(--mono);font-weight:500;letter-spacing:.04em;margin-bottom:4px}
 .three{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:0;padding:0;list-style:none}
 .three li{border-top:3px solid var(--accent);padding-top:10px;font-weight:500}
-.three span{display:block;font-weight:400;color:var(--muted);font-size:.9rem;margin-top:4px}
-.quote{border-left:3px solid var(--accent);padding:4px 0 4px 14px;font-size:1.02rem}
+.three span{display:block;font-weight:400;color:var(--muted);font-size:.92rem;margin-top:4px}
+.quote{border-left:3px solid var(--accent);padding:4px 0 4px 14px;font-size:1.05rem}
 
-button,select,input{font:inherit;color:inherit}
-button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.88rem;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
-.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-.chip b{font-family:var(--mono);font-weight:500}
-.dot{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
-.s-problem{background:var(--problem)} .s-corrected{background:var(--corrected)} .s-verified{background:var(--verified)} .s-partial{background:var(--partial)} .s-unverified{background:var(--unverified)}
-.bar{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
-.bar button{border:0;padding:0;cursor:pointer;color:var(--surface);font-family:var(--mono);font-size:.85rem;min-width:0}
-.list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.item{border-bottom:1px solid var(--line)}
-.item summary{display:grid;grid-template-columns:auto auto 1fr auto;gap:10px;align-items:center;padding:9px 2px;cursor:pointer;list-style:none}
-.item summary::-webkit-details-marker{display:none}
-.item .when{font-family:var(--mono);font-size:.8rem;color:var(--muted);white-space:nowrap}
-.item .what{min-width:0;overflow-wrap:anywhere}
-.tag{font-size:.75rem;padding:2px 8px;border-radius:4px;white-space:nowrap;font-weight:500}
-.t-problem{background:var(--problem-bg);color:var(--problem)} .t-corrected{background:var(--corrected-bg);color:var(--corrected)}
-.t-verified{background:var(--verified-bg);color:var(--verified)} .t-partial{background:var(--partial-bg);color:var(--partial)} .t-unverified{background:var(--unverified-bg);color:var(--unverified)}
-.item .body{padding:0 2px 12px 2px;font-size:.92rem;display:flex;flex-direction:column;gap:6px}
-.item .src{display:flex;flex-wrap:wrap;gap:6px 12px;font-family:var(--mono);font-size:.78rem}
-.count{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
-
-.tabs{display:flex;gap:6px;flex-wrap:wrap}
+button,input{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tab{border:1px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500}
-.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tag{font-size:.75rem;padding:2px 8px;border-radius:4px;white-space:nowrap;font-weight:500}
+.t-good{background:var(--good-bg);color:var(--good)} .t-bad{background:var(--bad-bg);color:var(--bad)} .t-info{background:var(--info-bg);color:var(--info)} .t-idle{background:var(--idle-bg);color:var(--idle)}
 
 .tblwrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:.9rem}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-family:var(--mono);font-size:.76rem;color:var(--muted);font-weight:500;letter-spacing:.04em}
 td.c{text-align:center;font-family:var(--mono)}
-td strong{white-space:nowrap}
-.dm{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.dm-row{display:grid;grid-template-columns:6.5em 1fr auto;gap:10px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--line)}
-.dm-row time{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-.dm-row b{font-weight:500;min-width:0;overflow-wrap:anywhere}
-.dm-row small{display:block;color:var(--muted);font-weight:400;font-size:.82rem}
-.dm-alts{display:flex;flex-direction:column;gap:8px;padding:10px 2px 14px;border-bottom:1px solid var(--line)}
-.dm-alt{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;background:var(--sunk);border-radius:8px;padding:10px 12px}
-.dm-alt small{grid-column:1;color:var(--muted);font-size:.82rem}
-.dm-alt .tab{grid-row:1/3;grid-column:2}
-.delta{font-family:var(--mono);font-size:.8rem}
-@media (max-width:520px){.dm-row{grid-template-columns:1fr auto}.dm-row time{grid-column:1/-1}}
-td.me{background:var(--accent-soft);font-weight:500}
-code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 5px;border-radius:4px}
+td.me,th.me{background:var(--accent-soft)}
+td.me{font-weight:500}
 
-.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.flow span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-weight:500}
-.flow small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
-.flow i{color:var(--muted);font-style:normal}
-
-/* 기능 카드 */
-.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-.feat div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
-.feat p{font-size:.9rem;color:var(--muted)}
-
-/* 화면 */
+/* 쓰는 순서 */
 .screens{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start}
 .snav{display:flex;flex-direction:column;gap:6px}
 .sbtn{display:grid;grid-template-columns:2em 1fr;gap:2px 6px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px;cursor:pointer}
 .sbtn b{font-family:var(--mono);font-weight:500;color:var(--accent)}
 .sbtn span{font-weight:500}
-.sbtn small{grid-column:2;color:var(--muted);font-size:.84rem;line-height:1.5}
+.sbtn small{grid-column:2;color:var(--muted);font-size:.86rem;line-height:1.55}
 .sbtn[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
-.phone{width:280px;max-width:100%;border:2px solid var(--fg);border-radius:30px;padding:18px 14px;background:var(--bg);display:flex;flex-direction:column;gap:9px;font-size:13px;line-height:1.5;min-height:520px}
+.phone{width:284px;max-width:100%;border:2px solid var(--fg);border-radius:30px;padding:18px 14px;background:var(--bg);display:flex;flex-direction:column;gap:9px;font-size:13px;line-height:1.5;min-height:540px}
 .ph-h{font-family:var(--display);font-size:18px;font-weight:700;line-height:1.3}
 .ph-sub{color:var(--muted);font-size:12px}
 .ph-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;display:flex;flex-direction:column;gap:3px}
-.ph-card.bad{border:2px solid var(--problem)}
+.ph-card.bad{border:2px solid var(--bad)}
 .ph-top{display:flex;gap:8px;align-items:center}
 .ph-top b{flex:1;font-weight:500;min-width:0}
 .ph-top time{font-family:var(--mono);font-size:11px;color:var(--muted)}
@@ -134,453 +83,261 @@ code{font-family:var(--mono);font-size:.85em;background:var(--sunk);padding:1px 
 .ph-chips span{border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface);font-size:12px}
 .ph-chips span.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .ph-btn{margin-top:auto;background:var(--accent);color:var(--on-accent);border-radius:10px;padding:11px;text-align:center;font-weight:700}
-.ph-alert{background:var(--problem-bg);color:var(--problem);border-radius:8px;padding:8px 10px;font-weight:500}
-.tree{font-family:var(--mono);font-size:.84rem;line-height:1.7;background:var(--sunk);border-radius:8px;padding:12px;margin:0;overflow-x:auto}
+.ph-note{background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:8px 10px;font-weight:500}
 
-/* 계산기 */
-.sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 22px}
-.sl label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem}
-.sl output{font-family:var(--mono)}
-.sl input[type=range]{width:100%;accent-color:var(--accent)}
+/* 지금과 이 앱 */
+.ba{display:flex;flex-direction:column;gap:10px}
+.ba-row{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}
+.ba-row div{border-radius:10px;padding:12px 14px;min-width:0}
+.ba-row .b{background:var(--sunk);color:var(--muted)}
+.ba-row .a{background:var(--surface);border:1px solid var(--accent);font-weight:500}
+.ba-row i{font-style:normal;color:var(--muted)}
+.ba-head{font-family:var(--mono);font-size:.76rem;color:var(--muted);letter-spacing:.04em}
+
+/* 다른 점 */
+.diff{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.diff div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.diff b{font-family:var(--mono);color:var(--accent);font-weight:500;font-size:.85rem}
+.diff p{font-size:.93rem;color:var(--muted)}
+
+/* 대안 예시 */
 .result{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .result div{background:var(--sunk);border-radius:8px;padding:12px}
 .result b{display:block;font-family:var(--mono);font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.2}
-.result span{font-size:.82rem;color:var(--muted)}
+.result span{font-size:.84rem;color:var(--muted)}
+.dm{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.dm-row{display:grid;grid-template-columns:7em 1fr auto;gap:10px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--line)}
+.dm-row time{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.dm-row b{font-weight:500;min-width:0;overflow-wrap:anywhere}
+.dm-row small{display:block;color:var(--muted);font-weight:400;font-size:.84rem}
+.dm-alts{display:flex;flex-direction:column;gap:8px;padding:10px 2px 14px;border-bottom:1px solid var(--line)}
+.dm-alt{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;background:var(--sunk);border-radius:8px;padding:10px 12px}
+.dm-alt small{grid-column:1;color:var(--muted);font-family:var(--mono);font-size:.8rem}
+.dm-alt .tab{grid-row:1/3;grid-column:2}
 
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:6px}
-.step{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:center;min-width:0}
-.step b{font-family:var(--mono);font-weight:500}
-.step span{font-size:.78rem;color:var(--muted);text-align:center;overflow-wrap:anywhere}
-.step[aria-selected="true"]{border-color:var(--accent);background:var(--accent-soft)}
-.step.done b::after{content:" ✓";color:var(--verified)}
-.ask{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;counter-reset:q}
-.ask li{display:grid;grid-template-columns:2em 1fr;gap:4px}
-.ask li::before{counter-increment:q;content:counter(q);font-family:var(--mono);color:var(--accent);font-weight:500}
-.ask strong{display:block}
-.ask div{min-width:0}
-@media (max-width:640px){ .screens{grid-template-columns:1fr} .phone{margin:0 auto} .item summary{grid-template-columns:auto 1fr auto} .item .when{grid-column:2/-1;grid-row:2} .item .what{grid-column:2} }
+/* 요금 */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.plan small{color:var(--muted);font-size:.86rem}
+.plan ul{margin:0;padding-left:1.1em;font-size:.92rem;display:flex;flex-direction:column;gap:4px}
+.never{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.never li{background:var(--sunk);border-radius:8px;padding:12px 14px;font-weight:500}
+.never span{display:block;font-weight:400;color:var(--muted);font-size:.88rem}
+.sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 22px}
+.sl label{display:flex;justify-content:space-between;gap:8px;font-size:.92rem}
+.sl output{font-family:var(--mono)}
+.sl input[type=range]{width:100%;accent-color:var(--accent)}
+
+.ask{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:18px}
+.ask>li{display:flex;flex-direction:column;gap:6px}
+.ask h3{color:var(--accent)}
+@media (max-width:640px){ .screens{grid-template-columns:1fr} .phone{margin:0 auto} .ba-row{grid-template-columns:1fr} .ba-row i{display:none} .dm-row{grid-template-columns:1fr auto} .dm-row time{grid-column:1/-1} }
 </style>
 
 <div class="wrap">
 <header>
-  <span class="eyebrow">앱 개발 기획안 · 초안 · 2026-11-26</span>
-  <h1>여행 일정 도우미 기획안</h1>
-  <p class="lead">AI가 가장 좋은 경로와 일정을 짠다. 항목마다 대안도 AI가 추천한다.</p>
+  <span class="eyebrow">앱 기획안 · 초안 · 의견을 듣고 고칩니다</span>
+  <h1>여행 일정 도우미 <span style="font-size:.5em;font-weight:500;color:var(--muted)">(가칭)</span></h1>
+  <p class="lead">조건만 넣으세요. AI가 가장 좋은 경로와 일정을 짭니다. 마음에 안 드는 곳은 누르면 바뀝니다.</p>
   <ul class="three">
-    <li>핵심 1 · 최적 경로와 일정<span>조건을 넣으면 AI가 순서, 시간, 이동을 짠다.</span></li>
-    <li>핵심 2 · 항목별 대안<span>일정의 항목마다 AI가 바꿀 곳을 추천한다. 누르면 바뀐다.</span></li>
-    <li>기본 · 확인<span>가는 날 여는지, 갈 수 있는 거리인지. 자랑이 아니라 당연히 되어야 하는 것이다.</span></li>
+    <li>일정을 대신 짭니다<span>갈 곳, 순서, 시간, 이동까지 한 번에 나옵니다.</span></li>
+    <li>항목마다 대안이 있습니다<span>바꾸면 앞뒤 이동과 경비를 다시 계산합니다.</span></li>
+    <li>광고가 없습니다<span>가게에서 돈을 받지 않습니다. 추천은 AI의 판단뿐입니다.</span></li>
   </ul>
   <nav class="toc" aria-label="차례">
-    <a href="#what">1 어떤 앱인가</a><a href="#why">2 왜 만드는가</a><a href="#target">3 누가 쓰는가</a><a href="#diff">4 무엇이 다른가</a><a href="#legacy">5 기존 앱에서 가져올 것</a><a href="#features">6 주요 기능</a><a href="#screens">7 화면 구성</a><a href="#structure">8 서비스 구조</a><a href="#money">9 수익 모델</a><a href="#roadmap">10 개발 단계</a><a href="#kpi">11 성공 지표</a><a href="#risk">12 위험</a><a href="#open">13 남은 결정</a>
+    <a href="#what">1 어떤 앱인가</a><a href="#how">2 어떻게 쓰나</a><a href="#better">3 무엇이 편해지나</a><a href="#diff">4 무엇이 다른가</a><a href="#money">5 요금</a><a href="#ask">6 의견을 듣고 싶습니다</a>
   </nav>
-  <p class="muted"><span class="who" style="margin-left:0">결정</span> 은 대화에서 정한 것이다. <span class="who">제안</span> 은 작성자가 정했고 바꿀 수 있다. <span class="who">미정</span> 은 답이 필요하다.</p>
 </header>
 
 <section>
   <span class="eyebrow" id="what">1 · 어떤 앱인가</span>
-  <h2>조건을 넣으면 AI가 경로와 일정을 짜고, 항목마다 대안을 준다</h2>
-  <p class="quote">"금요일 퇴근하고 전주에 간다. 숙소에서 걸어서 15분 안. 1차는 막걸리, 2차는 조용한 바, 다음 날은 해장국."<br>이 한 줄을 넣으면 시간표가 나온다. 순서는 이동이 가장 적게 잡힌다. 가게마다 바꿀 곳이 두세 개 붙는다.</p>
-  <div class="panel">
-    <h3>정해진 것<span class="who">결정</span></h3>
-    <div class="cols">
-      <div><h3>형태</h3><p>웹 앱으로 시작한다. 휴대폰 앱은 나중에 붙인다.</p></div>
-      <div><h3>지역</h3><p>국내 여행이 먼저다. 해외는 그다음이다.</p></div>
-      <div><h3>사용자</h3><p>목표는 공개 서비스다. 나와 지인부터 초대해서 쓴다.</p></div>
-      <div><h3>개발</h3><p>새 프로젝트로 만든다. 기존 페이지는 고치지 않는다.</p></div>
-    </div>
-  </div>
+  <h2>주말 여행의 일정을 AI가 짜 주는 앱입니다</h2>
+  <p>친구, 연인, 가족과 1박 2일로 떠납니다. 어디를 갈지, 어떤 순서로 돌지, 무엇을 먹을지 정해야 합니다. 지도와 블로그를 오가다 보면 몇 시간이 갑니다.</p>
+  <p>이 앱에서는 한 줄이면 됩니다.</p>
+  <p class="quote">"다음 주 금요일, 전주, 친구 셋. 많이 걷기 싫고 줄 서기 싫다. 저녁은 막걸리, 2차는 조용한 곳."</p>
+  <p>숙소, 식당, 술집, 카페, 놀거리가 시간표로 나옵니다. 순서는 이동이 가장 적게 잡힙니다. 가게마다 바꿀 곳이 두세 개 붙어 있습니다.</p>
+  <p class="muted">국내 주말 여행부터 시작합니다. 웹에서 먼저 쓰고, 휴대폰 앱은 그다음에 나옵니다.</p>
 </section>
 
 <section>
-  <span class="eyebrow" id="why">2 · 왜 만드는가</span>
-  <h2>코스 짜기는 오래 걸리고, AI가 짠 코스는 틀린다</h2>
-  <ol class="plain">
-    <li><strong>코스를 짜는 데 시간이 든다.</strong> 지도, 블로그, 리뷰를 오가며 가게를 고르고 거리를 잰다.</li>
-    <li><strong>조건을 매번 다시 말해야 한다.</strong> 걷기 싫다, 줄 서기 싫다, 소주보다 위스키다. 여행마다 같은 말을 반복한다.</li>
-    <li><strong>AI가 짠 일정은 확인되지 않았다.</strong> 그럴듯하지만 가 보면 문이 닫혀 있다.</li>
-  </ol>
-  <p>세 번째를 직접 확인했다. AI가 만든 13일 일정에서 19개 항목을 검색으로 확인했다. 7개는 그대로 따르면 실패한다. 아래에서 직접 보라.</p>
-  <div class="panel">
-    <div class="bar" id="bar" role="group" aria-label="상태별 개수"></div>
-    <div class="chips" id="statusChips"></div>
-    <div class="count" id="count"></div>
-    <div class="list" id="list"></div>
+  <span class="eyebrow" id="how">2 · 어떻게 쓰나</span>
+  <h2>일곱 단계입니다. 직접 눌러 보세요</h2>
+  <div class="screens">
+    <div class="snav" id="snav" role="tablist"></div>
+    <div class="phone" id="phone" aria-live="polite"></div>
   </div>
-  <p class="muted">확인한 일정은 해외 여행이다. 2026년 11월에 웹 검색으로 확인했다. 국내 일정으로도 같은 확인을 다시 한다.</p>
-  <p><strong>목적은 하나다.</strong> 일정 짜는 일을 AI에게 맡기고, 사람은 고르기만 한다. 맘에 안 들면 대안을 누른다.</p>
+  <p class="muted">예시 화면입니다. 지역과 가게는 설명을 위해 넣었습니다.</p>
 </section>
 
 <section>
-  <span class="eyebrow" id="target">3 · 누가 쓰는가<span class="who">미정</span></span>
-  <h2>일정을 직접 짜는 자유여행자</h2>
-  <div class="tabs" id="tgTabs" role="tablist"></div>
-  <div class="panel"><div class="cols" id="tgBody"></div></div>
-  <p class="muted">타겟은 아직 정하지 않았다. 아래는 작성자의 가정이다. 시장 규모도 조사하지 않았다. 술과 음식 중심으로 좁힐지는 13장에서 정한다.</p>
+  <span class="eyebrow" id="better">3 · 무엇이 편해지나</span>
+  <h2>짜는 시간이 줄고, 바꾸기가 쉬워집니다</h2>
+  <div class="ba">
+    <div class="ba-row ba-head"><span>지금</span><i></i><span>이 앱에서는</span></div>
+    <div class="ba-row"><div class="b">지도, 블로그, 리뷰를 오가며 갈 곳을 고릅니다.</div><i>→</i><div class="a">조건을 넣으면 일정이 한 번에 나옵니다.</div></div>
+    <div class="ba-row"><div class="b">어떤 순서가 덜 걷는지 일일이 재 봅니다.</div><i>→</i><div class="a">이동 시간을 계산해 가장 짧은 순서로 잡습니다.</div></div>
+    <div class="ba-row"><div class="b">한 곳이 마음에 안 들면 앞뒤를 다시 짭니다.</div><i>→</i><div class="a">대안을 누르면 앞뒤 이동과 경비가 따라 바뀝니다.</div></div>
+    <div class="ba-row"><div class="b">도착해 보니 쉬는 날입니다.</div><i>→</i><div class="a">가는 날 여는지 미리 확인하고, 안 되면 먼저 알립니다.</div></div>
+    <div class="ba-row"><div class="b">걷기 싫다, 줄 서기 싫다. 매번 다시 말합니다.</div><i>→</i><div class="a">취향을 한 번 적으면 다음 여행에도 기억합니다.</div></div>
+    <div class="ba-row"><div class="b">숙소와 경비는 따로 찾고 따로 계산합니다.</div><i>→</i><div class="a">일정, 숙소, 경비가 한곳에 있고 같이 움직입니다.</div></div>
+    <div class="ba-row"><div class="b">일정을 캡처해서 단체방에 올립니다.</div><i>→</i><div class="a">링크 하나로 동행에게 보냅니다.</div></div>
+  </div>
 </section>
 
 <section>
   <span class="eyebrow" id="diff">4 · 무엇이 다른가</span>
-  <h2>순서에 근거가 있고, 항목마다 대안이 있다</h2>
-  <div class="tblwrap"><table>
-    <thead><tr><th></th><th>직접 검색</th><th>AI 챗봇</th><th>일정 앱</th><th>이 앱</th></tr></thead>
-    <tbody>
-      <tr><td>일정을 대신 짜 준다</td><td class="c">×</td><td class="c">○</td><td class="c">△</td><td class="c me">○</td></tr>
-      <tr><td><strong>이동 시간을 계산해 순서를 정한다</strong></td><td class="c">직접</td><td class="c">×</td><td class="c">△</td><td class="c me">○</td></tr>
-      <tr><td>내 취향을 기억한다</td><td class="c">×</td><td class="c">△</td><td class="c">△</td><td class="c me">○</td></tr>
-      <tr><td>가는 날 기준으로 확인한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
-      <tr><td>근거와 확인 시각을 보여 준다</td><td class="c">×</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
-      <tr><td><strong>항목마다 대안을 주고 바로 바꾼다</strong></td><td class="c">×</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
-      <tr><td>바꾸면 이동과 경비를 다시 계산한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
-      <tr><td>숙소와 경비가 일정과 같이 움직인다</td><td class="c">×</td><td class="c">×</td><td class="c">△</td><td class="c me">○</td></tr>
-    </tbody>
-  </table></div>
-  <p class="muted">○ 된다, △ 일부 된다, × 안 된다. 다른 서비스의 칸은 제품별 조사 전의 일반적인 구분이다. 경쟁 앱 조사는 따로 해야 한다.</p>
-</section>
-
-<section>
-  <span class="eyebrow" id="legacy">5 · 기존 앱에서 가져올 것</span>
-  <h2>보기는 좋다. 그러나 읽기만 할 수 있다</h2>
-  <p>지금 저장소에 올라간 앱은 Gemini가 만든 허니문 일정 페이지다. 화면은 잘 짜여 있다. 핵심 기능 둘은 없다.</p>
-  <div class="panel">
-    <div class="cols">
-      <div><h3>장점</h3>
-        <ul class="plain">
-          <li>탭이 셋뿐이다. 일정, 숙소, 경비.</li>
-          <li>날짜별 카드를 누르면 펼쳐진다. 13일도 길지 않다.</li>
-          <li>시간, 활동, 메모, 이동이 항목마다 같은 순서다.</li>
-          <li>항목마다 지도 핀이 있다.</li>
-          <li>날마다 예비 장소가 있다.</li>
-          <li>숙소마다 추천 이유와 가격대가 있다.</li>
-          <li>경비를 항목별로 나눠 보여 준다.</li>
-        </ul>
-      </div>
-      <div><h3>단점</h3>
-        <ul class="plain">
-          <li>조건을 넣는 곳이 없다. 다른 여행에는 못 쓴다.</li>
-          <li>왜 이 순서인지 근거가 없다. 이동 시간은 AI가 쓴 글이다.</li>
-          <li>날짜와 안 맞는 항목이 있다. 확인한 19개 중 7개다.</li>
-          <li>예비 장소가 어느 항목의 대안인지 모른다. 바꿀 수도 없다.</li>
-          <li>지도에 동선을 그리지 않는다.</li>
-          <li>일정과 숙소 탭이 다른 말을 한다. 경비 표기도 엇갈린다.</li>
-          <li>저장, 로그인, 공유가 없다.</li>
-        </ul>
-      </div>
-    </div>
+  <h2>순서에 이유가 있고, 추천에 광고가 없습니다</h2>
+  <div class="diff">
+    <div><b>하나</b><h3>순서에 이유가 있습니다</h3><p>AI가 갈 곳을 고릅니다. 이동 시간은 지도로 계산합니다. 여러 순서를 비교해 가장 덜 움직이는 것을 고릅니다. 왜 이 순서인지 보여 줍니다.</p></div>
+    <div><b>둘</b><h3>항목마다 대안이 있습니다</h3><p>대안마다 이유가 붙습니다. 더 가깝다, 더 싸다, 더 조용하다. 바꾸면 무엇이 달라지는지 미리 보여 줍니다. 걷는 길 대신 택시나 버스도 고를 수 있습니다.</p></div>
+    <div><b>셋</b><h3>광고도 수수료도 없습니다</h3><p>가게나 숙소에서 돈을 받지 않습니다. 예약을 연결해도 수수료를 받지 않습니다. 돈을 낸 곳이 위로 올라오는 일이 없습니다.</p></div>
+    <div><b>넷</b><h3>가는 날 기준으로 확인합니다</h3><p>그날 여는지, 걸어갈 거리인지, 지역 행사와 겹치는지 봅니다. AI 챗봇이 짠 일정을 확인해 봤더니 19곳 중 7곳은 그대로 갈 수 없었습니다.</p></div>
   </div>
-  <div class="tblwrap"><table>
-    <thead><tr><th>가져올 것</th><th>바꿀 점</th></tr></thead>
-    <tbody>
-      <tr><td>탭 셋: 일정, 숙소, 경비</td><td>셋이 같은 데이터에서 나온다. 서로 다른 말을 하지 않는다.</td></tr>
-      <tr><td>날짜별 카드와 시간표</td><td>이동 시간을 계산한 값으로 바꾼다. 순서의 이유를 보여 준다.</td></tr>
-      <tr><td>항목별 지도 핀</td><td>앱 안 지도에 하루 동선을 그린다.</td></tr>
-      <tr><td>예비 장소</td><td>날짜 단위에서 항목 단위로 바꾼다. 누르면 교체된다.</td></tr>
-      <tr><td>숙소 추천 이유와 가격대</td><td>예약 페이지로 연결한다. 숙소를 바꾸면 동선을 다시 짠다.</td></tr>
-      <tr><td>경비 분해</td><td>일정을 바꾸면 다시 계산한다.</td></tr>
-    </tbody>
-  </table></div>
-  <p class="muted">코드를 가져오는 것이 아니다. 화면의 좋은 점만 가져온다. 기존 페이지는 고치지 않는다.</p>
-</section>
 
-<section>
-  <span class="eyebrow" id="features">6 · 주요 기능</span>
-  <h2>핵심은 둘이다. 나머지는 그것을 받친다</h2>
-  <div class="panel">
-    <div class="cols">
-      <div><h3>핵심 1 · 최적 경로와 일정</h3>
-        <p>AI가 갈 곳을 고르고 순서를 정한다. "최적"의 기준은 다섯 가지다.</p>
-        <ol class="plain">
-          <li>이동이 적다. 같은 동네를 묶는다.</li>
-          <li>여는 시간에 맞는다.</li>
-          <li>내 한도를 넘지 않는다. 걷는 시간, 웨이팅.</li>
-          <li>예산 안에 든다.</li>
-          <li>하루의 흐름이 자연스럽다. 밥 때에 밥을 먹는다.</li>
-        </ol>
-      </div>
-      <div><h3>핵심 2 · 항목별 대안</h3>
-        <p>일정의 항목마다 AI가 바꿀 곳을 두세 개 붙인다.</p>
-        <ul class="plain">
-          <li>대안마다 이유를 적는다. 더 가깝다, 더 싸다, 더 조용하다.</li>
-          <li>바꾸면 무엇이 달라지는지 미리 보여 준다. 이동 몇 분, 비용 얼마.</li>
-          <li>누르면 바뀐다. 앞뒤 이동과 경비를 다시 계산한다.</li>
-          <li>경로에도 대안이 있다. 걸어서, 택시로, 버스로.</li>
-          <li>문제가 생긴 항목은 먼저 알리고 대안을 내민다.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <h3>대안을 눌러 보라</h3>
+  <h3>대안을 눌러 보세요</h3>
   <div class="panel">
     <div class="result">
       <div><b id="dmWalk"></b><span>걷는 시간 합계</span></div>
       <div><b id="dmCost"></b><span>1인 예상 비용</span></div>
     </div>
     <div class="dm" id="dm"></div>
-    <p class="muted">예시다. 가게, 시간, 금액은 지어낸 것이다.</p>
+    <p class="muted">예시입니다. 대안으로 바꾸면 위의 합계가 다시 계산됩니다.</p>
   </div>
-  <h3>받치는 기능</h3>
-  <div class="feat">
-    <div><h3>취향 프로필<span class="who">초대 단계</span></h3><p>걷는 시간, 웨이팅, 주종, 분위기, 자차 여부. 한 번 적으면 모든 여행의 기본값이 된다.</p></div>
-    <div><h3>숙소 추천<span class="who">초대 단계</span></h3><p>숙소가 동선의 중심이다. 추천 이유와 가격대를 보여 준다. 숙소를 바꾸면 일정을 다시 짠다.</p></div>
-    <div><h3>예상 경비<span class="who">초대 단계</span></h3><p>숙박, 식비, 이동, 놀거리로 나눠 보여 준다. 일정을 바꾸면 다시 계산한다.</p></div>
-    <div><h3>확인<span class="who">초대 단계</span></h3><p>가는 날 여는지, 걸어갈 수 있는지, 그 지역에 행사가 있는지 확인한다. 결과와 근거를 카드에 붙인다.</p></div>
-    <div><h3>지도 동선<span class="who">초대 단계</span></h3><p>하루 동선을 지도에 그린다. 걷는 한도를 넘는 구간을 표시한다.</p></div>
-    <div><h3>공유<span class="who">공개 단계</span></h3><p>동행자에게 링크로 보낸다. 나중에는 여러 사람의 취향을 합쳐 코스를 짠다.</p></div>
-  </div>
-  <h3>하지 않는 것<span class="who">제안</span></h3>
-  <ul class="plain">
-    <li>예약과 결제 대행. 예약 페이지로 연결만 한다.</li>
-    <li>항공권, 숙소 가격 비교.</li>
-    <li>실시간 길 안내.</li>
-    <li>여러 명이 동시에 고치기.</li>
-  </ul>
-</section>
 
-<section>
-  <span class="eyebrow" id="screens">7 · 화면 구성<span class="who">제안</span></span>
-  <h2>일정, 숙소, 경비. 탭 셋이 중심이다</h2>
-  <p>화면을 눌러 보라. 오른쪽에 그 화면이 나온다.</p>
-  <div class="screens">
-    <div class="snav" id="snav" role="tablist"></div>
-    <div class="phone" id="phone" aria-live="polite"></div>
-  </div>
-  <p class="muted">예시 화면이다. 지역, 가게, 시간은 지어낸 것이다. 더 자세한 시안 열 장은 <a href="https://claude.ai/artifact/Tv8e3NMk2Uomoo7oHjVy32" target="_blank" rel="noopener">화면 시안</a>에 있다. 시안은 공유해야 다른 사람이 볼 수 있다.</p>
-  <h3>화면 구조</h3>
-  <pre class="tree">내 여행 (첫 화면)
-├ 내 취향
-├ 새 여행 ─ 이번 여행 조건 ─ 만들고 확인하기
-└ 여행 하나
-   ├ 일정 탭 (날짜별 시간표)
-   │  ├ 항목별 대안 ─ 교체
-   │  ├ 확인 근거
-   │  └ 지도 보기 (하루 동선)
-   ├ 숙소 탭
-   ├ 경비 탭
-   └ 공유</pre>
-  <h3>화면 규칙</h3>
-  <ul class="plain">
-    <li>확인 상태는 다섯 가지다. 확인됨, 정정, 문제, 일부 확인, 확인 전.</li>
-    <li>상태를 색만으로 나누지 않는다. 글자를 같이 쓴다.</li>
-    <li>모든 카드에 대안 버튼이 있다. 문제가 있는 카드는 대안을 먼저 펼쳐 보인다.</li>
-    <li>대안에는 바꾸면 달라지는 값을 같이 적는다. 이동 몇 분, 비용 얼마.</li>
-    <li>일정, 숙소, 경비 탭은 같은 데이터를 본다. 하나를 바꾸면 셋이 다 바뀐다.</li>
-    <li>한 화면에서 하나만 묻는다. 버튼은 엄지가 닿는 아래쪽에 둔다.</li>
-    <li>공유할 때 예산과 취향은 숨긴 채로 시작한다.</li>
-  </ul>
-</section>
-
-<section>
-  <span class="eyebrow" id="structure">8 · 서비스 구조</span>
-  <h2>AI가 고르고 짠다. 계산과 확인이 그것을 받친다</h2>
-  <p>AI는 갈 곳과 순서를 정한다. 이동 시간은 AI가 쓰지 않는다. 지도 API로 계산한다. 그래야 "최적"이라고 말할 수 있다.</p>
-  <div class="flow" role="img" aria-label="조건 합치기, 초안 쓰기, 확인, 문제 항목 교체, 일정 표시 순서">
-    <span>조건 합치기<small>취향 + 이번 여행</small></span><i>→</i>
-    <span>후보 고르기<small>AI</small></span><i>→</i>
-    <span>경로와 일정 짜기<small>AI + 이동 시간 계산</small></span><i>→</i>
-    <span>확인<small>지도 API, 웹 검색</small></span><i>→</i>
-    <span>대안 붙이기<small>항목마다 두세 개</small></span><i>→</i>
-    <span>일정 화면</span>
-  </div>
+  <h3>다른 방법과 견주면</h3>
   <div class="tblwrap"><table>
-    <thead><tr><th>정보</th><th>어디서 얻는가</th></tr></thead>
+    <thead><tr><th></th><th>직접 검색</th><th>AI 챗봇</th><th>일정 앱</th><th class="me">이 앱</th></tr></thead>
     <tbody>
-      <tr><td>장소, 위치, 거리, 이동 시간</td><td>지도 API. 카카오, 티맵, 구글을 비교한 뒤 고른다.</td></tr>
-      <tr><td>휴무일, 임시 휴업, 지역 행사</td><td>웹 검색. 지도 API가 주지 않는 것이 많다.</td></tr>
-      <tr><td>웨이팅, 주종, 분위기</td><td>우리가 쌓는다. 방법은 미정이다.<span class="who">미정</span></td></tr>
-      <tr><td>사용자가 다녀온 결과</td><td>사용자가 남긴다. 다음 사람의 확인에 쓴다.</td></tr>
+      <tr><td>일정을 대신 짜 준다</td><td class="c">×</td><td class="c">○</td><td class="c">△</td><td class="c me">○</td></tr>
+      <tr><td>이동 시간을 계산해 순서를 정한다</td><td class="c">직접</td><td class="c">×</td><td class="c">△</td><td class="c me">○</td></tr>
+      <tr><td>항목마다 대안을 주고 바로 바꾼다</td><td class="c">×</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td>바꾸면 이동과 경비를 다시 계산한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td>가는 날 여는지 확인한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td>내 취향을 기억한다</td><td class="c">×</td><td class="c">△</td><td class="c">△</td><td class="c me">○</td></tr>
+      <tr><td>광고와 제휴 없이 추천한다</td><td class="c">×</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
     </tbody>
   </table></div>
-  <p>화면과 서버를 나눠 만든다.<span class="who">제안</span> 서버는 데이터만 내준다. 나중에 휴대폰 앱을 만들 때 서버는 그대로 쓴다. 기술 구성과 데이터 설계는 저장소의 설계 문서에 따로 적었다.</p>
-  <p class="muted">한국에서는 구글 길찾기가 아직 제한적일 수 있다. 구글은 2026년 2월에 정밀 지도 사용을 조건부로 허가받았다. 지금 되는지는 확인하지 못했다.</p>
+  <p class="muted">○ 된다, △ 일부 된다, × 안 된다. 다른 방법의 칸은 일반적인 구분입니다. 서비스마다 다를 수 있습니다.</p>
 </section>
 
 <section>
-  <span class="eyebrow" id="money">9 · 수익 모델<span class="who">제안</span></span>
-  <h2>처음에는 무료다. 공개할 때 구독과 제휴로 번다</h2>
-  <div class="tblwrap"><table>
-    <thead><tr><th>수익원</th><th>내용</th><th>언제</th></tr></thead>
-    <tbody>
-      <tr><td><strong>구독</strong></td><td>무료는 한 달에 코스 몇 개까지. 구독하면 제한이 없다. 출발 전날 다시 확인해 주고, 동행자 취향을 합쳐 준다.</td><td>공개 단계</td></tr>
-      <tr><td><strong>예약 제휴</strong></td><td>숙소, 놀거리 예약 페이지로 연결하고 수수료를 받는다.</td><td>공개 단계</td></tr>
-      <tr><td><strong>가게 제휴</strong></td><td>가게가 영업시간, 휴무, 예약 정보를 직접 관리한다. 제휴 표시를 붙인다.</td><td>사용자가 모인 뒤</td></tr>
-      <tr><td><strong>지역 코스</strong></td><td>지자체나 관광 기관의 추천 코스를 확인해서 싣는다.</td><td>검토만</td></tr>
-    </tbody>
-  </table></div>
-  <ul class="plain">
-    <li><strong>돈을 받아도 순서는 바꾸지 않는다.</strong> 제휴 가게를 위로 올리면 확인의 신뢰가 무너진다. 제휴는 표시만 한다.</li>
-    <li><strong>가격은 비용을 잰 뒤 정한다.</strong> 코스 한 건에 AI 비용이 든다. 그 값을 모르고 가격을 정할 수 없다.</li>
+  <span class="eyebrow" id="money">5 · 요금</span>
+  <h2>돈은 쓰는 사람에게서만 받습니다</h2>
+  <p>광고에 지친 사람이 많습니다. 추천 앱이 가게에서 돈을 받으면 추천을 믿기 어렵습니다. 그래서 받지 않기로 했습니다.</p>
+  <ul class="never">
+    <li>광고 없음<span>배너도, 추천 속 광고도 없습니다.</span></li>
+    <li>제휴 수수료 없음<span>예약을 연결해도 수수료를 받지 않습니다.</span></li>
+    <li>가게 돈 없음<span>돈을 내고 순위를 올릴 수 없습니다.</span></li>
   </ul>
-  <h3>구독으로 비용을 감당하는가</h3>
+  <p>수입은 둘뿐입니다. 한 번씩 내거나, 달마다 냅니다.</p>
+  <div class="plans">
+    <div class="plan"><h3>처음 한 번</h3><small>써 보고 정하세요</small>
+      <ul><li>첫 여행은 무료</li><li>일정, 대안, 숙소, 경비 모두</li></ul></div>
+    <div class="plan"><h3>건당 결제</h3><small>가끔 여행하는 사람</small>
+      <ul><li>여행 하나에 한 번 냅니다</li><li>그 여행은 몇 번을 고쳐도 됩니다</li><li>출발 전날 다시 확인해 줍니다</li></ul></div>
+    <div class="plan"><h3>구독</h3><small>자주 여행하는 사람</small>
+      <ul><li>달마다 냅니다</li><li>여행을 몇 개든 만듭니다</li><li>동행의 취향까지 합쳐서 짭니다</li></ul></div>
+  </div>
+  <h3>나는 어느 쪽이 쌀까</h3>
   <div class="panel">
     <div class="sliders">
-      <div class="sl"><label for="mUsers">한 달 사용자 <output id="oUsers"></output></label><input type="range" id="mUsers" min="100" max="20000" step="100" value="1000"></div>
-      <div class="sl"><label for="mPaid">구독하는 비율 <output id="oPaid"></output></label><input type="range" id="mPaid" min="0" max="20" step="0.5" value="5"></div>
-      <div class="sl"><label for="mPrice">한 달 구독료 <output id="oPrice"></output></label><input type="range" id="mPrice" min="1900" max="14900" step="500" value="4900"></div>
-      <div class="sl"><label for="mTrips">한 사람이 한 달에 만드는 코스 <output id="oTrips"></output></label><input type="range" id="mTrips" min="0.5" max="6" step="0.5" value="2"></div>
-      <div class="sl"><label for="mCost">코스 한 건의 AI·API 비용 <output id="oCost"></output></label><input type="range" id="mCost" min="50" max="2000" step="50" value="300"></div>
+      <div class="sl"><label for="pTrips">1년에 가는 여행 <output id="oTrips"></output></label><input type="range" id="pTrips" min="1" max="24" step="1" value="6"></div>
+      <div class="sl"><label for="pOne">건당 가격 <output id="oOne"></output></label><input type="range" id="pOne" min="900" max="5900" step="500" value="2900"></div>
+      <div class="sl"><label for="pSub">한 달 구독료 <output id="oSub"></output></label><input type="range" id="pSub" min="900" max="9900" step="500" value="3900"></div>
     </div>
     <div class="result">
-      <div><b id="rRev"></b><span>한 달 구독 수입</span></div>
-      <div><b id="rCost"></b><span>한 달 AI·API 비용</span></div>
-      <div><b id="rNet"></b><span>차이</span></div>
+      <div><b id="rOne"></b><span>건당으로 내면 1년에</span></div>
+      <div><b id="rSub"></b><span>구독하면 1년에</span></div>
     </div>
-    <p class="muted" id="rNote"></p>
-    <p class="muted">모든 값은 가정이다. 실제 값이 아니다. 코스 한 건의 비용은 개발 1단계에서 잰다. 서버 비용과 제휴 수입은 넣지 않았다.</p>
+    <p id="rNote" style="font-weight:500"></p>
+    <p class="muted">가격은 정해지지 않았습니다. 위 금액은 예시입니다. 적당한 값을 직접 맞춰 보고 의견을 주세요.</p>
   </div>
 </section>
 
 <section>
-  <span class="eyebrow" id="roadmap">10 · 개발 단계</span>
-  <h2>재고, 비교하고, 초대하고, 연다</h2>
-  <div class="steps" id="steps" role="tablist"></div>
-  <div class="panel" id="stepBody"></div>
-</section>
-
-<section>
-  <span class="eyebrow" id="kpi">11 · 성공 지표<span class="who">제안</span></span>
-  <h2>만든 코스대로 실제로 다녀왔는가</h2>
-  <div class="tblwrap"><table>
-    <thead><tr><th>단계</th><th>보는 것</th><th>왜</th></tr></thead>
-    <tbody>
-      <tr><td>초대</td><td>만든 코스 가운데 실제로 다녀온 비율</td><td>코스가 쓸 만한지 알려 준다.</td></tr>
-      <tr><td>초대</td><td>AI가 짠 일정을 고치지 않고 쓴 비율</td><td>경로와 일정이 정말 좋은지 알려 준다.</td></tr>
-      <tr><td>초대</td><td>대안을 열어 본 비율, 대안으로 바꾼 비율</td><td>대안 추천이 쓸모 있는지 알려 준다.</td></tr>
-      <tr><td>초대</td><td>"확인됨"이 현장에서 틀린 횟수</td><td>확인은 기본이다. 틀리면 나머지도 믿지 않는다.</td></tr>
-      <tr><td>초대</td><td>코스 한 건의 비용과 걸리는 시간</td><td>가격과 무료 한도를 정하는 근거다.</td></tr>
-      <tr><td>공개</td><td>두 번째 여행을 만든 사람의 비율</td><td>한 번 쓰고 마는 앱인지 알려 준다.</td></tr>
-      <tr><td>공개</td><td>구독하는 비율, 제휴 링크를 누른 비율</td><td>수익 모델이 서는지 알려 준다.</td></tr>
-    </tbody>
-  </table></div>
-  <p class="muted">목표 숫자는 정하지 않았다. 초대 단계에서 기준값을 먼저 잰다.</p>
-</section>
-
-<section>
-  <span class="eyebrow" id="risk">12 · 위험과 대응</span>
-  <h2>AI가 짠 경로를 그대로 믿지 않는다</h2>
-  <div class="tblwrap"><table>
-    <thead><tr><th>위험</th><th>대응</th></tr></thead>
-    <tbody>
-      <tr><td>AI가 짠 순서가 최적이 아니다.</td><td>이동 시간은 지도 API로 계산한다. 순서를 바꿔 가며 비교한 뒤 가장 짧은 것을 고른다. 왜 이 순서인지 보여 준다.</td></tr>
-      <tr><td>대안이 비슷비슷하거나 엉뚱하다.</td><td>대안마다 무엇이 다른지 적게 한다. 사용자가 고른 대안을 다음 추천에 반영한다.</td></tr>
-      <tr><td>확인했다고 했는데 틀린다.</td><td>근거와 확인 시각을 보여 준다. 출처가 엇갈리면 "일부 확인"으로 낮춘다. 사용자가 틀렸다고 알릴 수 있게 한다.</td></tr>
-      <tr><td>코스 한 건의 비용이 구독료보다 크다.</td><td>날짜에 걸리는 항목부터 확인한다. 같은 가게와 날짜의 확인은 다시 쓴다. 무료 한도를 둔다.</td></tr>
-      <tr><td>지도 API가 받은 데이터를 저장하지 못하게 한다.</td><td>받은 값은 기한을 두고 쓴다. 오래 둘 값은 직접 확인해서 쌓는다.</td></tr>
-      <tr><td>웨이팅, 주종 같은 값이 없다.</td><td>첫 도시 하나에서 직접 쌓아 본다. 되는 방법을 찾은 뒤 넓힌다.</td></tr>
-      <tr><td>제휴가 신뢰를 해친다.</td><td>제휴는 표시만 한다. 순서에 영향을 주지 않는다.</td></tr>
-      <tr><td>국내 영업시간을 API로 받기 어렵다.</td><td>웹 검색으로 보완한다. 가게가 직접 관리하게 하는 제휴를 준비한다.</td></tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section>
-  <span class="eyebrow" id="open">13 · 남은 결정<span class="who">미정</span></span>
-  <h2>다섯 가지를 정해야 한다</h2>
-  <ol class="ask">
-    <li><div><strong>앱 이름.</strong>지금은 "여행 일정 도우미"라고 부른다. 이름이 없다.</div></li>
-    <li><div><strong>어느 도시부터 하는가.</strong>웨이팅과 주종 같은 값은 도시마다 따로 쌓아야 한다. 첫 도시 하나를 정해야 한다.</div></li>
-    <li><div><strong>타겟을 어디까지 좁히는가.</strong>지금은 일정을 직접 짜는 국내 여행자로 넓게 잡았다. 술과 음식 중심으로 좁히는 길도 있다. 좁히면 추천이 정확해지고, 넓히면 쓸 사람이 늘어난다.</div></li>
-    <li><div><strong>수익 모델의 순서.</strong>구독을 먼저 하고 제휴를 붙이는 순서로 잡았다. 무료로 두고 제휴만 하는 길도 있다.</div></li>
-    <li><div><strong>웨이팅과 주종은 어디서 얻는가.</strong>직접 모으거나, 리뷰에서 AI로 뽑거나, 사용자에게 받는다.</div></li>
-  </ol>
+  <span class="eyebrow" id="ask">6 · 의견을 듣고 싶습니다</span>
+  <h2>만들기 전에 묻습니다</h2>
+  <p>아직 만들지 않았습니다. 읽고 든 생각을 그대로 알려 주세요. 좋지 않다는 말이 더 도움이 됩니다.</p>
+  <ul class="ask">
+    <li><h3>쓰시겠습니까</h3>
+      <ul class="plain">
+        <li>지금은 여행 일정을 어떻게 짜십니까? 얼마나 걸립니까?</li>
+        <li>그 과정에서 가장 귀찮은 일은 무엇입니까?</li>
+        <li>이 앱이 있으면 쓰시겠습니까? 안 쓴다면 이유는 무엇입니까?</li>
+      </ul></li>
+    <li><h3>무엇이 꼭 필요합니까</h3>
+      <ul class="plain">
+        <li>일정 짜기, 대안 바꾸기, 가는 날 확인, 숙소 추천, 경비 계산, 공유. 이 가운데 없으면 안 되는 것 둘은 무엇입니까?</li>
+        <li>없어도 되는 것은 무엇입니까?</li>
+        <li>여기 없는데 있었으면 하는 기능이 있습니까?</li>
+      </ul></li>
+    <li><h3>돈을 내시겠습니까</h3>
+      <ul class="plain">
+        <li>건당 결제와 구독 가운데 어느 쪽이 맞습니까?</li>
+        <li>여행 한 번에 얼마까지 내시겠습니까? 한 달 구독은 얼마까지입니까?</li>
+        <li>광고가 없다는 점이 돈을 낼 이유가 됩니까?</li>
+      </ul></li>
+    <li><h3>화면이 이해됩니까</h3>
+      <ul class="plain">
+        <li>2장의 화면을 보고 무엇을 하는 화면인지 바로 알았습니까?</li>
+        <li>헷갈린 곳은 어디입니까?</li>
+        <li>대안을 바꾸는 방식이 편해 보입니까?</li>
+      </ul></li>
+  </ul>
 </section>
 </div>
 
 <script>
-const DATA = [{"d":1,"date":"3.29","t":"18:00","a":"리스본 공항(LIS) 도착","s":"unverified","f":null,"src":[]},{"d":1,"date":"3.29","t":"19:30","a":"호텔 체크인: 쉐라톤 리스본 or 럭셔리 부티크","s":"unverified","f":null,"src":[]},{"d":1,"date":"3.29","t":"20:30","a":"저녁: Time Out Market","s":"verified","f":"일요일 10:00–24:00 영업. 20:30 방문 가능.","src":["https://www.timeout.com/lisbon/restaurants/time-out-market-lisboa"]},{"d":2,"date":"3.30","t":"10:00","a":"28번 트램 타고 알파마 지구로","s":"unverified","f":null,"src":[]},{"d":2,"date":"3.30","t":"11:30","a":"상 조르주 성 & 전망대","s":"unverified","f":null,"src":[]},{"d":2,"date":"3.30","t":"13:30","a":"점심: Farol de Santa Luzia","s":"partial","f":"실존 확인(Largo de Santa Luzia 5). 영업시간은 출처마다 달라(11–23시 / 24시 마감) 월요일 영업 미확정.","src":["https://lifecooler.com/artigo/comer/restaurante-farol-de-santa-luzia/405728/"]},{"d":2,"date":"3.30","t":"15:30","a":"코메르시우 광장 & 아우구스타 거리","s":"unverified","f":null,"src":[]},{"d":2,"date":"3.30","t":"18:00","a":"산타 주스타 엘리베이터 & 카르모 수녀원","s":"problem","f":"산타 주스타 엘리베이터는 2026년 중반 기준 정비로 임시 폐쇄(재개일 미정)로 보고됨. 카르모 수녀원은 11–4월 18:00 마감(최종 입장 17:40)이라 18:00 방문은 불가. 월요일 자체는 영업(일요일 휴무).","src":["https://www.carris.pt/en/discover/elevador-de-santa-justa-reduced-hours","https://thebettervacation.com/lisbon/carmo-convent/amp/"]},{"d":2,"date":"3.30","t":"20:00","a":"저녁: Pinoquio","s":"verified","f":"월요일 12:00–23:00(일부 출처 24:00). Praça dos Restauradores 79. 호시우 광장 인근 맞음.","src":["https://www.timeout.pt/lisboa/pt/restaurantes/pinoquio","https://foodle.pro/restaurants/lisbon/pinoquio"]},{"d":3,"date":"3.31","t":"09:30","a":"제로니무스 수도원","s":"corrected","f":"화요일 영업(월요일 휴무). 다만 개장은 10:00(10–4월 10:00–17:30)이므로 09:30은 입장이 아니라 줄 서는 시각.","src":["https://thebettervacation.com/lisbon/jeronimos-monastery/"]},{"d":3,"date":"3.31","t":"11:30","a":"파스테이스 드 벨렘 (에그타르트 원조)","s":"unverified","f":null,"src":[]},{"d":3,"date":"3.31","t":"13:00","a":"벨렘 탑 & 발견의 기념비 산책","s":"problem","f":"벨렘 탑 내부는 2025년 4월부터 보수로 폐쇄, 2026년 5월 말~6월 초 재개장. 여행일(2026-03-31)에는 내부 입장 불가, 외부 산책만 가능. 재개장 후에는 시간대별 사전 예약제(30분당 60명).","src":["https://www.theportugalnews.com/news/2025-04-27/belem-tower-closes-for-renovations/97209","https://www.portugalresident.com/over-15000-visit-lisbons-iconic-belem-tower-since-major-renovation/"]},{"d":3,"date":"3.31","t":"15:00","a":"LX Factory","s":"unverified","f":null,"src":[]},{"d":3,"date":"3.31","t":"19:00","a":"저녁: Ponto Final","s":"problem","f":"다수 출처가 화요일 휴무로 표기(1개 출처는 상반). 3일차(3/31)는 화요일. 디너 19:00–23:00. 예약 가능 여부도 출처 간 상충(예약 권장 vs 줄 서기).","src":["https://www.smart-travelling.net/en/locations/ponto-final/","https://www.enprimeurclub.com/restaurants/ponto-final-almada-restaurant","https://www.timeout.pt/lisboa/pt/restaurantes/ponto-final"]},{"d":4,"date":"4.01","t":"10:00","a":"리스본 출발","s":"verified","f":"Rede Expressos 세트 히우스→알부페이라 통상 2시간 45분(일부 편 3시간 5–15분). 10:00 출발편 존재 여부는 미확인.","src":["https://www.rome2rio.com/s/Lisboa-Sete-Rios/Albufeira","https://omio.com/buses/lisbon/albufeira"]},{"d":4,"date":"4.01","t":"13:00","a":"알부페이라 도착 및 렌트카 픽업(선택)","s":"unverified","f":null,"src":[]},{"d":4,"date":"4.01","t":"15:00","a":"호텔 체크인 및 휴식","s":"unverified","f":null,"src":[]},{"d":4,"date":"4.01","t":"19:00","a":"올드타운 저녁 산책","s":"unverified","f":null,"src":[]},{"d":5,"date":"4.02","t":"10:00","a":"베나길 동굴 보트 투어","s":"corrected","f":"면허 보트 투어 또는 가이드 동반 카약/SUP로만 접근 가능. 2024년 8월부터 동굴 내부 해변 상륙·수영 진입 금지(벌금 최대 약 2,500유로). 보트에서 관람만 가능.","src":["https://www.portugalresident.com/new-rules-for-benagil-caves-come-into-force-on-august-13/","https://earthtrekkers.com/benagil-cave/"]},{"d":5,"date":"4.02","t":"13:00","a":"점심: O Pescador (Benagil Beach)","s":"unverified","f":null,"src":[]},{"d":5,"date":"4.02","t":"15:00","a":"마리냐 해변 (Praia da Marinha)","s":"unverified","f":null,"src":[]},{"d":5,"date":"4.02","t":"19:00","a":"리조트 복귀 및 스파/수영","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"11:00","a":"라고스(Lagos) 방문","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"13:30","a":"점심: Casa do Prego","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"16:00","a":"사그레스 & 성 비센트 곶","s":"unverified","f":null,"src":[]},{"d":6,"date":"4.03","t":"19:30","a":"알부페이라 복귀 및 마지막 밤","s":"partial","f":"미슐랭 2스타 유지 확인(2026 가이드). 4월 초 시즌 영업 여부는 미확인.","src":["https://guide.michelin.com/pt/pt_PT/faro-region/albufeira/restaurant/vila-joya"]},{"d":7,"date":"4.04","t":"09:30","a":"세비야행 버스 탑승","s":"partial","f":"버스 최단 약 3시간 30분, 대부분 직행. 09:30 출발 + 3.5시간 + 시차 1시간 = 14:00 도착은 계산상 일치. 단 운행사가 ALSA인지 불명확(ALSA 노선 페이지는 있으나 Rome2rio는 Rede Expressos로 표기), 09:30 출발편 미확인.","src":["https://www.alsa.com/en/ruta/albufeira-sevilla","https://www.rome2rio.com/Bus/Albufeira/Seville"]},{"d":7,"date":"4.04","t":"14:00","a":"세비야 도착 및 체크인 (시차 +1시간)","s":"problem","f":"4/4는 성토요일로 세마나 산타(2026-03-29~04-05) 기간. 행렬로 대성당 주변 도로가 통제되어 택시 접근이 어려울 수 있음.","src":["https://www.seville-traveller.com/semana-santa-dates","https://www.idealista.com/en/news/lifestyle-in-spain/2026/02/03/837044-holy-week-2026-in-seville"]},{"d":7,"date":"4.04","t":"16:00","a":"세비야 대성당 & 히랄다 탑","s":"problem","f":"세마나 산타 기간 대성당·히랄다는 오후에 관람객 입장을 막는 것으로 보고됨(2차 출처). 공식 시간표는 확인 못 함. 16:00 방문 위험.","src":["https://www.seville-traveller.com/easter-in-seville/","https://www.seville-traveller.com/semana-santa-dates"]},{"d":7,"date":"4.04","t":"20:00","a":"타파스 투어: El Rinconcillo","s":"unverified","f":null,"src":[]},{"d":8,"date":"4.05","t":"08:00","a":"세비야 산타 후스타역 출발","s":"corrected","f":"AVE 소요 약 2시간 37–39분(일정은 2시간 30분). 08:00 출발이면 10:40 전후 도착.","src":["https://www.rome2rio.com/Train/Madrid/Seville","https://www.thetrainline.com/train-times/madrid-to-seville"]},{"d":8,"date":"4.05","t":"10:30","a":"마드리드 아토차역 도착","s":"unverified","f":null,"src":[]},{"d":8,"date":"4.05","t":"12:00","a":"솔 광장 & 마요르 광장 산책","s":"unverified","f":null,"src":[]},{"d":8,"date":"4.05","t":"14:00","a":"경기장 이동 및 직관","s":"problem","f":"그 주말 마드리드 홈경기는 아틀레티코–바르셀로나(4/4 토, 메트로폴리타노)였고, 4/5(일) 마드리드 홈경기는 찾지 못함. 레알–아틀레티코 더비는 3/22에 이미 치러짐. 일정대로면 경기를 못 봄. 4/5는 부활절 일요일이기도 함.","src":["https://www.espn.com/soccer/match/_/gameId/748434","https://www.laliga.com/en-AR/match/temporada-2025-2026-laliga-ea-sports-real-madrid-atletico-de-madrid-29"]},{"d":8,"date":"4.05","t":"20:00","a":"세비야행 막차 탑승","s":"partial","f":"마드리드→세비야 막차는 날짜에 따라 19:54~21:25. 20:00 출발편과 22:30 도착은 가능 범위지만 당일 시간표 확인 필요.","src":["https://www.thetrainline.com/train-times/madrid-to-seville","https://omio.com/trains/madrid-atocha/sevilla-santa-justa"]},{"d":9,"date":"4.06","t":"10:00","a":"알카사르(Alcázar) 궁전","s":"unverified","f":"성금요일(4/3) 휴관은 보고됨. 4/6(월) 영업 여부는 확인하지 않음.","src":["https://www.seville-traveller.com/easter-in-seville/"]},{"d":9,"date":"4.06","t":"13:00","a":"점심: Eslava","s":"problem","f":"복수 출처가 월요일 휴무로 표기. 9일차(4/6)는 월요일. 예약 불가·줄 서기 방식.","src":["https://www.enprimeurclub.com/restaurants/espacio-eslava-seville-restaurant","https://tablejourney.com/spain/seville/restaurants/espacio-eslava/"]},{"d":9,"date":"4.06","t":"16:00","a":"스페인 광장 (Plaza de España)","s":"unverified","f":null,"src":[]},{"d":9,"date":"4.06","t":"20:00","a":"플라멩코 공연 관람","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"09:00","a":"렌트카 픽업 & 출발","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"11:00","a":"사하라 (Zahara de la Sierra)","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"12:30","a":"론다(Ronda) 도착 & 누에보 다리","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"13:30","a":"점심: Parador de Ronda","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"16:00","a":"세테닐 (Setenil de las Bodegas)","s":"unverified","f":null,"src":[]},{"d":10,"date":"4.07","t":"19:00","a":"세비야 복귀 및 차량 반납","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"10:00","a":"마드리드행 기차 탑승","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"13:00","a":"호텔 체크인: 그란 비아 근처","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"15:00","a":"프라도 미술관 투어","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"18:00","a":"레티로 공원 산책","s":"unverified","f":null,"src":[]},{"d":11,"date":"4.08","t":"20:30","a":"저녁: Botín","s":"verified","f":"매일 13:00–16:00, 20:00–24:00 영업. 20:30 가능.","src":["https://timeout.com/madrid/restaurants-and-cafes/el-sobrino-de-botin"]},{"d":12,"date":"4.09","t":"10:00","a":"마드리드 왕궁","s":"unverified","f":null,"src":[]},{"d":12,"date":"4.09","t":"12:30","a":"점심 & 카페","s":"unverified","f":null,"src":[]},{"d":12,"date":"4.09","t":"14:30","a":"살라망카 지구 쇼핑 / 기념품 구매","s":"unverified","f":null,"src":[]},{"d":12,"date":"4.09","t":"19:30","a":"마지막 만찬: Ten Con Ten","s":"unverified","f":null,"src":[]},{"d":13,"date":"4.10","t":"09:00","a":"체크아웃 및 공항 이동","s":"corrected","f":"공항↔M-30 안쪽 정액 요금은 2026-01-01부터 33유로(일정은 30유로).","src":["https://www.madridtourism.org/madrid-taxis-fares/","https://madridsecreto.co/en/madrid-raises-cab-fares-in-2026-these-are-the-new-prices/"]},{"d":13,"date":"4.10","t":"12:00","a":"인천행 비행기 탑승","s":"unverified","f":null,"src":[]}];
-const ST = {problem:'문제',corrected:'정정',verified:'확인됨',partial:'일부 확인',unverified:'미검증'};
-const ORDER = ['problem','corrected','verified','partial','unverified'];
 const $ = id => document.getElementById(id);
 const el = (t, a = {}, ...kids) => { const e = document.createElement(t); for (const k in a) { if (k === 'class') e.className = a[k]; else if (k === 'text') e.textContent = a[k]; else e.setAttribute(k, a[k]); } kids.forEach(k => e.append(k)); return e; };
 const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
 
-/* 2장: 확인 결과 */
-let fStatus = 'problem';
-function renderVerify(){
-  const counts = {}; ORDER.forEach(s => counts[s] = DATA.filter(d => d.s === s).length);
-  const bar = $('bar'); bar.replaceChildren();
-  ORDER.forEach(s => { const b = el('button', {class:'s-'+s, title:ST[s]+' '+counts[s]+'개', 'aria-label':ST[s]+' '+counts[s]+'개', text:counts[s]}); b.style.flex = counts[s] + ' 0 0'; b.style.opacity = fStatus && fStatus !== s ? .35 : 1; b.onclick = () => { fStatus = fStatus === s ? null : s; renderVerify(); }; bar.append(b); });
-  const chips = $('statusChips'); chips.replaceChildren();
-  ORDER.forEach(s => { const c = el('button', {class:'chip', 'aria-pressed': String(fStatus === s)}, el('i', {class:'dot s-'+s}), ST[s]+' ', el('b', {text:counts[s]})); c.onclick = () => { fStatus = fStatus === s ? null : s; renderVerify(); }; chips.append(c); });
-  const rows = DATA.filter(x => !fStatus || x.s === fStatus);
-  $('count').textContent = `${DATA.length}개 가운데 ${rows.length}개 표시` + (fStatus ? ` · ${ST[fStatus]} · 다시 누르면 전체` : '');
-  const list = $('list'); list.replaceChildren();
-  rows.forEach(x => { const body = el('div', {class:'body'}); body.append(el('div', {text: x.f || '아직 검색하지 않았다.'})); if (x.src.length) { const s = el('div', {class:'src'}); x.src.forEach(u => { let h = u; try { h = new URL(u).hostname.replace(/^www\./,''); } catch(e){} s.append(el('a', {href:u, target:'_blank', rel:'noopener', text:h})); }); body.append(s); }
-    list.append(el('details', {class:'item'}, el('summary', {}, el('i', {class:'dot s-'+x.s}), el('span', {class:'when', text:`${x.d}일차 ${x.date} ${x.t}`}), el('span', {class:'what', text:x.a}), el('span', {class:'tag t-'+x.s, text:ST[x.s]})), body)); });
-}
-
-/* 3장: 타겟 */
-const TG = [
-  {n:'핵심 · 주말 국내 여행자', who:'친구, 연인, 가족과 1박 2일로 간다. 패키지를 쓰지 않고 일정을 직접 짠다.', pain:'갈 곳을 고르고 순서를 정하는 데 몇 시간이 든다. 한 곳이 틀어지면 다시 짜야 한다.', gain:'AI가 짠 일정을 받는다. 맘에 안 드는 항목은 대안을 눌러 바꾼다.'},
-  {n:'다음 · 모임 총무', who:'친구 네댓 명의 여행을 맡은 사람. 숙소와 식당을 혼자 정한다.', pain:'취향이 제각각이다. 일정이 틀어지면 책임이 돌아온다.', gain:'동행자의 취향을 합쳐 코스를 짠다. 링크 하나로 일정을 돌린다.'},
-  {n:'나중 · 해외 자유여행자', who:'해외에서 일주일 넘게 다니는 사람. 지금은 대상이 아니다.', pain:'현지 휴무일, 축제, 임시 폐쇄를 알기 어렵다.', gain:'날짜 기준의 확인을 해외 일정에도 쓴다. 휴대폰 앱 단계에서 연다.'}
-];
-let tg = 0;
-function renderTg(){ const t = $('tgTabs'); t.replaceChildren(); TG.forEach((x,i) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(i === tg), text:x.n}); b.onclick = () => { tg = i; renderTg(); }; t.append(b); });
-  const x = TG[tg]; $('tgBody').replaceChildren(...[['누구인가', x.who], ['무엇이 불편한가', x.pain], ['이 앱에서 얻는 것', x.gain]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p})))); }
-
-/* 6장: 화면 */
+/* 2장: 쓰는 순서 */
 const SC = [
-  {n:'내 여행', d:'앱을 열면 처음 본다. 여행마다 문제가 몇 건인지 보인다.', b:[['h','내 여행'],['card','','전주 1박 2일','unverified','확인 전 2','12/12 ~ 12/13 · 친구 3명'],['card','','강릉 당일','verified','다녀옴','11/08 · 연인'],['btn','새 여행 만들기']]},
-  {n:'내 취향', d:'처음 한 번만 적는다. 모든 여행의 기본값이 된다.', b:[['h','어떤 여행을 좋아하나요?'],['row','한 번에 걷는 시간','15분까지'],['row','기다릴 수 있는 웨이팅','20분까지'],['sub','즐겨 마시는 술'],['chips',['소주·청하','위스키','전통주','와인'],[0,1]],['sub','좋아하는 분위기'],['chips',['조용한 바','이자카야','포장마차','루프톱'],[0,1]],['btn','저장']]},
-  {n:'새 여행', d:'어디로, 언제, 누구와. 그리고 이번에만 다른 조건을 고친다.', b:[['h','어디로, 언제, 누구와?'],['row','어디로','전주'],['row','언제','12/12 (금) ~ 12/13 (토)'],['row','누구와','친구 3명'],['row','예산','1인 15만 원'],['sub','이번 여행만 다른 것'],['row','웨이팅','40분까지',1],['row','술','전통주',1],['btn','코스 만들기']]},
-  {n:'일정', d:'핵심 화면이다. 카드마다 확인 결과가 붙는다. 문제 카드에는 이유가 보인다.', b:[['h','1일차 · 12/12 (금)'],['chips',['일정','숙소','경비'],[0]],['card','15:00','숙소 체크인','verified','확인됨'],['leg','도보 6분'],['card','18:00','1차 · 막걸리 [가게 이름]','verified','확인됨','대안 2곳'],['leg','도보 8분'],['card','20:30','2차 · 조용한 바 [가게 이름]','problem','문제','이 날은 쉰다. 대안 2곳 보기'],['leg','도보 9분 · 숙소'],['card','다음 날 10:00','해장 · 콩나물국밥 [가게 이름]','unverified','확인 전']]},
-  {n:'확인 근거', d:'카드를 누르면 연다. 무엇을 확인했고 무엇을 못 했는지 나눠 보여 준다.', b:[['h','2차 · 조용한 바'],['alert','이 날은 갈 수 없다. 금요일은 쉰다.'],['card','','지금 영업하는 가게','verified','확인'],['card','','금요일 휴무','problem','문제','출처 2곳이 같은 말을 한다'],['card','','숙소에서 도보 9분','verified','확인'],['card','','웨이팅','unverified','확인 전'],['sub','출처 2곳 · 오늘 확인'],['btn','대안 2곳 보기']]},
-  {n:'항목별 대안', d:'어느 카드에서나 연다. 대안마다 이유와 달라지는 값이 보인다.', b:[['h','무엇으로 바꿀까요?'],['chips',['조용한 바','숙소에서 15분','금요일 영업'],[0,1,2]],['card','','[대안 1]','verified','확인됨','더 가깝다 · 걷기 −1분 · 비용 +1만 원'],['card','','[대안 2]','partial','일부 확인','늦게까지 연다 · 걷기 +4분 · 웨이팅은 모른다'],['sub','바꾸면 앞뒤 이동과 경비를 다시 계산한다'],['btn','[대안 1]로 바꾸기']]},
-  {n:'숙소', d:'숙소 탭이다. 추천 이유와 가격대가 보인다. 숙소를 바꾸면 일정을 다시 짠다.', b:[['h','숙소 추천'],['chips',['일정','숙소','경비'],[1]],['sub','1차와 2차까지 걸어서 10분 안쪽인 곳'],['card','','[숙소 1] · 한옥','verified','선택됨','동선의 가운데 · 1박 [가격대]'],['card','','[숙소 2] · 호텔','unverified','대안','주차가 된다 · 걷기 +6분'],['card','','[숙소 3] · 게스트하우스','unverified','대안','가장 싸다 · 걷기 +11분'],['btn','예약 페이지 열기']]},
-  {n:'경비', d:'경비 탭이다. 항목별로 나눠 보여 준다. 일정을 바꾸면 다시 계산한다.', b:[['h','예상 경비'],['chips',['일정','숙소','경비'],[2]],['row','숙박','[금액]'],['row','식비와 술','[금액]'],['row','이동','[금액]'],['row','놀거리','[금액]'],['row','1인 합계','[금액]',1],['sub','예산 15만 원 안에 든다'],['sub','장소를 바꾸면 다시 계산한다']]}
+  {n:'취향을 한 번 적습니다', d:'걷는 시간, 웨이팅, 좋아하는 음식과 분위기. 처음 한 번이면 됩니다.', b:[['h','어떤 여행을 좋아하나요?'],['row','한 번에 걷는 시간','15분까지'],['row','기다릴 수 있는 웨이팅','20분까지'],['sub','좋아하는 것'],['chips',['한식','술 한잔','카페','전시','산책','시장'],[0,1,2]],['sub','좋아하는 분위기'],['chips',['조용한 곳','북적이는 곳','전망 좋은 곳'],[0]],['btn','저장']]},
+  {n:'여행 조건을 넣습니다', d:'어디로, 언제, 누구와, 얼마로. 이번에만 다른 것이 있으면 고칩니다.', b:[['h','어디로, 언제, 누구와?'],['row','어디로','전주'],['row','언제','금 ~ 토 · 1박 2일'],['row','누구와','친구 3명'],['row','예산','1인 15만 원'],['sub','이번 여행만 다른 것'],['row','웨이팅','40분까지',1],['row','저녁','막걸리',1],['btn','일정 만들기']]},
+  {n:'AI가 일정을 짭니다', d:'갈 곳과 순서, 시간, 이동이 나옵니다. 왜 이 순서인지도 보여 줍니다.', b:[['h','1일차 · 금요일'],['chips',['일정','숙소','경비'],[0]],['note','이 순서가 가장 덜 걷습니다 · 합계 23분'],['card','15:00','숙소 체크인','good','확인됨'],['leg','걸어서 6분'],['card','18:00','저녁 · 막걸리집','good','확인됨','대안 2곳'],['leg','걸어서 8분'],['card','20:30','2차 · 조용한 바','bad','쉬는 날','대안 2곳을 먼저 보여 줍니다'],['leg','걸어서 9분 · 숙소'],['card','다음 날 10:00','아침 · 콩나물국밥','good','확인됨','대안 1곳']]},
+  {n:'마음에 안 들면 바꿉니다', d:'항목마다 대안이 있습니다. 이유와 달라지는 값이 같이 보입니다.', b:[['h','2차를 무엇으로 바꿀까요?'],['chips',['조용한 곳','숙소에서 15분','금요일 영업'],[0,1,2]],['card','','위스키 바','good','확인됨','더 가깝습니다 · 걷기 −1분 · 비용 +1만 원'],['card','','이자카야','info','일부 확인','늦게까지 엽니다 · 걷기 +4분 · 비용 −5천 원'],['sub','바꾸면 앞뒤 이동과 경비를 다시 계산합니다'],['btn','위스키 바로 바꾸기']]},
+  {n:'숙소를 같이 봅니다', d:'숙소가 동선의 중심입니다. 숙소를 바꾸면 일정을 다시 짭니다.', b:[['h','숙소 추천'],['chips',['일정','숙소','경비'],[1]],['sub','저녁과 2차까지 걸어서 10분 안쪽'],['card','','한옥 숙소','good','선택됨','동선의 가운데입니다'],['card','','호텔','idle','대안','주차가 됩니다 · 걷기 +6분'],['card','','게스트하우스','idle','대안','가장 쌉니다 · 걷기 +11분'],['btn','예약하러 가기']]},
+  {n:'경비가 따라 계산됩니다', d:'항목별로 나눠 보여 줍니다. 장소를 바꾸면 합계도 바뀝니다.', b:[['h','예상 경비'],['chips',['일정','숙소','경비'],[2]],['row','숙박','4만 원'],['row','식사와 술','7만 4천 원'],['row','이동','8천 원'],['row','놀거리','1만 원'],['row','1인 합계','13만 2천 원',2],['sub','예산 15만 원 안에 듭니다']]},
+  {n:'동행에게 보냅니다', d:'링크 하나로 일정을 보냅니다. 받은 사람은 가입하지 않아도 봅니다.', b:[['h','누구와 같이 볼까요?'],['row','나','고치기'],['row','친구 3명','보기'],['sub','보여 줄 것'],['chips',['일정','숙소','경비','내 취향'],[0,1]],['btn','링크 복사']]}
 ];
-let sc = 3;
+let sc = 2;
 function renderScreens(){ const nav = $('snav'); nav.replaceChildren();
   SC.forEach((s,i) => { const b = el('button', {class:'sbtn', role:'tab', 'aria-selected': String(i === sc)}, el('b', {text:String(i+1)}), el('span', {text:s.n}), el('small', {text:s.d})); b.onclick = () => { sc = i; renderScreens(); }; nav.append(b); });
   const ph = $('phone'); ph.replaceChildren();
   SC[sc].b.forEach(k => { let e;
     if (k[0] === 'h') e = el('div', {class:'ph-h', text:k[1]});
     else if (k[0] === 'sub') e = el('div', {class:'ph-sub', text:k[1]});
-    else if (k[0] === 'alert') e = el('div', {class:'ph-alert', text:k[1]});
+    else if (k[0] === 'note') e = el('div', {class:'ph-note', text:k[1]});
     else if (k[0] === 'leg') e = el('div', {class:'ph-leg', text:k[1]});
     else if (k[0] === 'btn') e = el('div', {class:'ph-btn', text:k[1]});
-    else if (k[0] === 'row') e = el('div', {class:'ph-row' + (k[3] ? ' chg' : '')}, el('span', {text:k[1] + (k[3] && sc === 2 ? ' · 이번만' : '')}), el('span', {text:k[2]}));
+    else if (k[0] === 'row') e = el('div', {class:'ph-row' + (k[3] ? ' chg' : '')}, el('span', {text:k[1] + (k[3] === 1 ? ' · 이번만' : '')}), el('span', {text:k[2]}));
     else if (k[0] === 'chips') e = el('div', {class:'ph-chips'}, ...k[1].map((c,i) => el('span', {class: k[2].includes(i) ? 'on' : '', text:c})));
-    else if (k[0] === 'card') { const top = el('div', {class:'ph-top'}); if (k[1]) top.append(el('time', {text:k[1]})); top.append(el('b', {text:k[2]}), el('span', {class:'tag t-'+k[3], text:k[4]})); e = el('div', {class:'ph-card' + (k[3] === 'problem' && k[1] ? ' bad' : '')}, top); if (k[5]) e.append(el('div', {class:'ph-sub', text:k[5]})); }
+    else if (k[0] === 'card') { const top = el('div', {class:'ph-top'}); if (k[1]) top.append(el('time', {text:k[1]})); top.append(el('b', {text:k[2]}), el('span', {class:'tag t-'+k[3], text:k[4]})); e = el('div', {class:'ph-card' + (k[3] === 'bad' ? ' bad' : '')}, top); if (k[5]) e.append(el('div', {class:'ph-sub', text:k[5]})); }
     ph.append(e); }); }
 
-/* 8장: 계산기 */
-function renderMoney(){ const u = +$('mUsers').value, p = +$('mPaid').value, pr = +$('mPrice').value, t = +$('mTrips').value, c = +$('mCost').value;
-  $('oUsers').textContent = u.toLocaleString('ko-KR') + '명'; $('oPaid').textContent = p + '%'; $('oPrice').textContent = won(pr); $('oTrips').textContent = t + '건'; $('oCost').textContent = won(c);
-  const rev = u * p / 100 * pr, cost = u * t * c, net = rev - cost;
-  $('rRev').textContent = won(rev); $('rCost').textContent = won(cost); $('rNet').textContent = (net >= 0 ? '+' : '−') + won(Math.abs(net));
-  $('rNet').style.color = net >= 0 ? 'var(--verified)' : 'var(--problem)';
-  const need = pr > 0 ? (t * c / pr * 100) : 0;
-  $('rNote').textContent = `이 조건에서 비용을 메우려면 ${need.toFixed(1)}%가 구독해야 한다.`; }
-['mUsers','mPaid','mPrice','mTrips','mCost'].forEach(id => $(id).addEventListener('input', renderMoney));
-
-/* 9장: 단계 */
-const STEPS = [
-  {n:'0', t:'해외 샘플 확인', done:true, what:'AI가 만든 해외 일정을 웹 검색으로 확인했다.', end:'끝났다. 56개 중 19개를 확인했다. 7개가 문제였다.', need:'없음'},
-  {n:'1', t:'국내 샘플과 비용', what:'국내 1박 2일 조건으로 코스를 만들고 확인하는 스크립트를 만든다. 호출마다 토큰을 기록한다.', end:'국내 코스 한 건의 확인 결과와 비용이 나온다.', need:'첫 도시, AI API 키'},
-  {n:'2', t:'지도 API 비교', what:'카카오, 티맵, 구글을 같은 코스로 비교한다.', end:'국내에서 쓸 조합이 정해진다.', need:'지도 API 키'},
-  {n:'3', t:'초대제 웹 앱', what:'취향, 코스 만들기, 확인, 교체, 지도까지 만든다. 초대한 사람만 들어온다.', end:'초대받은 사람이 가입부터 장소 교체까지 마친다.', need:'남은 결정'},
-  {n:'4', t:'공유', what:'링크 공유와 동행자 취향 합치기를 만든다.', end:'받은 사람이 링크로 일정을 본다.', need:'3단계 결과'},
-  {n:'5', t:'공개와 수익', what:'누구나 가입하게 연다. 무료 한도, 구독, 예약 제휴를 붙인다.', end:'모르는 사람이 가입해서 쓴다. 구독이 비용을 메운다.', need:'초대 단계에서 잰 비용'},
-  {n:'6', t:'휴대폰 앱', what:'같은 서버에 휴대폰 앱을 붙인다. 해외 여행도 이때 연다.', end:'스토어에서 받을 수 있다.', need:'공개 단계 결과'}
-];
-let st = 1;
-function renderSteps(){ const b = $('steps'); b.replaceChildren(); STEPS.forEach((s,i) => { const x = el('button', {class:'step' + (s.done ? ' done' : ''), role:'tab', 'aria-selected': String(i === st)}, el('b', {text:s.n}), el('span', {text:s.t})); x.onclick = () => { st = i; renderSteps(); }; b.append(x); });
-  const s = STEPS[st]; $('stepBody').replaceChildren(el('div', {class:'cols'}, ...[['하는 일', s.what], ['끝났다고 보는 기준', s.end], ['필요한 것', s.need]].map(([h,p]) => el('div', {}, el('h3', {text:h}), el('p', {text:p}))))); }
-
-/* 6장: 대안 교체 예시 */
+/* 4장: 대안 예시 */
 const DM = [
-  {t:'18:00 · 1차', cur:{n:'[막걸리집 A]', walk:6, cost:25000, why:'처음 추천'}, alts:[{n:'[막걸리집 B]', walk:4, cost:30000, why:'더 가깝다. 웨이팅이 짧다.'},{n:'[한정식 C]', walk:11, cost:35000, why:'조용하다. 예약이 된다.'}]},
-  {t:'20:30 · 2차', cur:{n:'[조용한 바 D]', walk:8, cost:30000, why:'처음 추천'}, alts:[{n:'[위스키 바 E]', walk:7, cost:40000, why:'위스키가 많다.'},{n:'[이자카야 F]', walk:12, cost:25000, why:'늦게까지 연다. 더 싸다.'}]},
-  {t:'다음 날 10:00 · 해장', cur:{n:'[콩나물국밥 G]', walk:9, cost:9000, why:'처음 추천'}, alts:[{n:'[해장국 H]', walk:5, cost:10000, why:'숙소에서 가장 가깝다.'}]}
+  {t:'18:00 · 저녁', cur:{n:'막걸리집', walk:6, cost:25000}, alts:[{n:'다른 막걸리집', walk:4, cost:30000, why:'더 가깝습니다. 웨이팅이 짧습니다.'},{n:'한정식집', walk:11, cost:35000, why:'조용합니다. 예약이 됩니다.'}]},
+  {t:'20:30 · 2차', cur:{n:'조용한 바', walk:8, cost:30000}, alts:[{n:'위스키 바', walk:7, cost:40000, why:'금요일에 엽니다. 위스키가 많습니다.'},{n:'이자카야', walk:12, cost:25000, why:'늦게까지 엽니다. 더 쌉니다.'}]},
+  {t:'다음 날 10:00 · 아침', cur:{n:'콩나물국밥집', walk:9, cost:9000}, alts:[{n:'해장국집', walk:5, cost:10000, why:'숙소에서 가장 가깝습니다.'}]}
 ];
 let dmOpen = 1;
 function renderDemo(){ const box = $('dm'); box.replaceChildren();
   $('dmWalk').textContent = DM.reduce((a,x) => a + x.cur.walk, 0) + '분'; $('dmCost').textContent = won(DM.reduce((a,x) => a + x.cur.cost, 0));
   DM.forEach((x,i) => { const btn = el('button', {class:'tab', 'aria-expanded': String(dmOpen === i), text:`대안 ${x.alts.length}곳`}); btn.onclick = () => { dmOpen = dmOpen === i ? -1 : i; renderDemo(); };
     box.append(el('div', {class:'dm-row'}, el('time', {text:x.t}), el('b', {}, x.cur.n, el('small', {text:`걷기 ${x.cur.walk}분 · ${won(x.cur.cost)}`})), btn));
-    if (dmOpen === i) { const alts = el('div', {class:'dm-alts'}); x.alts.forEach((a,j) => { const dw = a.walk - x.cur.walk, dc = a.cost - x.cur.cost; const sw = el('button', {class:'tab', text:'바꾸기'}); sw.onclick = () => { x.alts[j] = x.cur; x.cur = a; renderDemo(); };
-      alts.append(el('div', {class:'dm-alt'}, el('span', {}, el('b', {text:a.n + ' '}), a.why), el('small', {class:'delta', text:`걷기 ${dw > 0 ? '+' : ''}${dw}분 · 비용 ${dc > 0 ? '+' : ''}${dc.toLocaleString('ko-KR')}원`}), sw)); }); box.append(alts); } }); }
+    if (dmOpen === i) { const alts = el('div', {class:'dm-alts'}); x.alts.forEach((a,j) => { const dw = a.walk - x.cur.walk, dc = a.cost - x.cur.cost; const sw = el('button', {class:'tab', text:'바꾸기'}); sw.onclick = () => { x.alts[j] = Object.assign({why:'처음 추천한 곳입니다.'}, x.cur); x.cur = a; renderDemo(); };
+      alts.append(el('div', {class:'dm-alt'}, el('span', {}, el('b', {text:a.n + ' '}), a.why), el('small', {text:`걷기 ${dw > 0 ? '+' : ''}${dw}분 · 비용 ${dc > 0 ? '+' : ''}${dc.toLocaleString('ko-KR')}원`}), sw)); }); box.append(alts); } }); }
 
-renderVerify(); renderTg(); renderScreens(); renderMoney(); renderSteps(); renderDemo();
+/* 5장: 요금 비교 */
+function renderPrice(){ const t = +$('pTrips').value, one = +$('pOne').value, sub = +$('pSub').value;
+  $('oTrips').textContent = t + '번'; $('oOne').textContent = won(one); $('oSub').textContent = won(sub);
+  const a = t * one, b = sub * 12; $('rOne').textContent = won(a); $('rSub').textContent = won(b);
+  const even = Math.ceil(b / one);
+  $('rNote').textContent = a <= b ? `1년에 ${t}번이면 건당 결제가 쌉니다. ${even}번부터는 구독이 쌉니다.` : `1년에 ${t}번이면 구독이 쌉니다. ${even}번보다 적게 가면 건당 결제가 쌉니다.`; }
+['pTrips','pOne','pSub'].forEach(id => $(id).addEventListener('input', renderPrice));
+
+renderScreens(); renderDemo(); renderPrice();
 </script>
