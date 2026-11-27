@@ -40,7 +40,9 @@ section,header{display:flex;flex-direction:column;gap:16px;min-width:0}
 .toc a{text-decoration:none;white-space:nowrap;color:var(--accent)}
 .toc a:hover{text-decoration:underline}
 .plain{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;max-width:38em}
-.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px 12px;margin:0;padding:0;list-style:none}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .three li{border-top:3px solid var(--accent);padding-top:10px;font-weight:500}
 .three span{display:block;font-weight:400;color:var(--muted);font-size:.92rem;margin-top:4px}
 .quote{border-left:3px solid var(--accent);padding:4px 0 4px 14px;font-size:1.05rem}
@@ -138,10 +140,11 @@ td.me{font-weight:500}
 <header>
   <span class="eyebrow">앱 기획안 · 초안 · 의견을 듣고 고칩니다</span>
   <h1>여행 일정 도우미 <span style="font-size:.5em;font-weight:500;color:var(--muted)">(가칭)</span></h1>
-  <p class="lead">조건만 넣으세요. AI가 가장 좋은 경로와 일정을 짭니다. 마음에 안 드는 곳은 누르면 바뀝니다.</p>
+  <p class="lead">가고 싶은 곳과 조건만 넣으세요. AI가 가장 좋은 경로와 일정을 짭니다. 여행 중에 계획이 바뀌면 그 자리에서 다시 짭니다.</p>
   <ul class="three">
     <li>일정을 대신 짭니다<span>갈 곳, 순서, 시간, 이동까지 한 번에 나옵니다.</span></li>
     <li>항목마다 대안이 있습니다<span>바꾸면 앞뒤 이동과 경비를 다시 계산합니다.</span></li>
+    <li>여행 중에도 돕습니다<span>계획을 바꾸고 싶거나 시간이 비면, 지금 있는 곳에서 다시 추천합니다.</span></li>
     <li>광고가 없습니다<span>가게에서 돈을 받지 않습니다. 추천은 AI의 판단뿐입니다.</span></li>
   </ul>
   <nav class="toc" aria-label="차례">
@@ -156,42 +159,53 @@ td.me{font-weight:500}
   <p>이 앱에서는 한 줄이면 됩니다.</p>
   <p class="quote">"다음 주 금요일, 전주, 친구 셋. 많이 걷기 싫고 줄 서기 싫다. 저녁은 막걸리, 2차는 조용한 곳."</p>
   <p>숙소, 식당, 술집, 카페, 놀거리가 시간표로 나옵니다. 순서는 이동이 가장 적게 잡힙니다. 가게마다 바꿀 곳이 두세 개 붙어 있습니다.</p>
+  <p><strong>꼭 가고 싶은 곳이 있으면 적으세요.</strong> 그곳은 반드시 들어갑니다. AI는 그 사이를 채우고 순서를 정합니다.</p>
+  <p><strong>여행이 시작되면 앱이 같이 갑니다.</strong> 다녀온 곳을 기록합니다. 다음 일정이 내키지 않으면 지금 있는 곳에서 다시 추천합니다. 30분이나 1시간이 비면 걸어서 갈 만한 곳을 찾아 줍니다.</p>
   <p class="muted">국내 주말 여행부터 시작합니다. 웹에서 먼저 쓰고, 휴대폰 앱은 그다음에 나옵니다.</p>
 </section>
 
 <section>
   <span class="eyebrow" id="how">2 · 어떻게 쓰나</span>
-  <h2>일곱 단계입니다. 직접 눌러 보세요</h2>
+  <h2>떠나기 전 일곱 단계, 여행 중 세 가지. 직접 눌러 보세요</h2>
+  <div class="tabs" id="sgrp" role="tablist"></div>
   <div class="screens">
     <div class="snav" id="snav" role="tablist"></div>
     <div class="phone" id="phone" aria-live="polite"></div>
   </div>
-  <p class="muted">예시 화면입니다. 지역과 가게는 설명을 위해 넣었습니다.</p>
+  <p class="muted">예시 화면입니다. 지역과 가게는 설명을 위해 넣었습니다. 위치는 여행 중에, 켜 두었을 때만 씁니다.</p>
 </section>
 
 <section>
   <span class="eyebrow" id="better">3 · 무엇이 편해지나</span>
-  <h2>짜는 시간이 줄고, 바꾸기가 쉬워집니다</h2>
+  <h2>짜는 시간이 줄고, 여행 중에도 바꾸기 쉽습니다</h2>
   <div class="ba">
     <div class="ba-row ba-head"><span>지금</span><i></i><span>이 앱에서는</span></div>
     <div class="ba-row"><div class="b">지도, 블로그, 리뷰를 오가며 갈 곳을 고릅니다.</div><i>→</i><div class="a">조건을 넣으면 일정이 한 번에 나옵니다.</div></div>
+    <div class="ba-row"><div class="b">가고 싶은 곳은 있는데, 그 앞뒤를 무엇으로 채울지 모릅니다.</div><i>→</i><div class="a">꼭 갈 곳을 적으면 그곳을 넣고 나머지를 짭니다.</div></div>
     <div class="ba-row"><div class="b">어떤 순서가 덜 걷는지 일일이 재 봅니다.</div><i>→</i><div class="a">이동 시간을 계산해 가장 짧은 순서로 잡습니다.</div></div>
     <div class="ba-row"><div class="b">한 곳이 마음에 안 들면 앞뒤를 다시 짭니다.</div><i>→</i><div class="a">대안을 누르면 앞뒤 이동과 경비가 따라 바뀝니다.</div></div>
     <div class="ba-row"><div class="b">도착해 보니 쉬는 날입니다.</div><i>→</i><div class="a">가는 날 여는지 미리 확인하고, 안 되면 먼저 알립니다.</div></div>
     <div class="ba-row"><div class="b">걷기 싫다, 줄 서기 싫다. 매번 다시 말합니다.</div><i>→</i><div class="a">취향을 한 번 적으면 다음 여행에도 기억합니다.</div></div>
     <div class="ba-row"><div class="b">숙소와 경비는 따로 찾고 따로 계산합니다.</div><i>→</i><div class="a">일정, 숙소, 경비가 한곳에 있고 같이 움직입니다.</div></div>
     <div class="ba-row"><div class="b">일정을 캡처해서 단체방에 올립니다.</div><i>→</i><div class="a">링크 하나로 동행에게 보냅니다.</div></div>
+    <div class="ba-row ba-head" style="margin-top:10px"><span>여행 중 · 지금</span><i></i><span>이 앱에서는</span></div>
+    <div class="ba-row"><div class="b">계획이 틀어지면 길에 서서 다시 검색합니다.</div><i>→</i><div class="a">지금 있는 곳과 남은 시간으로 바로 다시 추천합니다.</div></div>
+    <div class="ba-row"><div class="b">시간이 붕 뜨면 근처를 헤맵니다.</div><i>→</i><div class="a">30분, 1시간. 비는 시간을 누르면 걸어서 갈 곳이 나옵니다.</div></div>
+    <div class="ba-row"><div class="b">바꾼 일정 때문에 뒤가 꼬입니다.</div><i>→</i><div class="a">뒤 일정에 늦지 않는지 확인하고, 늦으면 뒤를 같이 고칩니다.</div></div>
+    <div class="ba-row"><div class="b">어디를 갔는지 나중에 기억나지 않습니다.</div><i>→</i><div class="a">다녀온 곳이 시간과 함께 남습니다. 다음 추천이 더 잘 맞습니다.</div></div>
   </div>
 </section>
 
 <section>
   <span class="eyebrow" id="diff">4 · 무엇이 다른가</span>
-  <h2>순서에 이유가 있고, 추천에 광고가 없습니다</h2>
+  <h2>짜 주고 끝나지 않습니다. 여행이 끝날 때까지 같이 갑니다</h2>
   <div class="diff">
     <div><b>하나</b><h3>순서에 이유가 있습니다</h3><p>AI가 갈 곳을 고릅니다. 이동 시간은 지도로 계산합니다. 여러 순서를 비교해 가장 덜 움직이는 것을 고릅니다. 왜 이 순서인지 보여 줍니다.</p></div>
     <div><b>둘</b><h3>항목마다 대안이 있습니다</h3><p>대안마다 이유가 붙습니다. 더 가깝다, 더 싸다, 더 조용하다. 바꾸면 무엇이 달라지는지 미리 보여 줍니다. 걷는 길 대신 택시나 버스도 고를 수 있습니다.</p></div>
-    <div><b>셋</b><h3>광고도 수수료도 없습니다</h3><p>가게나 숙소에서 돈을 받지 않습니다. 예약을 연결해도 수수료를 받지 않습니다. 돈을 낸 곳이 위로 올라오는 일이 없습니다.</p></div>
-    <div><b>넷</b><h3>가는 날 기준으로 확인합니다</h3><p>그날 여는지, 걸어갈 거리인지, 지역 행사와 겹치는지 봅니다. AI 챗봇이 짠 일정을 확인해 봤더니 19곳 중 7곳은 그대로 갈 수 없었습니다.</p></div>
+    <div><b>셋</b><h3>가고 싶은 곳은 반드시 넣습니다</h3><p>적어 주신 곳은 빼지 않습니다. AI는 그곳을 기둥으로 두고 나머지를 채웁니다. 시간이 맞지 않으면 빼지 않고 먼저 묻습니다.</p></div>
+    <div><b>넷</b><h3>여행 중에도 같이 갑니다</h3><p>일정을 짜 주고 끝나지 않습니다. 지금 있는 곳, 남은 시간, 내 취향으로 다시 추천합니다. 빈 시간에는 걸어서 갈 볼거리를 찾아 줍니다.</p></div>
+    <div><b>다섯</b><h3>광고도 수수료도 없습니다</h3><p>가게나 숙소에서 돈을 받지 않습니다. 예약을 연결해도 수수료를 받지 않습니다. 돈을 낸 곳이 위로 올라오는 일이 없습니다.</p></div>
+    <div><b>여섯</b><h3>가는 날 기준으로 확인합니다</h3><p>그날 여는지, 걸어갈 거리인지, 지역 행사와 겹치는지 봅니다. AI 챗봇이 짠 일정을 확인해 봤더니 19곳 중 7곳은 그대로 갈 수 없었습니다.</p></div>
   </div>
 
   <h3>대안을 눌러 보세요</h3>
@@ -213,6 +227,9 @@ td.me{font-weight:500}
       <tr><td>항목마다 대안을 주고 바로 바꾼다</td><td class="c">×</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
       <tr><td>바꾸면 이동과 경비를 다시 계산한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
       <tr><td>가는 날 여는지 확인한다</td><td class="c">직접</td><td class="c">×</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td>내가 고른 곳을 넣고 나머지를 짠다</td><td class="c">직접</td><td class="c">△</td><td class="c">△</td><td class="c me">○</td></tr>
+      <tr><td>여행 중 지금 위치에서 다시 추천한다</td><td class="c">직접</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
+      <tr><td>빈 시간에 걸어서 갈 곳을 찾아 준다</td><td class="c">직접</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
       <tr><td>내 취향을 기억한다</td><td class="c">×</td><td class="c">△</td><td class="c">△</td><td class="c me">○</td></tr>
       <tr><td>광고와 제휴 없이 추천한다</td><td class="c">×</td><td class="c">△</td><td class="c">×</td><td class="c me">○</td></tr>
     </tbody>
@@ -234,7 +251,7 @@ td.me{font-weight:500}
     <div class="plan"><h3>처음 한 번</h3><small>써 보고 정하세요</small>
       <ul><li>첫 여행은 무료</li><li>일정, 대안, 숙소, 경비 모두</li></ul></div>
     <div class="plan"><h3>건당 결제</h3><small>가끔 여행하는 사람</small>
-      <ul><li>여행 하나에 한 번 냅니다</li><li>그 여행은 몇 번을 고쳐도 됩니다</li><li>출발 전날 다시 확인해 줍니다</li></ul></div>
+      <ul><li>여행 하나에 한 번 냅니다</li><li>그 여행은 몇 번을 고쳐도 됩니다</li><li>출발 전날 다시 확인해 줍니다</li><li>여행 중 다시 추천과 빈 시간 추천이 들어 있습니다</li></ul></div>
     <div class="plan"><h3>구독</h3><small>자주 여행하는 사람</small>
       <ul><li>달마다 냅니다</li><li>여행을 몇 개든 만듭니다</li><li>동행의 취향까지 합쳐서 짭니다</li></ul></div>
   </div>
@@ -267,7 +284,8 @@ td.me{font-weight:500}
       </ul></li>
     <li><h3>무엇이 꼭 필요합니까</h3>
       <ul class="plain">
-        <li>일정 짜기, 대안 바꾸기, 가는 날 확인, 숙소 추천, 경비 계산, 공유. 이 가운데 없으면 안 되는 것 둘은 무엇입니까?</li>
+        <li>일정 짜기, 가고 싶은 곳 넣기, 대안 바꾸기, 가는 날 확인, 여행 중 다시 추천, 빈 시간 추천, 다녀온 곳 기록, 숙소 추천, 경비 계산, 공유. 이 가운데 없으면 안 되는 것 셋은 무엇입니까?</li>
+        <li>여행 중에 앱에 위치를 알려 주는 것이 괜찮습니까? 꺼림칙한 점이 있습니까?</li>
         <li>없어도 되는 것은 무엇입니까?</li>
         <li>여기 없는데 있었으면 하는 기능이 있습니까?</li>
       </ul></li>
@@ -295,16 +313,20 @@ const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
 /* 2장: 쓰는 순서 */
 const SC = [
   {n:'취향을 한 번 적습니다', d:'걷는 시간, 웨이팅, 좋아하는 음식과 분위기. 처음 한 번이면 됩니다.', b:[['h','어떤 여행을 좋아하나요?'],['row','한 번에 걷는 시간','15분까지'],['row','기다릴 수 있는 웨이팅','20분까지'],['sub','좋아하는 것'],['chips',['한식','술 한잔','카페','전시','산책','시장'],[0,1,2]],['sub','좋아하는 분위기'],['chips',['조용한 곳','북적이는 곳','전망 좋은 곳'],[0]],['btn','저장']]},
-  {n:'여행 조건을 넣습니다', d:'어디로, 언제, 누구와, 얼마로. 이번에만 다른 것이 있으면 고칩니다.', b:[['h','어디로, 언제, 누구와?'],['row','어디로','전주'],['row','언제','금 ~ 토 · 1박 2일'],['row','누구와','친구 3명'],['row','예산','1인 15만 원'],['sub','이번 여행만 다른 것'],['row','웨이팅','40분까지',1],['row','저녁','막걸리',1],['btn','일정 만들기']]},
-  {n:'AI가 일정을 짭니다', d:'갈 곳과 순서, 시간, 이동이 나옵니다. 왜 이 순서인지도 보여 줍니다.', b:[['h','1일차 · 금요일'],['chips',['일정','숙소','경비'],[0]],['note','이 순서가 가장 덜 걷습니다 · 합계 23분'],['card','15:00','숙소 체크인','good','확인됨'],['leg','걸어서 6분'],['card','18:00','저녁 · 막걸리집','good','확인됨','대안 2곳'],['leg','걸어서 8분'],['card','20:30','2차 · 조용한 바','bad','쉬는 날','대안 2곳을 먼저 보여 줍니다'],['leg','걸어서 9분 · 숙소'],['card','다음 날 10:00','아침 · 콩나물국밥','good','확인됨','대안 1곳']]},
+  {n:'여행 조건을 넣습니다', d:'어디로, 언제, 누구와, 얼마로. 꼭 가고 싶은 곳이 있으면 적습니다. 그곳은 반드시 들어갑니다.', b:[['h','어디로, 언제, 누구와?'],['row','어디로','전주'],['row','언제','금 ~ 토 · 1박 2일'],['row','누구와','친구 3명'],['row','예산','1인 15만 원'],['sub','꼭 가고 싶은 곳'],['chips',['한옥마을','남부시장 야시장','+ 더하기'],[0,1]],['sub','이번 여행만 다른 것'],['row','웨이팅','40분까지',1],['row','저녁','막걸리',1],['btn','일정 만들기']]},
+  {n:'AI가 일정을 짭니다', d:'갈 곳과 순서, 시간, 이동이 나옵니다. 왜 이 순서인지도 보여 줍니다.', b:[['h','1일차 · 금요일'],['chips',['일정','숙소','경비'],[0]],['note','이 순서가 가장 덜 걷습니다 · 합계 28분'],['card','15:00','숙소 체크인','good','확인됨'],['leg','걸어서 5분'],['card','16:00','한옥마을','info','내가 고른 곳'],['leg','걸어서 6분'],['card','18:00','저녁 · 막걸리집','good','확인됨','대안 2곳'],['leg','걸어서 8분'],['card','20:30','2차 · 조용한 바','bad','쉬는 날','대안 2곳을 먼저 보여 줍니다'],['leg','걸어서 9분 · 숙소'],['card','다음 날 10:00','아침 · 콩나물국밥','good','확인됨','대안 1곳']]},
   {n:'마음에 안 들면 바꿉니다', d:'항목마다 대안이 있습니다. 이유와 달라지는 값이 같이 보입니다.', b:[['h','2차를 무엇으로 바꿀까요?'],['chips',['조용한 곳','숙소에서 15분','금요일 영업'],[0,1,2]],['card','','위스키 바','good','확인됨','더 가깝습니다 · 걷기 −1분 · 비용 +1만 원'],['card','','이자카야','info','일부 확인','늦게까지 엽니다 · 걷기 +4분 · 비용 −5천 원'],['sub','바꾸면 앞뒤 이동과 경비를 다시 계산합니다'],['btn','위스키 바로 바꾸기']]},
   {n:'숙소를 같이 봅니다', d:'숙소가 동선의 중심입니다. 숙소를 바꾸면 일정을 다시 짭니다.', b:[['h','숙소 추천'],['chips',['일정','숙소','경비'],[1]],['sub','저녁과 2차까지 걸어서 10분 안쪽'],['card','','한옥 숙소','good','선택됨','동선의 가운데입니다'],['card','','호텔','idle','대안','주차가 됩니다 · 걷기 +6분'],['card','','게스트하우스','idle','대안','가장 쌉니다 · 걷기 +11분'],['btn','예약하러 가기']]},
   {n:'경비가 따라 계산됩니다', d:'항목별로 나눠 보여 줍니다. 장소를 바꾸면 합계도 바뀝니다.', b:[['h','예상 경비'],['chips',['일정','숙소','경비'],[2]],['row','숙박','4만 원'],['row','식사와 술','7만 4천 원'],['row','이동','8천 원'],['row','놀거리','1만 원'],['row','1인 합계','13만 2천 원',2],['sub','예산 15만 원 안에 듭니다']]},
-  {n:'동행에게 보냅니다', d:'링크 하나로 일정을 보냅니다. 받은 사람은 가입하지 않아도 봅니다.', b:[['h','누구와 같이 볼까요?'],['row','나','고치기'],['row','친구 3명','보기'],['sub','보여 줄 것'],['chips',['일정','숙소','경비','내 취향'],[0,1]],['btn','링크 복사']]}
+  {n:'동행에게 보냅니다', d:'링크 하나로 일정을 보냅니다. 받은 사람은 가입하지 않아도 봅니다.', b:[['h','누구와 같이 볼까요?'],['row','나','고치기'],['row','친구 3명','보기'],['sub','보여 줄 것'],['chips',['일정','숙소','경비','내 취향'],[0,1]],['btn','링크 복사']]},
+  {g:1, n:'다녀온 곳이 기록됩니다', d:'도착하면 알아서 기록합니다. 계획과 실제가 나란히 남습니다.', b:[['h','오늘 · 금요일'],['note','지금 18:40 · 막걸리집에 있습니다'],['card','15:00','숙소 체크인','good','다녀옴'],['card','16:00','한옥마을','good','다녀옴','계획보다 20분 더 머물렀습니다'],['card','18:00','저녁 · 막걸리집','info','지금 여기'],['card','20:30','2차 · 위스키 바','idle','다음','걸어서 7분'],['btn','다음 일정 바꾸기']]},
+  {g:1, n:'계획을 바꾸고 싶을 때', d:'다음 일정이 내키지 않으면 누릅니다. 지금 있는 곳에서 다시 추천합니다.', b:[['h','다음 일정을 바꿀까요?'],['sub','지금 위치와 남은 시간으로 다시 찾았습니다'],['chips',['지금 여는 곳','걸어서 10분','조용한 곳'],[0,1,2]],['card','','루프톱 카페','good','확인됨','걸어서 4분 · 22시까지 엽니다'],['card','','심야 식당','good','확인됨','걸어서 6분 · 출출하다면'],['card','','그냥 숙소로','idle','쉬기','걸어서 9분 · 내일 일정은 그대로 둡니다'],['btn','루프톱 카페로 바꾸기']]},
+  {g:1, n:'시간이 비면', d:'30분이든 1시간이든. 지금 있는 곳에서 걸어서 갈 곳을 내 취향에 맞춰 추천합니다.', b:[['h','시간이 얼마나 비나요?'],['chips',['30분','1시간','2시간'],[1]],['sub','지금 위치에서 걸어서 · 내 취향 반영'],['card','','골목 벽화길 산책','good','40분','걸어서 3분 · 산책을 좋아하셔서'],['card','','작은 전시관','good','50분','걸어서 6분 · 지금 엽니다'],['card','','전망 좋은 카페','info','45분','걸어서 5분 · 웨이팅 10분'],['sub','다음 일정 20:30에 늦지 않습니다'],['btn','산책 넣기']]}
 ];
-let sc = 2;
-function renderScreens(){ const nav = $('snav'); nav.replaceChildren();
-  SC.forEach((s,i) => { const b = el('button', {class:'sbtn', role:'tab', 'aria-selected': String(i === sc)}, el('b', {text:String(i+1)}), el('span', {text:s.n}), el('small', {text:s.d})); b.onclick = () => { sc = i; renderScreens(); }; nav.append(b); });
+let sc = 2, grp = 0;
+function renderScreens(){ const gt = $('sgrp'); gt.replaceChildren(); ['떠나기 전','여행 중'].forEach((n,i) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(i === grp), text:n}); b.onclick = () => { grp = i; sc = SC.findIndex(s => (s.g || 0) === i); renderScreens(); }; gt.append(b); });
+  const nav = $('snav'); nav.replaceChildren();
+  SC.forEach((s,i) => { if ((s.g || 0) !== grp) return; const b = el('button', {class:'sbtn', role:'tab', 'aria-selected': String(i === sc)}, el('b', {text:String(i+1)}), el('span', {text:s.n}), el('small', {text:s.d})); b.onclick = () => { sc = i; renderScreens(); }; nav.append(b); });
   const ph = $('phone'); ph.replaceChildren();
   SC[sc].b.forEach(k => { let e;
     if (k[0] === 'h') e = el('div', {class:'ph-h', text:k[1]});
