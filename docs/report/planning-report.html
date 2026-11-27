@@ -95,6 +95,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 
 /* 대안 예시 */
 .result{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+h3.step{display:flex;gap:10px;align-items:baseline;font-size:1.12rem;margin-top:12px}
+h3.step i{font-family:var(--mono);font-style:normal;color:var(--accent);font-size:.9rem}
 .result div{background:var(--sunk);border-radius:8px;padding:12px}
 .result b{display:block;font-family:var(--mono);font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.2}
 .result span{font-size:.84rem;color:var(--muted)}
@@ -121,9 +123,68 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .sl output{font-family:var(--mono)}
 .sl input[type=range]{width:100%;accent-color:var(--accent)}
 
+/* 화면 여러 장을 나란히 */
+.phones{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px}
+.pwrap{flex:0 0 250px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pwrap .phone{width:100%;min-height:450px}
+.pcap{display:grid;grid-template-columns:1.6em 1fr;gap:0 4px;line-height:1.5}
+.pcap b{font-family:var(--mono);font-weight:500;color:var(--accent)}
+.pcap small{grid-column:2;color:var(--muted);font-size:.84rem}
+.arrow{font-family:var(--mono);color:var(--muted);text-align:center;font-size:.9rem}
+
+/* 일정표 */
+.app{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.ap-head{background:var(--accent);color:var(--on-accent);padding:18px;display:flex;flex-direction:column;gap:8px}
+.ap-head h3{font-size:1.25rem}
+.ap-meta{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.88rem}
+.ap-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.ap-stats div{padding:12px 14px;border-right:1px solid var(--line);min-width:0}
+.ap-stats div:last-child{border-right:0}
+.ap-stats b{display:block;font-family:var(--mono);font-weight:500;font-size:1.12rem;font-variant-numeric:tabular-nums}
+.ap-stats span{font-size:.78rem;color:var(--muted)}
+.ap-tabs{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ap-body{padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--bg)}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.dayhead{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;width:100%;border:0;background:none;padding:14px;cursor:pointer;text-align:left}
+.daynum{width:52px;height:52px;border-radius:10px;background:var(--sunk);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.daynum small{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.06em}
+.daynum b{font-size:1.3rem}
+.daytags{display:flex;gap:6px;margin-bottom:3px;flex-wrap:wrap}
+.daytitle{font-family:var(--display);font-weight:600;font-size:1.05rem}
+.dayin{padding:0 14px 14px;display:flex;flex-direction:column;gap:14px}
+.sumbox{background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:10px 12px;font-size:.9rem;font-weight:500}
+.tl{display:flex;flex-direction:column;margin-left:6px;border-left:2px solid var(--line)}
+.tl-item{position:relative;padding:0 0 18px 18px;display:grid;grid-template-columns:3.2em minmax(0,1fr);gap:10px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:"";position:absolute;left:-7px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.tl-item.bad::before{border-color:var(--bad);background:var(--bad)}
+.tl-item time{font-family:var(--mono);font-size:.82rem;color:var(--muted);padding-top:2px}
+.tl-name{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:500}
+.tl-note{font-size:.88rem;color:var(--muted)}
+.tl-foot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:5px}
+.mv{font-size:.78rem;background:var(--sunk);border-radius:4px;padding:3px 8px;color:var(--idle)}
+.altbtn{font-size:.8rem;border:1px solid var(--accent);color:var(--accent);background:none;border-radius:4px;padding:3px 10px;cursor:pointer}
+.tl-alts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.spare{background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:.88rem}
+.spare b{font-weight:500}
+.stayline{font-size:.82rem;color:var(--muted);text-align:right;border-top:1px solid var(--line);padding-top:10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.scard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.scard.on{border:2px solid var(--accent)}
+.scard .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.scard p{font-size:.88rem;color:var(--muted)}
+.total{background:var(--fg);color:var(--bg);border-radius:10px;padding:16px;text-align:center}
+.total b{display:block;font-family:var(--mono);font-size:1.7rem;font-weight:500}
+.total span{font-size:.82rem}
+.meter{height:8px;background:var(--sunk);border-radius:4px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--good)}
+.brow{display:grid;grid-template-columns:1fr auto;gap:2px 10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.brow b{font-family:var(--mono);font-weight:500}
+.brow small{grid-column:1/-1;color:var(--muted);font-size:.82rem}
+
 .ask{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:10px;max-width:38em}
 .ask li::marker{font-family:var(--mono);color:var(--accent)}
-@media (max-width:640px){ .screens{grid-template-columns:1fr} .phone{margin:0 auto} .ba-row{grid-template-columns:1fr} .ba-row i{display:none} .dm-row{grid-template-columns:1fr auto} .dm-row time{grid-column:1/-1} }
+@media (max-width:640px){ .ap-stats b{font-size:.98rem} .dayhead{gap:10px} .tl-item{grid-template-columns:1fr} .tl-item time{padding:0} .ba-row{grid-template-columns:1fr} .ba-row i{display:none} .dm-row{grid-template-columns:1fr auto} .dm-row time{grid-column:1/-1} }
 </style>
 
 <div class="wrap">
@@ -154,14 +215,22 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 
 <section>
   <span class="eyebrow" id="how">2 · 어떻게 쓰나</span>
-  <h2>떠나기 전에 일곱 단계, 여행 중에 세 가지</h2>
-  <p>눌러 보세요. 오른쪽에 그 화면이 나옵니다.</p>
-  <div class="tabs" id="sgrp" role="tablist"></div>
-  <div class="screens">
-    <div class="snav" id="snav" role="tablist"></div>
-    <div class="phone" id="phone" aria-live="polite"></div>
-  </div>
-  <p class="muted">예시 화면입니다. 위치는 여행 중에, 켜 두었을 때만 씁니다.</p>
+  <h2>묻고, 짜고, 같이 갑니다</h2>
+
+  <h3 class="step"><i>가</i>처음에 세 가지를 묻습니다</h3>
+  <p>가입할 때 취향을 한 번 묻습니다. 여행을 만들 때 두 화면을 더 묻습니다. 그게 전부입니다.</p>
+  <div class="phones" id="phAsk"></div>
+  <p class="arrow">↓ 일정 만들기</p>
+
+  <h3 class="step"><i>나</i>이런 일정표를 받습니다</h3>
+  <p>실제로 눌러 보세요. 날짜를 펼치고, 대안으로 바꾸고, 숙소와 경비 탭을 열어 보세요. 바꾸면 위의 숫자가 따라 바뀝니다.</p>
+  <div class="app" id="app"></div>
+  <p class="muted">예시 일정입니다. 일정표는 링크 하나로 동행에게 보냅니다. 받은 사람은 가입하지 않아도 봅니다.</p>
+
+  <h3 class="step"><i>다</i>여행 중에는 세 가지를 돕습니다</h3>
+  <p>여행이 시작되면 일정표가 오늘 화면으로 바뀝니다.</p>
+  <div class="phones" id="phTrip"></div>
+  <p class="muted">위치는 여행 중에, 켜 두었을 때만 씁니다.</p>
 </section>
 
 <section>
@@ -190,15 +259,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     <div><b>둘</b><h3>여행이 끝날 때까지 같이 갑니다</h3><p>일정을 짜 주고 끝나지 않습니다. 지금 있는 곳, 남은 시간, 내 취향으로 다시 추천합니다. 뒤 일정에 늦지 않는지도 봅니다.</p></div>
     <div><b>셋</b><h3>추천에 광고가 없습니다</h3><p>가게나 숙소에서 돈을 받지 않습니다. 돈을 낸 곳이 위로 올라오지 않습니다. 추천은 AI의 판단뿐입니다.</p></div>
   </div>
-  <h3>대안을 눌러 보세요</h3>
-  <div class="panel">
-    <div class="result">
-      <div><b id="dmWalk"></b><span>걷는 시간 합계</span></div>
-      <div><b id="dmCost"></b><span>1인 예상 비용</span></div>
-    </div>
-    <div class="dm" id="dm"></div>
-    <p class="muted">예시입니다. 바꾸면 위의 합계가 다시 계산됩니다.</p>
-  </div>
+  <p class="muted">2장의 일정표에서 대안을 직접 바꿔 볼 수 있습니다.</p>
 </section>
 
 <section>
@@ -255,48 +316,84 @@ const $ = id => document.getElementById(id);
 const el = (t, a = {}, ...kids) => { const e = document.createElement(t); for (const k in a) { if (k === 'class') e.className = a[k]; else if (k === 'text') e.textContent = a[k]; else e.setAttribute(k, a[k]); } kids.forEach(k => e.append(k)); return e; };
 const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
 
-/* 2장: 쓰는 순서. g가 1이면 여행 중 화면 */
-const SC = [
-  {n:'취향을 한 번 적습니다', d:'걷는 시간, 웨이팅, 좋아하는 것. 처음 한 번이면 됩니다.', b:[['h','어떤 여행을 좋아하나요?'],['row','한 번에 걷는 시간','15분까지'],['row','기다릴 수 있는 웨이팅','20분까지'],['sub','좋아하는 것'],['chips',['한식','술 한잔','카페','전시','산책','시장'],[0,1,2]],['sub','좋아하는 분위기'],['chips',['조용한 곳','북적이는 곳','전망 좋은 곳'],[0]],['btn','저장']]},
-  {n:'여행 조건을 넣습니다', d:'어디로, 언제, 누구와, 얼마로. 꼭 갈 곳을 적으면 반드시 들어갑니다.', b:[['h','어디로, 언제, 누구와?'],['row','어디로','전주'],['row','언제','금 ~ 토 · 1박 2일'],['row','누구와','친구 3명'],['row','예산','1인 15만 원'],['sub','꼭 가고 싶은 곳'],['chips',['한옥마을','남부시장 야시장','+ 더하기'],[0,1]],['sub','이번 여행만 다른 것'],['row','웨이팅','40분까지',1],['btn','일정 만들기']]},
-  {n:'AI가 일정을 짭니다', d:'갈 곳, 순서, 시간, 이동이 나옵니다. 왜 이 순서인지도 보입니다.', b:[['h','1일차 · 금요일'],['chips',['일정','숙소','경비'],[0]],['note','이 순서가 가장 덜 걷습니다 · 합계 28분'],['card','15:00','숙소 체크인','good','확인됨'],['leg','걸어서 5분'],['card','16:00','한옥마을','info','내가 고른 곳'],['leg','걸어서 6분'],['card','18:00','저녁 · 막걸리집','good','확인됨','대안 2곳'],['leg','걸어서 8분'],['card','20:30','2차 · 조용한 바','bad','쉬는 날','대안 2곳을 먼저 보여 줍니다']]},
-  {n:'마음에 안 들면 바꿉니다', d:'항목마다 대안이 있습니다. 이유와 달라지는 값이 같이 보입니다.', b:[['h','2차를 무엇으로 바꿀까요?'],['chips',['조용한 곳','숙소에서 15분','금요일 영업'],[0,1,2]],['card','','위스키 바','good','확인됨','더 가깝습니다 · 걷기 −1분 · 비용 +1만 원'],['card','','이자카야','info','일부 확인','늦게까지 엽니다 · 걷기 +4분 · 비용 −5천 원'],['sub','바꾸면 이동과 경비를 다시 계산합니다'],['btn','위스키 바로 바꾸기']]},
-  {n:'숙소를 같이 봅니다', d:'숙소가 동선의 중심입니다. 숙소를 바꾸면 일정을 다시 짭니다.', b:[['h','숙소 추천'],['chips',['일정','숙소','경비'],[1]],['sub','저녁과 2차까지 걸어서 10분 안쪽'],['card','','한옥 숙소','good','선택됨','동선의 가운데입니다'],['card','','호텔','idle','대안','주차가 됩니다 · 걷기 +6분'],['card','','게스트하우스','idle','대안','가장 쌉니다 · 걷기 +11분'],['btn','예약하러 가기']]},
-  {n:'경비가 따라 계산됩니다', d:'항목별로 보입니다. 장소를 바꾸면 합계도 바뀝니다.', b:[['h','예상 경비'],['chips',['일정','숙소','경비'],[2]],['row','숙박','4만 원'],['row','식사와 술','7만 4천 원'],['row','이동','8천 원'],['row','놀거리','1만 원'],['row','1인 합계','13만 2천 원',2],['sub','예산 15만 원 안에 듭니다']]},
-  {n:'동행에게 보냅니다', d:'링크 하나로 보냅니다. 받은 사람은 가입하지 않아도 봅니다.', b:[['h','누구와 같이 볼까요?'],['row','나','고치기'],['row','친구 3명','보기'],['sub','보여 줄 것'],['chips',['일정','숙소','경비','내 취향'],[0,1]],['btn','링크 복사']]},
-  {g:1, n:'다녀온 곳이 기록됩니다', d:'계획과 실제가 나란히 남습니다.', b:[['h','오늘 · 금요일'],['note','지금 18:40 · 막걸리집에 있습니다'],['card','15:00','숙소 체크인','good','다녀옴'],['card','16:00','한옥마을','good','다녀옴','계획보다 20분 더 머물렀습니다'],['card','18:00','저녁 · 막걸리집','info','지금 여기'],['card','20:30','2차 · 위스키 바','idle','다음','걸어서 7분'],['btn','다음 일정 바꾸기']]},
-  {g:1, n:'계획을 바꾸고 싶을 때', d:'다음 일정이 내키지 않으면 누릅니다. 지금 있는 곳에서 다시 추천합니다.', b:[['h','다음 일정을 바꿀까요?'],['sub','지금 위치와 남은 시간으로 다시 찾았습니다'],['chips',['지금 여는 곳','걸어서 10분','조용한 곳'],[0,1,2]],['card','','루프톱 카페','good','확인됨','걸어서 4분 · 22시까지 엽니다'],['card','','심야 식당','good','확인됨','걸어서 6분 · 출출하다면'],['card','','그냥 숙소로','idle','쉬기','걸어서 9분 · 내일 일정은 그대로 둡니다'],['btn','루프톱 카페로 바꾸기']]},
-  {g:1, n:'시간이 비면', d:'30분이든 1시간이든. 걸어서 갈 곳을 내 취향에 맞춰 추천합니다.', b:[['h','시간이 얼마나 비나요?'],['chips',['30분','1시간','2시간'],[1]],['sub','지금 위치에서 걸어서 · 내 취향 반영'],['card','','골목 벽화길 산책','good','40분','걸어서 3분 · 산책을 좋아하셔서'],['card','','작은 전시관','good','50분','걸어서 6분 · 지금 엽니다'],['card','','전망 좋은 카페','info','45분','걸어서 5분 · 웨이팅 10분'],['sub','다음 일정 20:30에 늦지 않습니다'],['btn','산책 넣기']]}
-];
-let sc = 2, grp = 0;
-function renderScreens(){ const gt = $('sgrp'); gt.replaceChildren(); ['떠나기 전','여행 중'].forEach((n,i) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(i === grp), text:n}); b.onclick = () => { grp = i; sc = SC.findIndex(s => (s.g || 0) === i); renderScreens(); }; gt.append(b); });
-  const nav = $('snav'); nav.replaceChildren(); let no = 0;
-  SC.forEach((s,i) => { if ((s.g || 0) !== grp) return; no++; const b = el('button', {class:'sbtn', role:'tab', 'aria-selected': String(i === sc)}, el('b', {text:String(no)}), el('span', {text:s.n}), el('small', {text:s.d})); b.onclick = () => { sc = i; renderScreens(); }; nav.append(b); });
-  const ph = $('phone'); ph.replaceChildren();
-  SC[sc].b.forEach(k => { let e;
+/* 2장: 화면 그리기 */
+function phone(blocks){ const ph = el('div', {class:'phone'});
+  blocks.forEach(k => { let e;
     if (k[0] === 'h') e = el('div', {class:'ph-h', text:k[1]});
     else if (k[0] === 'sub') e = el('div', {class:'ph-sub', text:k[1]});
     else if (k[0] === 'note') e = el('div', {class:'ph-note', text:k[1]});
-    else if (k[0] === 'leg') e = el('div', {class:'ph-leg', text:k[1]});
     else if (k[0] === 'btn') e = el('div', {class:'ph-btn', text:k[1]});
-    else if (k[0] === 'row') e = el('div', {class:'ph-row' + (k[3] ? ' chg' : '')}, el('span', {text:k[1] + (k[3] === 1 ? ' · 이번만' : '')}), el('span', {text:k[2]}));
+    else if (k[0] === 'row') e = el('div', {class:'ph-row' + (k[3] ? ' chg' : '')}, el('span', {text:k[1] + (k[3] ? ' · 이번만' : '')}), el('span', {text:k[2]}));
     else if (k[0] === 'chips') e = el('div', {class:'ph-chips'}, ...k[1].map((c,i) => el('span', {class: k[2].includes(i) ? 'on' : '', text:c})));
-    else if (k[0] === 'card') { const top = el('div', {class:'ph-top'}); if (k[1]) top.append(el('time', {text:k[1]})); top.append(el('b', {text:k[2]}), el('span', {class:'tag t-'+k[3], text:k[4]})); e = el('div', {class:'ph-card' + (k[3] === 'bad' ? ' bad' : '')}, top); if (k[5]) e.append(el('div', {class:'ph-sub', text:k[5]})); }
-    ph.append(e); }); }
+    else if (k[0] === 'card') { const top = el('div', {class:'ph-top'}); if (k[1]) top.append(el('time', {text:k[1]})); top.append(el('b', {text:k[2]}), el('span', {class:'tag t-'+k[3], text:k[4]})); e = el('div', {class:'ph-card'}, top); if (k[5]) e.append(el('div', {class:'ph-sub', text:k[5]})); }
+    ph.append(e); }); return ph; }
+function phones(id, list){ const box = $(id); list.forEach((s,i) => box.append(el('div', {class:'pwrap'}, el('div', {class:'pcap'}, el('b', {text:String(i+1)}), el('strong', {text:s.n}), el('small', {text:s.d})), phone(s.b)))); }
 
-/* 4장: 대안 예시 */
-const DM = [
-  {t:'18:00 · 저녁', cur:{n:'막걸리집', walk:6, cost:25000}, alts:[{n:'다른 막걸리집', walk:4, cost:30000, why:'더 가깝습니다. 웨이팅이 짧습니다.'},{n:'한정식집', walk:11, cost:35000, why:'조용합니다. 예약이 됩니다.'}]},
-  {t:'20:30 · 2차', cur:{n:'조용한 바', walk:8, cost:30000}, alts:[{n:'위스키 바', walk:7, cost:40000, why:'금요일에 엽니다. 위스키가 많습니다.'},{n:'이자카야', walk:12, cost:25000, why:'늦게까지 엽니다. 더 쌉니다.'}]},
-  {t:'다음 날 10:00 · 아침', cur:{n:'콩나물국밥집', walk:9, cost:9000}, alts:[{n:'해장국집', walk:5, cost:10000, why:'숙소에서 가장 가깝습니다.'}]}
+const ASK = [
+  {n:'취향', d:'가입할 때 한 번. 모든 여행에 씁니다.', b:[['h','어떤 여행을 좋아하나요?'],['row','한 번에 걷는 시간','15분까지'],['row','기다릴 수 있는 웨이팅','20분까지'],['row','차를 가져가나요','아니요'],['sub','좋아하는 것'],['chips',['한식','술 한잔','카페','전시','산책','시장'],[0,1,2]],['sub','좋아하는 분위기'],['chips',['조용한 곳','북적이는 곳','전망 좋은 곳'],[0]],['btn','저장']]},
+  {n:'어디로, 언제, 누구와', d:'여행마다. 네 가지만 묻습니다.', b:[['h','어디로, 언제, 누구와?'],['row','어디로','전주'],['row','언제','12.12 금 ~ 12.13 토'],['row','누구와','친구 3명'],['row','예산','1인 15만 원'],['sub','어떻게 가나요'],['chips',['기차','버스','자동차'],[0]],['btn','다음']]},
+  {n:'꼭 갈 곳과 이번만 다른 것', d:'적은 곳은 반드시 들어갑니다.', b:[['h','꼭 가고 싶은 곳이 있나요?'],['chips',['한옥마을','남부시장 야시장','+ 더하기'],[0,1]],['sub','없으면 비워 두세요. AI가 고릅니다.'],['sub','이번 여행만 다른 것'],['row','웨이팅','40분까지',1],['row','저녁','막걸리',1],['row','걷는 시간','15분까지'],['btn','일정 만들기']]}
 ];
-let dmOpen = 1;
-function renderDemo(){ const box = $('dm'); box.replaceChildren();
-  $('dmWalk').textContent = DM.reduce((a,x) => a + x.cur.walk, 0) + '분'; $('dmCost').textContent = won(DM.reduce((a,x) => a + x.cur.cost, 0));
-  DM.forEach((x,i) => { const btn = el('button', {class:'tab', 'aria-expanded': String(dmOpen === i), text:`대안 ${x.alts.length}곳`}); btn.onclick = () => { dmOpen = dmOpen === i ? -1 : i; renderDemo(); };
-    box.append(el('div', {class:'dm-row'}, el('time', {text:x.t}), el('b', {}, x.cur.n, el('small', {text:`걷기 ${x.cur.walk}분 · ${won(x.cur.cost)}`})), btn));
-    if (dmOpen === i) { const alts = el('div', {class:'dm-alts'}); x.alts.forEach((a,j) => { const dw = a.walk - x.cur.walk, dc = a.cost - x.cur.cost; const sw = el('button', {class:'tab', text:'바꾸기'}); sw.onclick = () => { x.alts[j] = Object.assign({why:'처음 추천한 곳입니다.'}, x.cur); x.cur = a; renderDemo(); };
-      alts.append(el('div', {class:'dm-alt'}, el('span', {}, el('b', {text:a.n + ' '}), a.why), el('small', {text:`걷기 ${dw > 0 ? '+' : ''}${dw}분 · 비용 ${dc > 0 ? '+' : ''}${dc.toLocaleString('ko-KR')}원`}), sw)); }); box.append(alts); } }); }
+const TRIP = [
+  {n:'다녀온 곳을 기록합니다', d:'계획과 실제가 나란히 남습니다.', b:[['h','오늘 · 금요일'],['note','지금 18:40 · 막걸리집에 있습니다'],['card','15:00','숙소 체크인','good','다녀옴'],['card','16:00','한옥마을','good','다녀옴','계획보다 20분 더 머물렀습니다'],['card','18:00','저녁 · 막걸리집','info','지금 여기'],['card','20:00','남부시장 야시장','idle','다음','걸어서 7분'],['btn','다음 일정 바꾸기']]},
+  {n:'계획을 바꿔 줍니다', d:'지금 있는 곳과 남은 시간으로 다시 추천합니다.', b:[['h','다음 일정을 바꿀까요?'],['sub','지금 위치와 남은 시간으로 다시 찾았습니다'],['chips',['지금 여는 곳','걸어서 10분','조용한 곳'],[0,1,2]],['card','','루프톱 카페','good','확인됨','걸어서 4분 · 22시까지 엽니다'],['card','','심야 식당','good','확인됨','걸어서 6분 · 출출하다면'],['card','','그냥 숙소로','idle','쉬기','내일 일정은 그대로 둡니다'],['btn','루프톱 카페로 바꾸기']]},
+  {n:'빈 시간을 채워 줍니다', d:'30분이든 1시간이든. 걸어서 갈 곳을 취향에 맞춰 추천합니다.', b:[['h','시간이 얼마나 비나요?'],['chips',['30분','1시간','2시간'],[1]],['sub','지금 위치에서 걸어서 · 내 취향 반영'],['card','','골목 벽화길 산책','good','40분','걸어서 3분 · 산책을 좋아하셔서'],['card','','작은 전시관','good','50분','걸어서 6분 · 지금 엽니다'],['card','','전망 좋은 카페','info','45분','걸어서 5분 · 웨이팅 10분'],['sub','다음 일정에 늦지 않습니다'],['btn','산책 넣기']]}
+];
+
+/* 2장: 일정표 */
+const BUDGET = 150000;
+const STAYS = [
+  {n:'한옥 숙소', type:'한옥', price:40000, why:'동선의 가운데입니다. 한옥마을까지 걸어서 5분.', extra:0},
+  {n:'호텔', type:'호텔', price:55000, why:'주차가 됩니다. 방이 넓습니다.', extra:6},
+  {n:'게스트하우스', type:'게스트하우스', price:25000, why:'가장 쌉니다. 많이 걷습니다.', extra:11}
+];
+const DAYS = [
+  {day:1, date:'12.12 (금)', title:'한옥마을과 막걸리 골목', sum:'숙소에 짐을 풀고 걸어서 다닙니다. 여러 순서를 견줘 가장 덜 걷는 순서로 잡았습니다.', items:[
+    {t:'15:00', n:'숙소 체크인', note:'짐을 맡기고 가볍게 나갑니다.', walk:0, cost:0, cat:'stay'},
+    {t:'16:00', n:'한옥마을', mine:1, note:'해 지기 전이 걷기 좋습니다. 1시간 반을 잡았습니다.', walk:5, cost:0, cat:'play'},
+    {t:'18:00', n:'저녁 · 막걸리집', note:'한 상 차림입니다. 웨이팅 20분 안쪽.', walk:6, cost:25000, cat:'food', alts:[{n:'저녁 · 다른 막걸리집', walk:4, cost:30000, why:'더 가깝습니다. 웨이팅이 짧습니다.', note:'안주를 골라 시킵니다.'},{n:'저녁 · 한정식집', walk:11, cost:35000, why:'조용합니다. 예약이 됩니다.', note:'예약하고 갑니다.'}]},
+    {t:'20:00', n:'남부시장 야시장', mine:1, note:'금요일과 토요일 밤에 엽니다.', walk:7, cost:10000, cat:'play'},
+    {t:'21:30', n:'2차 · 조용한 바', bad:'쉬는 날', note:'금요일은 쉽니다. 대안을 골라 주세요.', walk:8, cost:30000, cat:'food', alts:[{n:'2차 · 위스키 바', walk:7, cost:40000, why:'금요일에 엽니다. 위스키가 많습니다.', note:'자정까지 엽니다.'},{n:'2차 · 이자카야', walk:12, cost:25000, why:'늦게까지 엽니다. 더 쌉니다.', note:'새벽 1시까지 엽니다.'}]}
+  ], spare:{n:'골목 벽화길', d:'한옥마을 옆입니다. 20분이면 봅니다.'}},
+  {day:2, date:'12.13 (토)', title:'해장하고 천천히', sum:'늦게 일어나도 되는 일정입니다. 13:20 기차에 맞췄습니다.', items:[
+    {t:'09:30', n:'아침 · 콩나물국밥집', note:'아침 6시부터 엽니다.', walk:9, cost:9000, cat:'food', alts:[{n:'아침 · 해장국집', walk:5, cost:10000, why:'숙소에서 가장 가깝습니다.', note:'아침 7시부터 엽니다.'}]},
+    {t:'11:00', n:'전망 좋은 카페', note:'체크아웃하고 짐을 들고 갑니다.', walk:6, cost:7000, cat:'food'},
+    {t:'12:30', n:'전주역으로', note:'13:20 기차를 탑니다.', walk:0, taxi:15, cost:6000, cat:'move'}
+  ], spare:{n:'작은 전시관', d:'카페에서 걸어서 6분. 50분쯤 봅니다.'}}
+];
+let stay = 0, tab = 'plan', altOpen = null; const open = {1:true, 2:false};
+const all = () => DAYS.flatMap(d => d.items);
+const sumCat = c => all().filter(x => x.cat === c).reduce((a,x) => a + x.cost, 0);
+function renderApp(){ const app = $('app'); app.replaceChildren();
+  const walk = all().reduce((a,x) => a + x.walk, 0) + STAYS[stay].extra, lodging = STAYS[stay].price;
+  const total = lodging + sumCat('food') + sumCat('play') + sumCat('move'), bad = all().filter(x => x.bad).length;
+  app.append(el('div', {class:'ap-head'}, el('h3', {text:'전주 1박 2일'}), el('div', {class:'ap-meta'}, el('span', {text:'12.12 (금) ~ 12.13 (토)'}), el('span', {text:'친구 3명'}), el('span', {text:'숙소 · ' + STAYS[stay].n}))));
+  const st = el('div', {class:'ap-stats'});
+  [[walk + '분', '걷는 시간 합계'], [won(total), '1인 경비 · 예산 15만 원'], [bad ? bad + '건' : '없음', '확인할 것']].forEach(([b,s],i) => { const d = el('div', {}, el('b', {text:b}), el('span', {text:s})); if (i === 1 && total > BUDGET) d.firstChild.style.color = 'var(--bad)'; if (i === 2 && bad) d.firstChild.style.color = 'var(--bad)'; st.append(d); }); app.append(st);
+  const tabs = el('div', {class:'ap-tabs', role:'tablist'}); [['plan','일정'],['stay','숙소'],['budget','경비']].forEach(([k,n]) => { const b = el('button', {class:'tab', role:'tab', 'aria-selected': String(tab === k), text:n}); b.onclick = () => { tab = k; renderApp(); }; tabs.append(b); }); app.append(tabs);
+  const body = el('div', {class:'ap-body'}); app.append(body);
+  if (tab === 'plan') DAYS.forEach(d => { const card = el('div', {class:'day'});
+    const head = el('button', {class:'dayhead', 'aria-expanded': String(!!open[d.day])}, el('div', {class:'daynum'}, el('small', {text:'DAY'}), el('b', {text:String(d.day)})), el('div', {}, el('div', {class:'daytags'}, el('span', {class:'tag t-info', text:d.date}), el('span', {class:'tag t-idle', text:d.items.length + '곳'})), el('div', {class:'daytitle', text:d.title})), el('span', {'aria-hidden':'true', text: open[d.day] ? '▴' : '▾'}));
+    head.onclick = () => { open[d.day] = !open[d.day]; renderApp(); }; card.append(head);
+    if (open[d.day]) { const inn = el('div', {class:'dayin'}, el('div', {class:'sumbox', text:d.sum})); const tl = el('div', {class:'tl'});
+      d.items.forEach((x,i) => { const key = d.day + '-' + i; const name = el('div', {class:'tl-name'}, x.n);
+        if (x.mine) name.append(el('span', {class:'tag t-info', text:'내가 고른 곳'})); name.append(x.bad ? el('span', {class:'tag t-bad', text:x.bad}) : el('span', {class:'tag t-good', text:'확인됨'}));
+        const foot = el('div', {class:'tl-foot'}); if (x.walk) foot.append(el('span', {class:'mv', text:'걸어서 ' + x.walk + '분'})); if (x.taxi) foot.append(el('span', {class:'mv', text:'택시 ' + x.taxi + '분'})); if (x.cost) foot.append(el('span', {class:'mv', text:won(x.cost)}));
+        if (x.alts && x.alts.length) { const ab = el('button', {class:'altbtn', 'aria-expanded': String(altOpen === key), text:'대안 ' + x.alts.length + '곳'}); ab.onclick = () => { altOpen = altOpen === key ? null : key; renderApp(); }; foot.append(ab); }
+        const bodyEl = el('div', {}, name, el('div', {class:'tl-note', text:x.note}), foot);
+        if (altOpen === key) { const al = el('div', {class:'tl-alts'}); x.alts.forEach((a,j) => { const dw = a.walk - x.walk, dc = a.cost - x.cost; const sw = el('button', {class:'tab', text:'바꾸기'});
+          sw.onclick = () => { const prev = {n:x.n, walk:x.walk, cost:x.cost, note:x.note, why:'처음 추천한 곳입니다.'}; if (x.bad) x.alts.splice(j, 1); else x.alts[j] = prev; Object.assign(x, {n:a.n, walk:a.walk, cost:a.cost, note:a.note}); delete x.bad; altOpen = null; renderApp(); };
+          al.append(el('div', {class:'dm-alt'}, el('span', {}, el('b', {text:a.n.split(' · ').pop() + ' '}), a.why), el('small', {text:'걷기 ' + (dw > 0 ? '+' : '') + dw + '분 · 비용 ' + (dc > 0 ? '+' : '') + dc.toLocaleString('ko-KR') + '원'}), sw)); }); bodyEl.append(al); }
+        tl.append(el('div', {class:'tl-item' + (x.bad ? ' bad' : '')}, el('time', {text:x.t}), bodyEl)); });
+      inn.append(tl, el('div', {class:'spare'}, el('b', {text:'시간이 남으면 · ' + d.spare.n + ' '}), d.spare.d), el('div', {class:'stayline', text: d.day === 1 ? '숙박 · ' + STAYS[stay].n : '집으로'})); card.append(inn); }
+    body.append(card); });
+  if (tab === 'stay') { body.append(el('div', {class:'sumbox', text:'숙소가 동선의 중심입니다. 바꾸면 걷는 시간과 경비가 다시 계산됩니다.'})); const cards = el('div', {class:'cards'});
+    STAYS.forEach((s,i) => { const b = el('button', {class:'tab', 'aria-pressed': String(i === stay), text: i === stay ? '선택됨' : '이 숙소로'}); b.onclick = () => { stay = i; renderApp(); };
+      cards.append(el('div', {class:'scard' + (i === stay ? ' on' : '')}, el('div', {class:'top'}, el('span', {class:'tag t-info', text:s.type}), el('b', {text:won(s.price)})), el('h3', {text:s.n}), el('p', {text:s.why}), el('span', {class:'mv', text: s.extra ? '걷기 +' + s.extra + '분' : '가장 덜 걷습니다'}), b)); }); body.append(cards); body.append(el('p', {class:'muted', text:'금액은 1인 1박 기준입니다.'})); }
+  if (tab === 'budget') { const m = el('div', {class:'meter'}, el('i')); m.firstChild.style.width = Math.min(100, total / BUDGET * 100) + '%'; if (total > BUDGET) m.firstChild.style.background = 'var(--bad)';
+    body.append(el('div', {class:'total'}, el('span', {text:'1인 예상 경비'}), el('b', {text:won(total)}), el('span', {text: total <= BUDGET ? '예산 15만 원 안에 듭니다 · ' + won(BUDGET - total) + ' 남음' : '예산을 ' + won(total - BUDGET) + ' 넘습니다'})), m);
+    [['숙박', lodging, STAYS[stay].n + ' 1박'], ['식사와 술', sumCat('food'), '저녁, 2차, 아침, 카페'], ['볼거리', sumCat('play'), '야시장에서 쓰는 돈'], ['현지 이동', sumCat('move'), '숙소에서 역까지 택시']].forEach(([n,v,d]) => body.append(el('div', {class:'brow'}, el('span', {text:n}), el('b', {text:won(v)}), el('small', {text:d}))));
+    body.append(el('p', {class:'muted', text:'전주까지 오가는 기차표는 뺐습니다. 일정이나 숙소를 바꾸면 다시 계산합니다.'})); } }
 
 /* 5장: 요금 비교 */
 function renderPrice(){ const t = +$('pTrips').value, one = +$('pOne').value, sub = +$('pSub').value;
@@ -306,5 +403,5 @@ function renderPrice(){ const t = +$('pTrips').value, one = +$('pOne').value, su
   $('rNote').textContent = a <= b ? `1년에 ${t}번이면 건당 결제가 쌉니다. ${even}번부터는 구독이 쌉니다.` : `1년에 ${t}번이면 구독이 쌉니다. ${even}번보다 적게 가면 건당 결제가 쌉니다.`; }
 ['pTrips','pOne','pSub'].forEach(id => $(id).addEventListener('input', renderPrice));
 
-renderScreens(); renderDemo(); renderPrice();
+phones('phAsk', ASK); phones('phTrip', TRIP); renderApp(); renderPrice();
 </script>
