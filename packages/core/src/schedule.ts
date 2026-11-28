@@ -3,8 +3,11 @@ import { chooseTravel } from './travel';
 import { isOpenDuring, openIntervals, toHHMM, toMin } from './time';
 import type { Category, Place, PlanItem, Prefs, TravelEstimate, TripRequest } from './types';
 
-export const DAY_START = toMin('09:30');
-export const DAY_END = toMin('20:30');
+export const DEFAULT_DAY_START = toMin('09:30');
+export const DEFAULT_DAY_END = toMin('20:30');
+/** a place with this tag is best seen in the evening */
+export const NIGHT_TAG = '야경';
+export const NIGHT_START = toMin('17:00');
 export type MealSlot = 'lunch' | 'dinner';
 export const MEAL_WINDOWS: Record<MealSlot, [number, number]> = {
   lunch: [toMin('11:30'), toMin('13:30')],
@@ -51,6 +54,8 @@ export interface DayCtx {
   weekday: number;
   leg: LegFn;
   maxWalkMin: number | null;
+  dayStart: number;
+  dayEnd: number;
 }
 
 export interface Placed {
@@ -65,6 +70,8 @@ export interface Placed {
 export interface Run {
   placed: Placed[];
   violations: number;
+  /** night-view places that could have been seen in the evening but are not */
+  nightMiss: number;
   travel: number;
   wait: number;
 }
@@ -88,7 +95,22 @@ interface Cursor {
   prev: Place | null;
 }
 
-function placeOne(cur: Cursor, entry: Entry, ctx: DayCtx): Placed {
+type Delayed = ReadonlySet<Entry>;
+const NONE: Delayed = new Set<Entry>();
+
+const isNightEntry = (e: Entry): boolean =>
+  e.kind === 'free' && e.slot === null && e.place.tags.includes(NIGHT_TAG);
+
+/** true when the place's hours and the day's end allow a visit starting at 17:00 or later */
+function nightPossible(place: Place, ctx: DayCtx): boolean {
+  const duration = stayOf(place);
+  const ivs = openIntervals(place, ctx.weekday);
+  if (ivs === null) return NIGHT_START + duration <= ctx.dayEnd;
+  return ivs.some(([o, c]) => Math.max(NIGHT_START, o) + duration <= Math.min(c, ctx.dayEnd));
+}
+
+/** `delayed`: night-view entries that wait for the evening instead of starting on arrival. */
+function placeOne(cur: Cursor, entry: Entry, ctx: DayCtx, delayed: Delayed): Placed {
   const leg = cur.prev ? ctx.leg(cur.prev, entry.place) : null;
   const arrive = cur.time + (leg?.minutes ?? 0);
 
@@ -109,7 +131,8 @@ function placeOne(cur: Cursor, entry: Entry, ctx: DayCtx): Placed {
 
   const duration = stayOf(entry.place);
   const window = entry.slot ? MEAL_WINDOWS[entry.slot] : null;
-  let start = window ? Math.max(arrive, window[0]) : arrive;
+  const night = delayed.has(entry);
+  let start = window ? Math.max(arrive, window[0]) : night ? Math.max(arrive, NIGHT_START) : arrive;
   let open = true;
   const intervals = openIntervals(entry.place, ctx.weekday);
   if (intervals !== null) {
@@ -121,9 +144,10 @@ function placeOne(cur: Cursor, entry: Entry, ctx: DayCtx): Placed {
   const wait = start - arrive;
   let violations = 0;
   if (!open) violations++;
-  if (wait > MAX_WAIT_MIN) violations++;
+  // Free time before an evening night view is accepted.
+  if (wait > MAX_WAIT_MIN && !night) violations++;
   if (window && start > window[1]) violations++;
-  if (end > DAY_END) violations++;
+  if (end > ctx.dayEnd) violations++;
   return { entry, start, end, leg, violations, wait };
 }
 
@@ -133,21 +157,23 @@ const advance = (p: Placed): Cursor => ({
 });
 
 /** Times and legs for a full, already ordered day. */
-export function runSequence(seq: Entry[], ctx: DayCtx): Run {
-  let cur: Cursor = { time: DAY_START, prev: null };
+export function runSequence(seq: Entry[], ctx: DayCtx, delayed: Delayed = NONE): Run {
+  let cur: Cursor = { time: ctx.dayStart, prev: null };
+  let nightMiss = 0;
   const placed: Placed[] = [];
   let violations = 0;
   let travel = 0;
   let wait = 0;
   for (const entry of seq) {
-    const p = placeOne(cur, entry, ctx);
+    const p = placeOne(cur, entry, ctx, delayed);
     placed.push(p);
+    if (isNightEntry(entry) && p.start < NIGHT_START && nightPossible(entry.place, ctx)) nightMiss++;
     violations += p.violations;
     travel += p.leg?.minutes ?? 0;
     wait += p.wait;
     cur = advance(p);
   }
-  return { placed, violations, travel, wait };
+  return { placed, violations, nightMiss, travel, wait };
 }
 
 export interface DayParts {
@@ -158,12 +184,12 @@ export interface DayParts {
 }
 
 /** Weaves fixed items into an order of free items: a fixed item goes first when the next free item would make us late for it. */
-function buildSequence(order: Entry[], parts: DayParts, ctx: DayCtx): Entry[] {
+function buildSequence(order: Entry[], parts: DayParts, ctx: DayCtx, delayed: Delayed): Entry[] {
   const queue = [...parts.fixed].sort((a, b) => a.fixedStart - b.fixedStart);
   const seq: Entry[] = [];
-  let cur: Cursor = { time: DAY_START, prev: null };
+  let cur: Cursor = { time: ctx.dayStart, prev: null };
   const push = (e: Entry) => {
-    const p = placeOne(cur, e, ctx);
+    const p = placeOne(cur, e, ctx, delayed);
     seq.push(e);
     cur = advance(p);
   };
@@ -171,7 +197,7 @@ function buildSequence(order: Entry[], parts: DayParts, ctx: DayCtx): Entry[] {
   for (const f of order) {
     while (queue.length > 0) {
       const next = queue[0]!;
-      const tentative = placeOne(cur, f, ctx);
+      const tentative = placeOne(cur, f, ctx, delayed);
       const toFixed = ctx.leg(f.place, next.place)?.minutes ?? 0;
       if (tentative.end + toFixed <= next.fixedStart) break;
       push(queue.shift()!);
@@ -183,10 +209,13 @@ function buildSequence(order: Entry[], parts: DayParts, ctx: DayCtx): Entry[] {
   return seq;
 }
 
-const better = (a: Run, b: Run): boolean =>
+/** Hard rules first, then night views in the evening, then travel minutes, then waiting. */
+const better = (a: Run, b: Run, useNight = true): boolean =>
   a.violations !== b.violations
     ? a.violations < b.violations
-    : a.travel !== b.travel
+    : useNight && a.nightMiss !== b.nightMiss
+      ? a.nightMiss < b.nightMiss
+      : a.travel !== b.travel
       ? a.travel < b.travel
       : a.wait < b.wait;
 
@@ -197,6 +226,10 @@ export interface SearchResult {
   worstTravel: number;
   considered: number;
   method: 'exhaustive' | 'heuristic';
+  /** the night-view preference changed where a place sits */
+  nightMoved: boolean;
+  /** night-view entries that wait for the evening in the chosen order */
+  delayed: Entry[];
 }
 
 /**
@@ -204,20 +237,43 @@ export interface SearchResult {
  * Orders that break fewer rules (hours, meal windows, fixed times, day end) win first.
  */
 export function searchOrders(parts: DayParts, ctx: DayCtx): SearchResult {
-  let best: { seq: Entry[]; run: Run } | null = null;
+  interface Cand {
+    seq: Entry[];
+    run: Run;
+    delayed: Set<Entry>;
+  }
+  let best: Cand | null = null;
+  /** best order when the night-view preference is ignored, to tell whether it changed anything */
+  let bestPlain: Cand | null = null;
   let considered = 0;
+  const exec = (order: Entry[], delayed: Set<Entry>): Cand => {
+    const seq = buildSequence(order, parts, ctx, delayed);
+    return { seq, run: runSequence(seq, ctx, delayed), delayed };
+  };
   const worstByViolations = new Map<number, number>();
 
   const consider = (order: Entry[]): boolean => {
-    const seq = buildSequence(order, parts, ctx);
-    const run = runSequence(seq, ctx);
+    const plain = exec(order, new Set());
+    if (bestPlain === null || better(plain.run, bestPlain.run, false)) bestPlain = plain;
+    // Let each night-view place wait for the evening, unless that breaks a hard rule.
+    let cand = plain;
+    if (plain.run.nightMiss > 0) {
+      for (const e of order) {
+        if (!isNightEntry(e) || !nightPossible(e.place, ctx)) continue;
+        const trial = exec(order, new Set(cand.delayed).add(e));
+        if (trial.run.violations <= cand.run.violations && trial.run.nightMiss < cand.run.nightMiss) {
+          cand = trial;
+        }
+      }
+    }
+    const { run } = cand;
     considered++;
     worstByViolations.set(
       run.violations,
       Math.max(worstByViolations.get(run.violations) ?? 0, run.travel),
     );
     if (best === null || better(run, best.run)) {
-      best = { seq, run };
+      best = cand;
       return true;
     }
     return false;
@@ -286,8 +342,17 @@ export function searchOrders(parts: DayParts, ctx: DayCtx): SearchResult {
     }
   }
 
-  const chosen = best as unknown as { seq: Entry[]; run: Run };
+  const chosen = best as unknown as Cand;
+  const plainBest = bestPlain as unknown as Cand;
+  const nightMoved = chosen.run.placed.some(
+    (p) =>
+      isNightEntry(p.entry) &&
+      p.start >= NIGHT_START &&
+      plainBest.run.placed.some((q) => q.entry === p.entry && q.start < NIGHT_START),
+  );
   return {
+    nightMoved,
+    delayed: [...chosen.delayed],
     seq: chosen.seq,
     run: chosen.run,
     worstTravel: worstByViolations.get(chosen.run.violations) ?? chosen.run.travel,

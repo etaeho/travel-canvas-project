@@ -1,6 +1,6 @@
 import {
-  DAY_END,
-  DAY_START,
+  DEFAULT_DAY_END,
+  DEFAULT_DAY_START,
   MEAL_WINDOWS,
   makeLegFn,
   searchOrders,
@@ -16,6 +16,7 @@ import {
 import { dateLabel, datesBetween, openIntervals, toHHMM, toMin, weekdayOf, won } from './time';
 import type {
   Alternative,
+  Category,
   OrderStats,
   Place,
   Plan,
@@ -34,10 +35,26 @@ const STOPS_PER_DAY_ELDER = 4;
 /** rough travel allowance per stop when checking that a day is not overfilled */
 const BUFFER_PER_STOP_MIN = 20;
 const MAX_ALTERNATIVES = 3;
+/** with an elder: never picked by the planner */
+const ELDER_CAUTION_TAG = '어르신주의';
+/** with an elder: picked first */
+const ELDER_EASY_TAGS = ['평지', '실내'];
+const CATEGORY_KO: Record<Category, string> = {
+  stay: '숙소',
+  meal: '식당',
+  cafe: '카페',
+  sight: '명소',
+  activity: '체험',
+  bar: '술집',
+};
+const CATEGORY_ORDER: Category[] = ['stay', 'meal', 'cafe', 'sight', 'activity', 'bar'];
+const hasCoords = (p: Place): boolean => p.lat !== null && p.lng !== null;
 
 interface DraftDay {
   date: string;
   weekday: number;
+  start: number;
+  end: number;
   fixed: Entry[];
   free: Entry[];
 }
@@ -60,6 +77,12 @@ function mealFits(place: Place, weekday: number, slot: MealSlot): boolean {
   return ivs.some(([o, c]) => Math.max(from, o) <= to && Math.max(from, o) + stayOf(place) <= c);
 }
 
+/** false when the party arrives after the meal window or leaves before it */
+function slotUsable(day: DraftDay, slot: MealSlot): boolean {
+  const [from, to] = MEAL_WINDOWS[slot];
+  return to >= day.start && from + 30 <= day.end;
+}
+
 function slotTaken(day: DraftDay, slot: MealSlot): boolean {
   const [from, to] = MEAL_WINDOWS[slot];
   return (
@@ -74,8 +97,34 @@ const dayLoad = (day: DraftDay): number =>
   day.free.reduce((s, e) => s + stayOf(e.place) + BUFFER_PER_STOP_MIN, 0) +
   day.fixed.reduce((s, e) => s + (e.fixedEnd - e.fixedStart), 0);
 
-export function dayCtxFor(date: string, leg: LegFn, prefs: Prefs): DayCtx {
-  return { date, weekday: weekdayOf(date), leg, maxWalkMin: prefs.maxWalkMin };
+/** The first day starts at arriveAt. The last day ends by leaveBy. */
+export function dayLimits(
+  request: TripRequest,
+  dayIndex: number,
+  dayCount: number,
+): { start: number; end: number } {
+  return {
+    start: dayIndex === 0 && request.arriveAt ? toMin(request.arriveAt) : DEFAULT_DAY_START,
+    end: dayIndex === dayCount - 1 && request.leaveBy ? toMin(request.leaveBy) : DEFAULT_DAY_END,
+  };
+}
+
+export function dayCtxFor(
+  date: string,
+  leg: LegFn,
+  ctx: PlanContext,
+  dayIndex: number,
+  dayCount: number,
+): DayCtx {
+  const { start, end } = dayLimits(ctx.request, dayIndex, dayCount);
+  return {
+    date,
+    weekday: weekdayOf(date),
+    leg,
+    maxWalkMin: ctx.prefs.maxWalkMin,
+    dayStart: start,
+    dayEnd: end,
+  };
 }
 
 export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): Plan {
@@ -83,9 +132,11 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
   const byId = new Map(places.map((p) => [p.id, p]));
   const leg = makeLegFn(request, prefs);
   const warnings: string[] = [];
-  const days: DraftDay[] = datesBetween(request.startDate, request.endDate).map((date) => ({
+  const dates = datesBetween(request.startDate, request.endDate);
+  const days: DraftDay[] = dates.map((date, i) => ({
     date,
     weekday: weekdayOf(date),
+    ...dayLimits(request, i, dates.length),
     fixed: [],
     free: [],
   }));
@@ -145,12 +196,16 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
       const options = days.flatMap((day) => SLOTS.map((slot) => ({ day, slot })));
       const open = options.filter((o) => !slotTaken(o.day, o.slot));
       const pick =
-        open.find((o) => mealFits(p, o.day.weekday, o.slot)) ?? open[0] ?? options[0]!;
+        open.find((o) => slotUsable(o.day, o.slot) && mealFits(p, o.day.weekday, o.slot)) ??
+        open.find((o) => slotUsable(o.day, o.slot)) ??
+        open[0] ??
+        options[0]!;
       pick.day.free.push(entry(p, { mine: true, slot: pick.slot }));
     } else {
       const openDays = days.filter((d) => openIntervals(p, d.weekday)?.length !== 0);
       const pool = openDays.length > 0 ? openDays : days;
-      const day = pool.reduce((a, b) => (dayLoad(b) < dayLoad(a) ? b : a));
+      const room = (d: DraftDay) => d.end - d.start - dayLoad(d);
+      const day = pool.reduce((a, b) => (room(b) > room(a) ? b : a));
       day.free.push(entry(p, { mine: true }));
     }
     used.add(id);
@@ -159,15 +214,20 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
 
   // Candidates the planner may add on its own.
   const likes = new Set([...prefs.likes, ...prefs.mood]);
+  const withElder = request.party.withElder;
   const score = (p: Place, day: DraftDay): number => {
     const anchor = stay ?? [...day.fixed, ...day.free][0]?.place ?? null;
     const near = anchor ? (leg(anchor, p)?.minutes ?? 0) : 0;
     const verified = { verified: 1, partial: 0.5, unverified: 0 }[p.verification.status];
-    return p.tags.filter((t) => likes.has(t)).length * 2 + verified - near / 10;
+    const easy = withElder ? p.tags.filter((t) => ELDER_EASY_TAGS.includes(t)).length : 0;
+    return p.tags.filter((t) => likes.has(t)).length * 2 + verified + easy - near / 10;
   };
+  /** Places the planner may pick on its own, before coordinates are checked. */
+  const pickable = (p: Place): boolean =>
+    !used.has(p.id) && !(withElder && p.tags.includes(ELDER_CAUTION_TAG));
   const ranked = (day: DraftDay, ok: (p: Place) => boolean): Place[] =>
     places
-      .filter((p) => !used.has(p.id) && p.lat !== null && p.lng !== null && ok(p))
+      .filter((p) => pickable(p) && hasCoords(p) && ok(p))
       .map((p) => ({ p, s: score(p, day) }))
       .sort((a, b) => b.s - a.s || (a.p.id < b.p.id ? -1 : 1))
       .map((x) => x.p);
@@ -175,13 +235,25 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
   // Meals: one per empty meal window.
   for (const day of days) {
     for (const slot of SLOTS) {
-      if (slotTaken(day, slot)) continue;
+      if (slotTaken(day, slot) || !slotUsable(day, slot)) continue;
       const pick = ranked(
         day,
         (p) => p.category === 'meal' && mealFits(p, day.weekday, slot) && affordable(p),
       )[0];
       if (!pick) {
-        warnings.push(`${dateLabel(day.date)} ${SLOT_KO[slot]}: 문 여는 식당을 찾지 못했다.`);
+        // Name the real cause: no coordinates, closed then, over budget, or nothing to pick from.
+        const meals = places.filter((p) => p.category === 'meal' && pickable(p));
+        const openThen = meals.filter((p) => mealFits(p, day.weekday, slot));
+        const noCoords = openThen.filter((p) => !hasCoords(p)).length;
+        const why =
+          meals.length === 0
+            ? '장소 목록에 넣을 식당이 없다.'
+            : noCoords > 0
+              ? `좌표가 없어 넣지 못한 식당이 ${noCoords}곳이다.`
+              : openThen.length === 0
+                ? '그 시간에 문 여는 식당이 없다.'
+                : '예산 안에 드는 식당이 없다.';
+        warnings.push(`${dateLabel(day.date)} ${SLOT_KO[slot]}: ${why}`);
         continue;
       }
       day.free.push(entry(pick, { slot, auto: true }));
@@ -191,7 +263,7 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
   }
 
   // Other stops: fill each day up to a calm pace.
-  const target = request.party.withElder ? STOPS_PER_DAY_ELDER : STOPS_PER_DAY;
+  const target = withElder ? STOPS_PER_DAY_ELDER : STOPS_PER_DAY;
   const autoStops = new Map<DraftDay, Entry[]>();
   for (const day of days) {
     const added: Entry[] = [];
@@ -208,7 +280,7 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
       if (stops() >= target) break;
       if (p.category === 'cafe' && cafes() >= 1) continue;
       if (!affordable(p)) continue;
-      if (dayLoad(day) + stayOf(p) + BUFFER_PER_STOP_MIN > DAY_END - DAY_START) continue;
+      if (dayLoad(day) + stayOf(p) + BUFFER_PER_STOP_MIN > day.end - day.start) continue;
       const e = entry(p, { auto: true });
       day.free.push(e);
       added.push(e);
@@ -219,7 +291,7 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
 
   // Order each day. If the day breaks a rule, take back the planner's own stops while that helps.
   const planDays: PlanDay[] = days.map((day, i) => {
-    const dctx = dayCtxFor(day.date, leg, prefs);
+    const dctx = dayCtxFor(day.date, leg, ctx, i, days.length);
     const parts = (): DayParts => ({
       free: day.free,
       fixed: day.fixed,
@@ -244,6 +316,19 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
     return { date: day.date, items, order: orderStats(items, result) };
   });
 
+  // One line for the whole trip: places that could not be used because they have no coordinates.
+  const inPlan = new Set(planDays.flatMap((d) => d.items.map((i) => i.placeId)));
+  const skipped = places.filter((p) => !hasCoords(p) && !inPlan.has(p.id));
+  if (skipped.length > 0) {
+    const counts = CATEGORY_ORDER.map((c) => ({
+      c,
+      n: skipped.filter((p) => p.category === c).length,
+    }))
+      .filter((x) => x.n > 0)
+      .map((x) => `${CATEGORY_KO[x.c]} ${x.n}곳`);
+    warnings.push(`좌표가 없는 곳은 자동으로 넣지 못했다: ${counts.join(', ')}.`);
+  }
+
   fillAlternatives(planDays, ctx, leg);
   return {
     days: planDays,
@@ -254,7 +339,7 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
 
 export function orderStats(
   items: PlanItem[],
-  search: Pick<SearchResult, 'worstTravel' | 'considered' | 'method'>,
+  search: Pick<SearchResult, 'worstTravel' | 'considered' | 'method' | 'nightMoved'>,
 ): OrderStats {
   const sum = (mode: 'walk' | 'car') =>
     items.reduce((s, i) => s + (i.legFromPrev?.mode === mode ? i.legFromPrev.minutes : 0), 0);
@@ -268,6 +353,7 @@ export function orderStats(
     worstTravelMinutes: Math.max(search.worstTravel, travelMinutes),
     considered: search.considered,
     method: search.method,
+    nightMoved: search.nightMoved,
   };
 }
 
@@ -296,9 +382,18 @@ export function itemWarnings(days: PlanDay[], ctx: PlanContext): string[] {
   let unknownCost = 0;
   days.forEach((day, d) => {
     const weekday = weekdayOf(day.date);
+    const dayEnd = dayLimits(ctx.request, d, days.length).end;
     day.items.forEach((item, i) => {
       const place = byId.get(item.placeId);
       const prev = day.items[i - 1];
+      if (
+        ctx.request.party.withElder &&
+        place?.tags.includes(ELDER_CAUTION_TAG) &&
+        !isMorningStay(item, i, d)
+      ) {
+        const note = place.elderNote ? ` "${place.elderNote}"` : '';
+        out.push(`${item.name}: 어르신이 다니기 어려울 수 있다.${note}`);
+      }
       if (item.status === 'closed') {
         const allDay = place ? openIntervals(place, weekday)?.length === 0 : false;
         const what = allDay
@@ -313,7 +408,7 @@ export function itemWarnings(days: PlanDay[], ctx: PlanContext): string[] {
       }
       if (item.status === 'unverified') out.push(`${item.name}: 확인 전인 곳이다.`);
       if (prev && item.legFromPrev === null) {
-        out.push(`${prev.name} → ${item.name}: 위치를 몰라 이동 시간을 계산하지 못했다.`);
+        out.push(`${prev.name} → ${item.name}: 좌표가 없어 이동 시간을 계산하지 못했다.`);
       }
       if (item.legFromPrev?.overLimit) {
         out.push(
@@ -326,9 +421,7 @@ export function itemWarnings(days: PlanDay[], ctx: PlanContext): string[] {
       if (!item.fixed && item.category !== 'stay') {
         // Times are 'HH:MM', so an item that ran past midnight wraps to a small value.
         const end = toMin(item.end) < toMin(item.start) ? toMin(item.end) + 1440 : toMin(item.end);
-        if (end > DAY_END) {
-          out.push(`${item.name}: 하루 일정이 ${toHHMM(DAY_END)}을 넘긴다.`);
-        }
+        if (end > dayEnd) out.push(`${item.name}: ${toHHMM(dayEnd)}까지 끝나지 않는다.`);
         if (item.category === 'meal') {
           const start = toMin(item.start);
           const inWindow = SLOTS.some((s) => start >= MEAL_WINDOWS[s][0] && start <= MEAL_WINDOWS[s][1]);
@@ -401,6 +494,11 @@ export function fillAlternatives(
 
       const scored = ctx.places
         .filter((p) => p.category === item.category && !used.has(p.id))
+        .filter(
+          (p) =>
+            p.id === pinnedId ||
+            !(ctx.request.party.withElder && p.tags.includes(ELDER_CAUTION_TAG)),
+        )
         .filter((p) => p.id === pinnedId || (p.lat !== null && p.lng !== null))
         .flatMap((p) => {
           const ivs = openIntervals(p, weekday);

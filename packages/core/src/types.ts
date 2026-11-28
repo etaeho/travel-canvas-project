@@ -55,6 +55,10 @@ export interface TripRequest {
   /** place ids */
   mustVisit: string[];
   fixed: { placeId: string; date: string; start: string; end: string }[];
+  /** 'HH:MM'. The first day starts then. Default 09:30. */
+  arriveAt?: string;
+  /** 'HH:MM'. The last day must end by then. Default 20:30. */
+  leaveBy?: string;
 }
 
 export interface Leg extends TravelEstimate {
@@ -97,6 +101,8 @@ export interface OrderStats {
   /** number of orders evaluated */
   considered: number;
   method: 'exhaustive' | 'heuristic';
+  /** a night-view place was moved to the evening, changing the order */
+  nightMoved: boolean;
 }
 
 export interface PlanDay {

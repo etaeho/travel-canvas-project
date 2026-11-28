@@ -1,5 +1,7 @@
 import { computeTotals, dayCtxFor, fillAlternatives, itemWarnings, orderStats } from './plan';
 import {
+  NIGHT_START,
+  NIGHT_TAG,
   makeLegFn,
   runSequence,
   searchOrders,
@@ -66,8 +68,18 @@ export function swapItem(
   });
 
   const leg = makeLegFn(ctx.request, ctx.prefs);
-  const dctx = dayCtxFor(day.date, leg, ctx.prefs);
-  const items = toItems(runSequence(seq, dctx), dctx);
+  const dctx = dayCtxFor(day.date, leg, ctx, dayIndex, plan.days.length);
+  // A night-view place that was in the evening stays in the evening.
+  const delayed = new Set(
+    seq.filter(
+      (e, i) =>
+        e.kind === 'free' &&
+        e.slot === null &&
+        e.place.tags.includes(NIGHT_TAG) &&
+        toMin(day.items[i]!.start) >= NIGHT_START,
+    ),
+  );
+  const items = toItems(runSequence(seq, dctx, delayed), dctx);
 
   // The order is kept, but the comparison with other orders is refreshed for explainOrder.
   const first = seq[0];
@@ -83,7 +95,9 @@ export function swapItem(
   );
 
   const days = plan.days.map((d, i) =>
-    i === dayIndex ? { date: d.date, items, order: orderStats(items, search) } : (JSON.parse(JSON.stringify(d)) as typeof d),
+    i === dayIndex
+      ? { date: d.date, items, order: orderStats(items, { ...search, nightMoved: d.order.nightMoved }) }
+      : (JSON.parse(JSON.stringify(d)) as typeof d),
   );
   fillAlternatives(days, ctx, leg, { dayIndex, itemIndex, placeId: target.placeId });
 
