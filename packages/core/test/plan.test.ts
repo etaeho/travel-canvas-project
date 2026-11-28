@@ -112,6 +112,63 @@ describe('planTrip', () => {
     expect(allItems(unlimited).every((i) => !i.legFromPrev?.overLimit)).toBe(true);
   });
 
+  it('(e2) with a car, drives legs over the walk limit and never flags them', () => {
+    const near = place('N', 'sight', 0, 0);
+    const mid = place('P', 'sight', 0.004, 0); // about 8 minutes on foot
+    const far = place('F', 'sight', 0.013, 0); // about 18 minutes on foot from P
+    const req = request({ mustVisit: ['N', 'P', 'F'] });
+    const legsOf = (p: Plan) => allItems(p).flatMap((i) => (i.legFromPrev ? [i.legFromPrev] : []));
+
+    const plan = planTrip(req, prefs({ hasCar: true, maxWalkMin: 10 }), [near, mid, far]);
+    const legs = legsOf(plan);
+    expect(legs.map((l) => l.mode).sort()).toEqual(['car', 'walk']);
+    expect(legs.find((l) => l.mode === 'walk')!.minutes).toBeLessThanOrEqual(10);
+    expect(legs.every((l) => !l.overLimit)).toBe(true);
+    expect(plan.totals.walkMinutes).toBe(8);
+    expect(plan.totals.driveMinutes).toBe(estimateTravel(mid, far, { mode: 'car' })!.minutes);
+    expect(explainOrder(plan, 0)).toContain(`걸어서 ${plan.totals.walkMinutes}분`);
+    expect(explainOrder(plan, 0)).toContain(`차로 ${plan.totals.driveMinutes}분`);
+
+    // A tighter limit turns the 8-minute walk into a drive.
+    const tight = planTrip(req, prefs({ hasCar: true, maxWalkMin: 5 }), [near, mid, far]);
+    expect(legsOf(tight).every((l) => l.mode === 'car')).toBe(true);
+    expect(tight.totals.walkMinutes).toBe(0);
+
+    // With no limit set, a car party still walks legs of 10 minutes or less.
+    const noLimit = planTrip(req, prefs({ hasCar: true, maxWalkMin: null }), [near, mid, far]);
+    expect(legsOf(noLimit).map((l) => l.mode).sort()).toEqual(['car', 'walk']);
+    expect(legsOf(noLimit).every((l) => !l.overLimit)).toBe(true);
+
+    // Without a car every leg is walked.
+    const onFoot = planTrip(req, prefs({ hasCar: false, maxWalkMin: 10 }), [near, mid, far]);
+    expect(legsOf(onFoot).every((l) => l.mode === 'walk')).toBe(true);
+    expect(onFoot.totals.driveMinutes).toBe(0);
+    expect(legsOf(onFoot).some((l) => l.overLimit)).toBe(true);
+  });
+
+  it('(d3) with a car, minimises total travel using each leg\'s chosen mode', () => {
+    const spread = [
+      place('A', 'sight', 0.001, 0.002),
+      place('B', 'sight', -0.012, 0.004),
+      place('C', 'sight', 0.004, -0.001),
+      place('D', 'sight', -0.01, -0.004),
+      place('E', 'sight', 0.02, 0.015),
+    ];
+    const p = prefs({ hasCar: true, maxWalkMin: 10 });
+    const plan = planTrip(request({ mustVisit: spread.map((s) => s.id) }), p, spread);
+    const legMinutes = (x: (typeof spread)[number], y: (typeof spread)[number]) => {
+      const walk = estimateTravel(x, y)!;
+      return walk.minutes <= 10 ? walk.minutes : estimateTravel(x, y, { mode: 'car' })!.minutes;
+    };
+    const total = (order: typeof spread) =>
+      order.slice(1).reduce((sum, q, i) => sum + legMinutes(order[i]!, q), 0);
+    const all = permutations(spread).map(total);
+    const chosen = plan.totals.walkMinutes + plan.totals.driveMinutes;
+    expect(chosen).toBe(Math.min(...all));
+    expect(plan.totals.driveMinutes).toBeGreaterThan(0);
+    expect(plan.days[0]!.order.worstTravelMinutes).toBe(Math.max(...all));
+  });
+
   it('(f) offers alternatives of the same category that are not already in the plan', () => {
     const places = [
       ...sights,
@@ -187,6 +244,7 @@ describe('planTrip', () => {
     expect(ids(plan).sort()).toEqual(['A', 'Q']);
     expect(allItems(plan).every((i) => i.legFromPrev === null)).toBe(true);
     expect(plan.totals.walkMinutes).toBe(0);
+    expect(plan.totals.driveMinutes).toBe(0);
     expect(plan.warnings.some((w) => w.includes('계산하지 못했다'))).toBe(true);
   });
 
@@ -220,6 +278,7 @@ describe('swapItem', () => {
     for (const alt of item.alternatives) {
       const next = swapItem(plan, 0, lunchIndex, alt.placeId, ctx);
       expect(next.totals.walkMinutes).toBe(plan.totals.walkMinutes + alt.delta.walkMinutes);
+      expect(next.totals.driveMinutes).toBe(plan.totals.driveMinutes + alt.delta.driveMinutes);
       expect(next.totals.costPerPerson).toBe(plan.totals.costPerPerson + alt.delta.costPerPerson);
       const swapped = next.days[0]!.items[lunchIndex]!;
       expect(swapped.placeId).toBe(alt.placeId);
@@ -231,7 +290,7 @@ describe('swapItem', () => {
   });
 
   it('does not mutate the input plan', () => {
-    const before = structuredClone(plan);
+    const before = JSON.parse(JSON.stringify(plan)) as Plan;
     const alt = day.items[lunchIndex]!.alternatives[0]!;
     const next = swapItem(plan, 0, lunchIndex, alt.placeId, ctx);
     expect(plan).toEqual(before);

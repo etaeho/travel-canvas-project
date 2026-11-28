@@ -37,21 +37,51 @@ const req = request({
   fixed: [{ placeId: '식당1', date: '2026-12-05', start: '18:00', end: '19:30' }],
 });
 
-const { effective } = mergePrefs(prefs({ maxWalkMin: 20 }), { maxWalkMin: 10 });
+// Defaults say 20 minutes; this trip, with the elder, says 10. The family drives.
+const { effective } = mergePrefs(prefs({ maxWalkMin: 20, hasCar: true }), { maxWalkMin: 10 });
 const ctx = { request: req, prefs: effective, places };
 
 const items = (plan: Plan) => plan.days.flatMap((d) => d.items);
+const legs = (plan: Plan) => items(plan).flatMap((i) => (i.legFromPrev ? [i.legFromPrev] : []));
+
+function expectSwapsChangeTotals(plan: Plan, c: typeof ctx) {
+  let swaps = 0;
+  let travelChanged = false;
+  let costChanged = false;
+  plan.days.forEach((day, d) =>
+    day.items.forEach((item, i) => {
+      for (const alt of item.alternatives) {
+        const next = swapItem(plan, d, i, alt.placeId, c);
+        expect(next.totals.walkMinutes).toBe(plan.totals.walkMinutes + alt.delta.walkMinutes);
+        expect(next.totals.driveMinutes).toBe(plan.totals.driveMinutes + alt.delta.driveMinutes);
+        expect(next.totals.costPerPerson).toBe(plan.totals.costPerPerson + alt.delta.costPerPerson);
+        for (const id of req.mustVisit) {
+          expect(items(next).some((x) => x.placeId === id)).toBe(true);
+        }
+        travelChanged ||=
+          next.totals.walkMinutes !== plan.totals.walkMinutes ||
+          next.totals.driveMinutes !== plan.totals.driveMinutes;
+        costChanged ||= next.totals.costPerPerson !== plan.totals.costPerPerson;
+        swaps++;
+      }
+    }),
+  );
+  expect(swaps).toBeGreaterThan(0);
+  expect(travelChanged).toBe(true);
+  expect(costChanged).toBe(true);
+}
 
 describe('경주 가족 여행', () => {
   const plan = planTrip(req, effective, places);
 
   it('② produces a plan for both days', () => {
+    expect(effective).toMatchObject({ hasCar: true, maxWalkMin: 10 });
     expect(plan.days.map((d) => d.date)).toEqual(['2026-12-05', '2026-12-06']);
-    for (const day of plan.days) {
+    plan.days.forEach((day, d) => {
       expect(day.items.length).toBeGreaterThanOrEqual(4);
       expect(day.items.filter((i) => i.category === 'meal')).toHaveLength(2);
-      expect(explainOrder(plan, plan.days.indexOf(day))).toMatch(/분/);
-    }
+      expect(explainOrder(plan, d)).toContain(`걸어서 ${day.order.walkMinutes}분`);
+    });
     expect(plan.days[0]!.items.at(-1)!.placeId).toBe('숙소');
     expect(plan.days[1]!.items[0]!.placeId).toBe('숙소');
     const dinner = items(plan).find((i) => i.placeId === '식당1')!;
@@ -67,37 +97,47 @@ describe('경주 가족 여행', () => {
     }
   });
 
-  it('④ flags every leg over the 10-minute limit, and only those', () => {
-    const legs = items(plan).flatMap((i) => (i.legFromPrev ? [i.legFromPrev] : []));
-    expect(legs.length).toBeGreaterThan(0);
-    for (const leg of legs) expect(leg.overLimit).toBe(leg.minutes > 10);
-    // 명소2 is more than 10 minutes from every other place at elder pace.
-    expect(legs.some((l) => l.overLimit)).toBe(true);
-    expect(plan.warnings.some((w) => w.includes('테스트 장소 명소2') && w.includes('10분'))).toBe(true);
-    expect(plan.totals.walkMinutes).toBe(legs.reduce((s, l) => s + l.minutes, 0));
+  it('④ drives the long legs, walks the short ones, and flags none', () => {
+    const all = legs(plan);
+    expect(all.some((l) => l.mode === 'car')).toBe(true);
+    expect(all.some((l) => l.mode === 'walk')).toBe(true);
+    expect(all.every((l) => !l.overLimit)).toBe(true);
+    for (const l of all) if (l.mode === 'walk') expect(l.minutes).toBeLessThanOrEqual(10);
+    expect(plan.totals.driveMinutes).toBeGreaterThan(0);
+    const sum = (mode: string) => all.filter((l) => l.mode === mode).reduce((s, l) => s + l.minutes, 0);
+    expect(plan.totals.walkMinutes).toBe(sum('walk'));
+    expect(plan.totals.driveMinutes).toBe(sum('car'));
+    const explained = plan.days.map((_, d) => explainOrder(plan, d)).join(' ');
+    expect(explained).toMatch(/차로 \d+분/);
   });
 
-  it('⑤ changes walk and cost totals when an item is swapped', () => {
-    let swaps = 0;
-    let walkChanged = false;
-    let costChanged = false;
-    plan.days.forEach((day, d) =>
-      day.items.forEach((item, i) => {
-        for (const alt of item.alternatives) {
-          const next = swapItem(plan, d, i, alt.placeId, ctx);
-          expect(next.totals.walkMinutes).toBe(plan.totals.walkMinutes + alt.delta.walkMinutes);
-          expect(next.totals.costPerPerson).toBe(plan.totals.costPerPerson + alt.delta.costPerPerson);
-          for (const id of req.mustVisit) {
-            expect(next.days.flatMap((x) => x.items).some((x) => x.placeId === id)).toBe(true);
-          }
-          walkChanged ||= next.totals.walkMinutes !== plan.totals.walkMinutes;
-          costChanged ||= next.totals.costPerPerson !== plan.totals.costPerPerson;
-          swaps++;
-        }
-      }),
-    );
-    expect(swaps).toBeGreaterThan(0);
-    expect(walkChanged).toBe(true);
-    expect(costChanged).toBe(true);
+  it('⑤ changes walk, drive and cost totals when an item is swapped', () => {
+    expectSwapsChangeTotals(plan, ctx);
+  });
+});
+
+describe('경주 가족 여행, 차 없이', () => {
+  const onFoot = { ...effective, hasCar: false };
+  const plan = planTrip(req, onFoot, places);
+
+  it('③ misses no mustVisit', () => {
+    for (const id of req.mustVisit) {
+      expect(items(plan).filter((i) => i.placeId === id)).toHaveLength(1);
+    }
+  });
+
+  it('④ flags every leg over the 10-minute limit, and only those', () => {
+    const all = legs(plan);
+    expect(all.length).toBeGreaterThan(0);
+    expect(all.every((l) => l.mode === 'walk')).toBe(true);
+    for (const l of all) expect(l.overLimit).toBe(l.minutes > 10);
+    // 명소2 is more than 10 minutes from every other place at elder pace.
+    expect(all.some((l) => l.overLimit)).toBe(true);
+    expect(plan.warnings.some((w) => w.includes('테스트 장소 명소2') && w.includes('10분'))).toBe(true);
+    expect(plan.totals.driveMinutes).toBe(0);
+  });
+
+  it('⑤ changes totals when an item is swapped', () => {
+    expectSwapsChangeTotals(plan, { ...ctx, prefs: onFoot });
   });
 });
