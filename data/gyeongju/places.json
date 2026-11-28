@@ -1008,5 +1008,47 @@
       ],
       "notes": "동궁원 누리집 기준 09:30~19:00, 매표와 입장은 18:00까지. 월요일에 쉰다. 버드파크는 10:00~19:00이고 한국관광공사 자료에는 연중무휴로 나온다. 값 5,000원은 식물원 어른 요금이다. 요금은 출처가 다르다. 버드파크 20,000원, 다른 표 16,000원, 영문 자료 통합권 18,000원. 주소도 '경감로 233'이 함께 보인다. 좌표, 주차, 길 상태, 머무는 시간은 찾지 못했다. '동궁과 월지'와 다른 곳이다."
     }
+  },
+  {
+    "id": "gj-yeongyang-sutbul-galbi",
+    "name": "영양숯불갈비",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 봉황로 79",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "10:30",
+        "close": "21:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한우",
+      "숯불갈비",
+      "주차"
+    ],
+    "elderNote": "건물 옆과 뒤에 전용 주차장이 있다는 후기가 있다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://naver.me/FKG3eEsb",
+        "https://www.trvlogue.com/ko/gyeongju-yeongyang-ribs-review",
+        "https://www.trvlogue.com/zh-Hant/yeongyang-sutbul-galbi-gyeongju-review-2026"
+      ],
+      "notes": "사용자가 주소와 지도 링크를 주었다. 영업시간은 출처가 엇갈린다. 매일 10:30~21:00이라는 글과 주말 10:30~21:30이라는 글이 있어 이른 쪽을 적었다. 평일 15~17시에 쉰다는 글도 있다. 쉬는 날은 찾지 못했다. 좌표는 없다. 값은 갈비살 110g 28,000원, 치마살 31,000원이라는 후기가 있으나 한 사람 값은 정하지 못했다. 주말에 줄을 선다는 후기가 있다. 모두 후기 글에서 옮겼고 가게 안내는 보지 못했다."
+    }
   }
 ]

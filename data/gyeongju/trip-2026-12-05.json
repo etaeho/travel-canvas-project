@@ -1,0 +1,36 @@
+{
+  "title": "경주 가족 여행",
+  "note": "토요일 14:00에 대전 대흥동에서 차로 떠난다. 경주 도착 16:30은 거리로 어림한 값이다. 지도 API를 붙이면 다시 계산한다. 일요일 떠나는 시각은 아직 모른다. 저녁 시각 18:00~19:30은 총괄이 잡은 값이다.",
+  "origin": {
+    "name": "대전 대흥동",
+    "departAt": "14:00"
+  },
+  "prefs": {
+    "maxWalkMin": 10,
+    "maxWaitMin": 20,
+    "hasCar": true,
+    "likes": [],
+    "mood": []
+  },
+  "request": {
+    "city": "경주",
+    "startDate": "2026-12-05",
+    "endDate": "2026-12-06",
+    "party": {
+      "count": 5,
+      "withElder": true
+    },
+    "budgetPerPerson": null,
+    "stayId": null,
+    "mustVisit": [],
+    "fixed": [
+      {
+        "placeId": "gj-yeongyang-sutbul-galbi",
+        "date": "2026-12-05",
+        "start": "18:00",
+        "end": "19:30"
+      }
+    ],
+    "arriveAt": "16:30"
+  }
+}
