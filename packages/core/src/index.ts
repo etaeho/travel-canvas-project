@@ -13,6 +13,6 @@ export {
   DEFAULT_WALK_OR_DRIVE_MIN,
   type TravelOptions,
 } from './travel';
-export { planTrip } from './plan';
+export { planTrip, AUTO_PICK_MAX_DRIVE_MIN, AUTO_PICK_WALK_FACTOR } from './plan';
 export { swapItem, SwapError, type SwapErrorCode } from './swap';
 export { explainOrder } from './explain';

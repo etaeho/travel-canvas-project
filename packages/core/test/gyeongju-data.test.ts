@@ -1,6 +1,7 @@
 // Runs the planner on the data team's file. Asserts only what stays true when the data is edited.
 import { describe, expect, it } from 'vitest';
 import raw from '../../../data/gyeongju/places.json';
+import trip from '../../../data/gyeongju/trip-2026-12-05.json';
 import { explainOrder, planTrip, type Place, type Plan, type Prefs, type TripRequest } from '../src/index';
 
 const places = raw as unknown as Place[];
@@ -77,5 +78,49 @@ describe('data/gyeongju/places.json', () => {
 
   it('never flags a leg as over the limit when the party has a car', () => {
     expect(items.every((i) => !i.legFromPrev?.overLimit)).toBe(true);
+  });
+});
+
+describe('data/gyeongju/trip-2026-12-05.json', () => {
+  const tripReq = trip.request as unknown as TripRequest;
+  const tripPrefs = trip.prefs as unknown as Prefs;
+  const plan = planTrip(tripReq, tripPrefs, places);
+  const byId = new Map(places.map((p) => [p.id, p]));
+  const firstDay = plan.days[0]!;
+
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env;
+  if (env?.PRINT_PLAN) console.log(`${trip.title}\n${print(plan)}`);
+
+  it('keeps each fixed item at its exact time', () => {
+    expect(tripReq.fixed.length).toBeGreaterThan(0);
+    for (const f of tripReq.fixed) {
+      const day = plan.days.find((d) => d.date === f.date)!;
+      const item = day.items.find((i) => i.placeId === f.placeId);
+      expect(item, f.placeId).toBeDefined();
+      expect([item!.start, item!.end, item!.fixed]).toEqual([f.start, f.end, true]);
+    }
+  });
+
+  it('starts nothing on the first day before the arrival time', () => {
+    const arriveAt = tripReq.arriveAt ?? '09:30';
+    expect(firstDay.date).toBe(tripReq.startDate);
+    for (const i of firstDay.items) expect(i.start >= arriveAt, `${i.name} ${i.start}`).toBe(true);
+  });
+
+  it('auto-picks nothing tagged 어르신주의', () => {
+    const picked = plan.days.flatMap((d) => d.items).filter((i) => !i.mine && !i.fixed);
+    for (const i of picked) expect(byId.get(i.placeId)!.tags, i.name).not.toContain('어르신주의');
+  });
+
+  it('gives a leg only where both ends have coordinates', () => {
+    for (const day of plan.days) {
+      day.items.forEach((item, i) => {
+        if (i === 0) return;
+        const a = byId.get(day.items[i - 1]!.placeId)!;
+        const b = byId.get(item.placeId)!;
+        const known = a.lat !== null && a.lng !== null && b.lat !== null && b.lng !== null;
+        expect(item.legFromPrev !== null, `${a.name} → ${b.name}`).toBe(known);
+      });
+    }
   });
 });

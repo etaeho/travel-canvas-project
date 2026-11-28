@@ -13,6 +13,7 @@ import {
   type MealSlot,
   type SearchResult,
 } from './schedule';
+import { chooseTravel, estimateTravel, type Coords } from './travel';
 import { dateLabel, datesBetween, openIntervals, toHHMM, toMin, weekdayOf, won } from './time';
 import type {
   Alternative,
@@ -36,6 +37,10 @@ const STOPS_PER_DAY_ELDER = 4;
 const BUFFER_PER_STOP_MIN = 20;
 const MAX_ALTERNATIVES = 3;
 /** with an elder: never picked by the planner */
+/** With a car, the planner never picks a place farther than this drive from the day's anchor. */
+export const AUTO_PICK_MAX_DRIVE_MIN = 30;
+/** Without a car, the planner never picks a place farther than maxWalkMin times this on foot. */
+export const AUTO_PICK_WALK_FACTOR = 2;
 const ELDER_CAUTION_TAG = '어르신주의';
 /** with an elder: picked first */
 const ELDER_EASY_TAGS = ['평지', '실내'];
@@ -215,9 +220,40 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
   // Candidates the planner may add on its own.
   const likes = new Set([...prefs.likes, ...prefs.mood]);
   const withElder = request.party.withElder;
+  const centroid = (ps: Place[]): Coords | null => {
+    const known = ps.filter(hasCoords);
+    if (known.length === 0) return null;
+    return {
+      lat: known.reduce((sum, p) => sum + (p.lat ?? 0), 0) / known.length,
+      lng: known.reduce((sum, p) => sum + (p.lng ?? 0), 0) / known.length,
+    };
+  };
+  /** Where a day is centred: the stay, else the user's own items that day, else everything chosen so far. */
+  const anchorOf = (day: DraftDay): Coords | null =>
+    (stay && hasCoords(stay) ? stay : null) ??
+    centroid(
+      [...day.fixed, ...day.free].filter((e) => e.mine || e.kind === 'fixed').map((e) => e.place),
+    ) ??
+    centroid(days.flatMap((d) => [...d.fixed, ...d.free]).map((e) => e.place));
+  /** The distance cap for the planner's own picks. Must-visits and fixed items never go through it. */
+  const tooFar = (p: Place, day: DraftDay): boolean => {
+    const anchor = anchorOf(day);
+    if (!anchor) return false;
+    if (prefs.hasCar) {
+      return (estimateTravel(anchor, p, { mode: 'car' })?.minutes ?? 0) > AUTO_PICK_MAX_DRIVE_MIN;
+    }
+    if (prefs.maxWalkMin === null) return false;
+    return (
+      (estimateTravel(anchor, p, { withElder })?.minutes ?? 0) >
+      prefs.maxWalkMin * AUTO_PICK_WALK_FACTOR
+    );
+  };
   const score = (p: Place, day: DraftDay): number => {
-    const anchor = stay ?? [...day.fixed, ...day.free][0]?.place ?? null;
-    const near = anchor ? (leg(anchor, p)?.minutes ?? 0) : 0;
+    const anchor = anchorOf(day);
+    const near = anchor
+      ? (chooseTravel(anchor, p, { withElder, hasCar: prefs.hasCar, maxWalkMin: prefs.maxWalkMin })
+          ?.minutes ?? 0)
+      : 0;
     const verified = { verified: 1, partial: 0.5, unverified: 0 }[p.verification.status];
     const easy = withElder ? p.tags.filter((t) => ELDER_EASY_TAGS.includes(t)).length : 0;
     return p.tags.filter((t) => likes.has(t)).length * 2 + verified + easy - near / 10;
@@ -227,7 +263,7 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
     !used.has(p.id) && !(withElder && p.tags.includes(ELDER_CAUTION_TAG));
   const ranked = (day: DraftDay, ok: (p: Place) => boolean): Place[] =>
     places
-      .filter((p) => pickable(p) && hasCoords(p) && ok(p))
+      .filter((p) => pickable(p) && hasCoords(p) && !tooFar(p, day) && ok(p))
       .map((p) => ({ p, s: score(p, day) }))
       .sort((a, b) => b.s - a.s || (a.p.id < b.p.id ? -1 : 1))
       .map((x) => x.p);
@@ -252,7 +288,11 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
               ? `좌표가 없어 넣지 못한 식당이 ${noCoords}곳이다.`
               : openThen.length === 0
                 ? '그 시간에 문 여는 식당이 없다.'
-                : '예산 안에 드는 식당이 없다.';
+                : openThen.every((p) => tooFar(p, day))
+                  ? prefs.hasCar
+                    ? `차로 ${AUTO_PICK_MAX_DRIVE_MIN}분 안에 있는 식당이 없다.`
+                    : `걸어서 ${(prefs.maxWalkMin ?? 0) * AUTO_PICK_WALK_FACTOR}분 안에 있는 식당이 없다.`
+                  : '예산 안에 드는 식당이 없다.';
         warnings.push(`${dateLabel(day.date)} ${SLOT_KO[slot]}: ${why}`);
         continue;
       }
@@ -278,6 +318,8 @@ export function planTrip(request: TripRequest, prefs: Prefs, places: Place[]): P
         openIntervals(p, day.weekday)?.length !== 0,
     )) {
       if (stops() >= target) break;
+      // The anchor can move as places are chosen, so the cap is checked again here.
+      if (tooFar(p, day)) continue;
       if (p.category === 'cafe' && cafes() >= 1) continue;
       if (!affordable(p)) continue;
       if (dayLoad(day) + stayOf(p) + BUFFER_PER_STOP_MIN > day.end - day.start) continue;
