@@ -1,0 +1,1011 @@
+[
+  {
+    "id": "gj-bulguksa",
+    "name": "불국사",
+    "category": "sight",
+    "lat": 35.79,
+    "lng": 129.33222,
+    "address": null,
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "17:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 0,
+    "tags": [
+      "유네스코",
+      "사찰",
+      "무료",
+      "주차"
+    ],
+    "elderNote": "주출입구에서 대웅전까지 경사로가 있다. 전각 주변 관람로는 평탄하다. 바깥 탐방로는 경사진 곳이 있다. 휠체어를 무료로 빌려준다(8대). 장애인 주차구역이 주출입구 근처에 있다. 장애인이 탄 차는 매표소 앞까지 들어간다. 주차는 유료다. 주차장에서 입구까지 거리는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "http://www.bulguksa.or.kr/bbs/content.php?co_id=application",
+        "https://en.wikipedia.org/wiki/Bulguksa",
+        "https://access.visitkorea.or.kr/ms/detail.do?cotId=df5ddf78-0cbf-47df-bf9c-5945933466b9",
+        "https://www.gyeongju.go.kr/news/page.do?mnu_uid=1336&parm_bod_uid=293557&step=258",
+        "https://imnews.imbc.com/news/2026/society/article/6802574_36918.html",
+        "https://m.news.nate.com/view/20260224n00074"
+      ],
+      "notes": "시간은 불국사 누리집 기준이다. 11~1월 09:00~17:00이고 17:00은 입장 마감 시각이다. 문 닫는 시각은 찾지 못했다. 연중무휴. 관람료는 2023-05-04부터 무료. 주차료는 출처가 다르다. 불국사 누리집은 승용차 2,000원, 경주시 보도는 공영주차장 소형차 1회 1,000원. 좌표는 영문 위키백과. 주소와 머무는 시간은 찾지 못했다. 대웅전 해체 수리가 2026년 말 시작 예정이라는 2026년 2월 보도가 있다. 실제로 시작했는지, 12월 5~6일에 관람을 막는지는 확인하지 못했다. 접근성 정보는 약 600일 전 자료다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-seokguram",
+    "name": "석굴암",
+    "category": "sight",
+    "lat": 35.795,
+    "lng": 129.34917,
+    "address": null,
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "17:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 0,
+    "tags": [
+      "유네스코",
+      "사찰",
+      "무료",
+      "주차"
+    ],
+    "elderNote": "주차장에서 석굴까지 약 0.6km를 걷는다. 8~10분이라는 자료와 10~20분이라는 자료가 있다. 가는 길에 계단이 있다는 후기가 있다. 주차장에서 매표소까지 경사로가 있으나 도움이 필요하다. 일주문에서 휠체어를 빌려준다. 장애인 주차구역 2면. 주차는 유료다. 차로 토함산을 20분쯤 올라야 주차장에 닿는다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "http://www.seokguram.org/bbs/content.php?co_id=price",
+        "http://www.seokguram.org/bbs/content.php?co_id=map",
+        "https://en.wikipedia.org/wiki/Seokguram",
+        "https://access.visitkorea.or.kr/ms/detail.do?cotId=31cef08c-1da8-4d13-9104-96da117a9ffc",
+        "https://www.knps.or.kr/front/portal/visit/visitVnewsDtl.do?vnewsId=VNEWSM001230",
+        "https://brunch.co.kr/@4fc1b587c48c42a/204"
+      ],
+      "notes": "시간은 석굴암 누리집 기준이다. 11~1월 09:00~17:00이고 17:00은 입장 마감 시각이다. 관람료는 2023-05-04부터 무료. 주차료는 누리집 기준 소형·중형 2,000원. 영문 한국관광공사 자료에는 경차 1,000원도 있다. 좌표는 영문 위키백과. 걷는 거리와 계단은 공식 자료가 아니라 여행 글과 후기에서 왔다. 계단 수와 길 상태는 찾지 못했다. 겨울 산길 통제 여부도 찾지 못했다. 주소와 머무는 시간은 찾지 못했다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-daereungwon",
+    "name": "대릉원·천마총",
+    "category": "sight",
+    "lat": 35.83806,
+    "lng": 129.21194,
+    "address": null,
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "22:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 3000,
+    "tags": [
+      "고분",
+      "야경",
+      "평지",
+      "주차"
+    ],
+    "elderNote": "평지라 경사가 거의 없다. 정문 매표소에서 휠체어를 빌려준다. 장애인 화장실은 후문 안쪽에 있다. 길 일부에 야자매트가 깔려 있다. 전용 주차장은 확인하지 못했다. 대릉원 공영주차장(계림로 9, 유료), 노동공영주차장(태종로 767, 유료), 쪽샘 임시주차장(무료)을 쓴다. 주차장에서 정문까지 거리는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?area_uid=203&cmd=2&mnu_uid=2292",
+        "https://www.gyeongju.go.kr/news/page.do?mnu_uid=1336&parm_bod_uid=256759&step=258",
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2378",
+        "https://en.wikipedia.org/wiki/Daereungwon",
+        "https://www.wikidata.org/wiki/Q17278215",
+        "https://access.visitkorea.or.kr/cos/detail.do?cotId=f9dcf037-2795-4305-8b0e-6eb0e6c8fefe",
+        "https://gyeongju.go.kr/council/viewer/minutes.do?uid=10992"
+      ],
+      "notes": "시간은 경주시 관광 누리집 기준 09:00~22:00, 매표 마감 21:30. 대릉원 입장은 무료다. 값 3,000원은 천마총 어른 관람료다. 만 65세 이상은 무료라는 자료가 한 곳 있다. 좌표는 영문 위키백과와 위키데이터. 공영주차장 요금표는 찾지 못했다. 연도를 알 수 없는 시의회 회의록에 1회 2,000원이라는 말이 있다. 쪽샘 임시주차장은 한시 운영이다. 접근성 정보는 2022년 무렵 자료다. 주소와 머무는 시간은 찾지 못했다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-cheomseongdae",
+    "name": "첨성대",
+    "category": "sight",
+    "lat": 35.834722,
+    "lng": 129.219,
+    "address": null,
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "21:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 0,
+    "tags": [
+      "야경",
+      "무료",
+      "평지"
+    ],
+    "elderNote": "평지다. 포장길은 아니고 단단히 다진 흙길이다. 옆에 장애인 화장실이 있다. 전용 주차장은 없다. 걸어서 3분 거리인 대릉원 공영주차장(유료)을 쓴다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=4859",
+        "https://en.wikipedia.org/wiki/Cheomseongdae",
+        "https://access.visitkorea.or.kr/cos/detail.do?cotId=f9dcf037-2795-4305-8b0e-6eb0e6c8fefe"
+      ],
+      "notes": "시간은 경주시 관광 누리집 기준 09:00~22:00, 동절기는 21:00까지. 무료, 연중무휴. 좌표는 영문 위키백과. 접근성과 주차 정보는 2022년 무렵 자료다. 주소와 머무는 시간은 찾지 못했다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-donggung-wolji",
+    "name": "동궁과 월지",
+    "category": "sight",
+    "lat": 35.834619,
+    "lng": 129.227114,
+    "address": null,
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "22:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 3000,
+    "tags": [
+      "야경",
+      "연못",
+      "주차"
+    ],
+    "elderNote": "주출입구에 턱이 없다. 복원 건물 앞까지는 무리가 없다. 연못을 한 바퀴 도는 길은 기울거나 경사진 곳이 있다. 관리사무실에서 휠체어를 빌려준다(3대). 주차장은 무료다(인왕동 504-1). 입구 맞은편 가장 가까운 곳에 장애인 주차 7면이 있다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=4859",
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2378",
+        "https://access.visitkorea.or.kr/ms/detail.do?cotId=2d9265e5-ea4d-4b89-8325-6b7978ce29fe",
+        "https://en.wikipedia.org/wiki/Donggung_Palace_and_Wolji_Pond",
+        "https://www.wikidata.org/wiki/Q496454"
+      ],
+      "notes": "시간은 경주시 관광 누리집 기준 09:00~22:00, 매표 마감 21:30. 조명은 해가 진 뒤부터 22:00까지 켠다. 연중무휴. 어른 3,000원. 마감 직전에는 붐벼서 못 들어갈 수 있다는 안내가 있다. 좌표는 영문 위키백과. 일부 안내는 2025년 1월 기준이다. 주소와 머무는 시간은 찾지 못했다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-national-museum",
+    "name": "국립경주박물관",
+    "category": "sight",
+    "lat": 35.828983,
+    "lng": 129.228361,
+    "address": "경상북도 경주시 일정로 186",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "10:00",
+        "close": "18:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 0,
+    "tags": [
+      "박물관",
+      "실내",
+      "무료",
+      "주차"
+    ],
+    "elderNote": "장애인·노약자용 엘리베이터와 장애인 화장실이 있다. 안내소에서 휠체어를 빌려준다는 글이 있다. 장애인 주차구역이 있다. 주차 요금과 주차장에서 입구까지 거리는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://gyeongju.museum.go.kr/kor/html/sub01/0101.html",
+        "https://gyeongju.museum.go.kr/site/kor/html/sub09/0908.html?mode=L&year=2026&mon=09&day=18",
+        "https://en.wikipedia.org/wiki/Gyeongju_National_Museum",
+        "https://www.wikidata.org/wiki/Q390124",
+        "https://access.visitkorea.or.kr/ms/detail.do?cotId=aa5246cb-4efe-4d3d-9311-183e67f53084",
+        "https://mediahub.seoul.go.kr/archives/2019981",
+        "https://www.yugacrew.com/crewletter/gyeongju-childrens-museum"
+      ],
+      "notes": "시간은 박물관 관람안내 기준 10:00~18:00, 입장은 끝나기 30분 전까지. 토요일 야간 연장은 3~10월만이라 12월 5일에는 없다(2026-03-01 시행). 다만 박물관 예약 화면에는 '토요일·공휴일 1시간 연장', '3~12월 토요일 21:00까지'로 적혀 있어 서로 다르다. 여기서는 이른 쪽인 18:00을 적었다. 휴관은 1월 1일, 설, 추석. 전시실 쉬는 날은 12월 둘째 월요일(12월 14일)이라 이번 여행과 겹치지 않는다. 어린이박물관은 쉬고 있다는 글이 있다(2026-11-07 기준, 공식 공지는 직접 보지 못했다). 좌표는 위키백과·위키데이터. 지도 목록 한 곳은 약 60m 다른 값을 준다. 머무는 시간은 찾지 못했다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-woljeonggyo",
+    "name": "월정교",
+    "category": "sight",
+    "lat": 35.82944,
+    "lng": 129.21806,
+    "address": "경상북도 경주시 교동 274",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "22:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 0,
+    "tags": [
+      "야경",
+      "무료",
+      "다리"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://gyeongju.go.kr/tour/page.do?listType=&mnu_uid=2292&sortKwd=name&code_uid=1012&srchKwd=&area_uid=52&cmd=2&pageNo=1",
+        "https://en.wikipedia.org/wiki/Woljeonggyo",
+        "https://korean.visitkorea.or.kr/detail/rem_detail.do?cotid=a29aa51a-088e-4513-adee-f094f65160e0"
+      ],
+      "notes": "시간은 경주시 관광 누리집 기준 09:00~22:00. 문루 홍보관은 10:00~22:00. 무료. 2층 문루는 못 올라간다는 여행 기사가 있다. 좌표는 영문 위키백과. 주차장, 계단, 경사 정보는 찾지 못했다. 머무는 시간도 찾지 못했다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-hwangnidan-gil",
+    "name": "황리단길",
+    "category": "sight",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 포석로 1080 (황남동)",
+    "hours": null,
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 0,
+    "tags": [
+      "거리",
+      "먹거리",
+      "주차"
+    ],
+    "elderNote": "황리단길 공영주차장(사정동, 894면)과 노동공영주차장(태종로 767, 유료)을 쓴다. 공영주차장은 주말마다 거의 가득 찬다. 중심 도로는 일방통행이다. 골목과 첨성로는 차와 사람이 뒤섞인다. 주차장에서 거리까지 걷는 거리는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?cmd=2&mnu_uid=2292&area_uid=53",
+        "https://access.visitkorea.or.kr/ms/detail.do?cotId=c36f22a0-0ee8-45e2-b89e-dee07855c161",
+        "https://www.kbmaeil.com/article/20260414500178",
+        "https://www.kyongbuk.co.kr/news/articleView.html?idxno=4089949"
+      ],
+      "notes": "거리라서 정해진 시간이 없다. 가게마다 시간과 쉬는 날이 다르다. 좌표는 출처를 찾지 못했다. 공영주차장 요금은 출처가 다르다. 경주시 관광 누리집은 '한시적 무료', 2026년 4월 보도는 '하반기 유료 전환 예정'이다. 지금 요금은 확인하지 못했다. 주말 차 없는 거리는 제안만 있고 시행한다는 자료는 없다(2026-11-08 보도). 머무는 시간은 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-gyochon-village",
+    "name": "교촌마을",
+    "category": "sight",
+    "lat": null,
+    "lng": null,
+    "address": null,
+    "hours": null,
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 0,
+    "tags": [
+      "한옥",
+      "무료"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://gyeongju.go.kr/tour/page.do?listType=&mnu_uid=2292&sortKwd=name&code_uid=1012&srchKwd=&area_uid=52&cmd=2&pageNo=1",
+        "https://www.gyeongju.go.kr/gyochon/page.do?mnu_uid=2980"
+      ],
+      "notes": "경주시 관광 누리집에 '정해진 관람시간 없음, 무료'로 나온다. 마을 안 체험장은 보통 09:00~18:00이고 곳마다 다르다. 좌표, 주소, 주차, 길 상태, 머무는 시간은 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-yangdong-village",
+    "name": "양동마을",
+    "category": "sight",
+    "lat": 36.00194,
+    "lng": 129.25333,
+    "address": "경상북도 경주시 양동마을길 134",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "18:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 4000,
+    "tags": [
+      "유네스코",
+      "한옥",
+      "주차"
+    ],
+    "elderNote": "전용 주차장이 있고 무료다. 주차장에서 마을까지 거리와 마을 안 경사는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://english.visitkorea.or.kr/svc/whereToGo/locIntrdn/rgnContentsView.do?vcontsId=94431",
+        "https://access.visitkorea.or.kr/ms/detail.do?cotId=a81b98af-73c0-4369-90c7-3c39ffaf35b8",
+        "https://www.gyeongju.go.kr/tour/page.do?listType=&mnu_uid=2296&sortKwd=&code_uid=1010&srchKwd=&area_uid=106&cmd=2&pageNo=1",
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2378",
+        "https://en.wikipedia.org/wiki/Yangdong_Folk_Village",
+        "https://www.wikidata.org/wiki/Q495266"
+      ],
+      "notes": "동절기(10~3월) 09:00~18:00, 입장은 17:00까지. 한국관광공사와 경주시 자료가 같다. 연중무휴. 어른 4,000원, 65세 이상은 무료. 마을 문화관은 월요일에 쉰다(한 곳에서만 확인). 주민 사생활 때문에 시간이 바뀔 수 있다는 안내가 있다. 좌표는 영문 위키백과. 위키데이터와 몇 초 차이가 난다. 머무는 시간은 찾지 못했다. 검색 결과에 실린 발췌로만 확인했다. 원문 페이지는 열지 못했다."
+    }
+  },
+  {
+    "id": "gj-hwangnam-maetdol-sundubu",
+    "name": "황남맷돌순두부",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 놋전2길 3 (황남동)",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "20:30"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": 13000,
+    "tags": [
+      "한식",
+      "두부",
+      "황리단길",
+      "주차"
+    ],
+    "elderNote": "전용 주차장이 있다. 단체석이 있다. 주차 요금과 입구까지 거리는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2502&con_uid=112&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 09:00~20:30, 연중무휴. 1인 예산은 10,000~16,000원으로 나온다. 13,000원은 그 가운데 값이다. 황리단길에서 교촌마을 가는 길에 있다. 좌표는 출처를 찾지 못했다. 머무는 시간도 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-daereungwon-bonga",
+    "name": "대릉원본가",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 포석로1050번길 39-21",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "10:00",
+        "close": "20:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한식",
+      "청국장",
+      "대릉원"
+    ],
+    "elderNote": "대릉원 정문 바로 옆이다. 안이 넓다. 전용 주차장은 확인하지 못했다. 대릉원 공영주차장(유료)이나 쪽샘 공영주차장(무료)을 쓴다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2502&con_uid=7486&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 10:00~20:00. 쉬는 날과 값은 찾지 못했다. 좌표는 출처를 찾지 못했다. 머무는 시간도 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-jeontong-maetdol-sundubu",
+    "name": "전통맷돌순두부",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 숲머리길 111 (보문동)",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "08:00",
+        "close": "21:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한식",
+      "두부",
+      "보문",
+      "주차"
+    ],
+    "elderNote": "전용 주차장이 있다. 주차 요금과 입구까지 거리는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://gyeongju.go.kr/tour/page.do?mnu_uid=2502&con_uid=88&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 08:00~21:00, 연중무휴. 숲머리 음식단지에 있다. 검색 결과에서 상호가 '숲머리식당'으로도 나왔다. 어느 쪽이 간판 이름인지 확인하지 못했다. 값은 찾지 못했다. 좌표는 출처를 찾지 못했다. 머무는 시간도 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-godobeol-hanjeongsik",
+    "name": "고도벌한정식",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 숲머리길 112 (보문동)",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "11:00",
+        "close": "15:00"
+      },
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "17:00",
+        "close": "21:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한식",
+      "한정식",
+      "보문"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2502&con_uid=733&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 11:00~21:00, 쉬는 시간 15:00~17:00. 쉬는 날, 값, 주차는 찾지 못했다. 한옥 건물이고 점심 특선이 있다. 좌표는 출처를 찾지 못했다. 머무는 시간도 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-neulbom",
+    "name": "늘봄",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 보불로 107 (하동)",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "21:00"
+      }
+    ],
+    "closedDays": [
+      4
+    ],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한식",
+      "쌈밥",
+      "불국사",
+      "주차"
+    ],
+    "elderNote": "전용 주차장이 있다. 주차 요금과 입구까지 거리는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://gyeongju.go.kr/tour/page.do?mnu_uid=2502&con_uid=96&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 09:00~21:00, 목요일에 쉰다. 불국사 근처다. 값은 찾지 못했다. 좌표는 출처를 찾지 못했다. 머무는 시간도 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-ureonggaksi-ssambap",
+    "name": "우렁각시쌈밥",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 삼릉2길 21 (배동)",
+    "hours": [
+      {
+        "days": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "11:00",
+        "close": "20:00"
+      }
+    ],
+    "closedDays": [
+      1
+    ],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한식",
+      "쌈밥",
+      "삼릉"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2287&con_uid=7459&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 11:00~20:00, 마지막 주문 19:00, 월요일에 쉰다. 값과 주차는 찾지 못했다. 좌표는 출처를 찾지 못했다. 머무는 시간도 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-sugaseong-eupseong",
+    "name": "수가성 읍성점",
+    "category": "meal",
+    "lat": null,
+    "lng": null,
+    "address": null,
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:30",
+        "close": "20:00"
+      }
+    ],
+    "closedDays": [
+      2
+    ],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한식",
+      "두부",
+      "시내"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2502&con_uid=82&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 09:30~20:00, 화요일에 쉰다. 대표 메뉴는 두부 수육정식. 주소, 값, 주차는 찾지 못했다. 좌표는 출처를 찾지 못했다. 머무는 시간도 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-aden",
+    "name": "아덴",
+    "category": "cafe",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 보문로 424-34 (신평동)",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "10:00",
+        "close": "23:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "베이커리",
+      "보문호",
+      "한옥"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?listType=&mnu_uid=2287&sortKwd=name&srchKwd=&con_uid=16&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 10:00~23:00, 설과 추석 당일만 쉰다. 주차는 찾지 못했다. 좌표, 값, 머무는 시간은 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-1894-sarangchae",
+    "name": "1894사랑채",
+    "category": "cafe",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 포석로1068번길 23",
+    "hours": [
+      {
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "open": "11:00",
+        "close": "22:00"
+      },
+      {
+        "days": [
+          0,
+          6
+        ],
+        "open": "10:00",
+        "close": "22:00"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한옥",
+      "황리단길",
+      "팥빙수"
+    ],
+    "elderNote": "전용 주차장이 없다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2287&con_uid=7296&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 평일 11:00~22:00, 토·일 10:00~22:00. 쉬는 날은 적혀 있지 않다. 좌표, 값, 머무는 시간은 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-bitkkuri",
+    "name": "빛꾸리",
+    "category": "cafe",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 손효자길 16-1",
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "11:00",
+        "close": "20:00"
+      }
+    ],
+    "closedDays": [
+      2
+    ],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한옥",
+      "전통차"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?mnu_uid=2287&con_uid=372&cmd=2"
+      ],
+      "notes": "경주시 관광 누리집 기준이다. 11:00~20:00, 화요일에 쉰다. 주차는 찾지 못했다. 좌표, 값, 머무는 시간은 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-lahan-select",
+    "name": "라한셀렉트 경주",
+    "category": "stay",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 보문로 338 (신평동)",
+    "hours": null,
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "호텔",
+      "보문호",
+      "주차"
+    ],
+    "elderNote": "주차장이 있다. 요금은 출처가 다르다. 한 곳은 투숙 중 무료, 다른 곳은 요금 별도라고 한다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.lahanhotels.com/gyeongju/ko/hotel/hotelLocation.do",
+        "https://gyeongju.go.kr/tour/page.do?mnu_uid=2336&con_uid=7245&cmd=2",
+        "https://docs.channel.io/dmservice/ko/categories/05-%EA%B2%BD%EC%A3%BC-%EB%9D%BC%ED%95%9C%EC%85%80%EB%A0%89%ED%8A%B8%ED%98%B8%ED%85%94%EC%A0%90-e2a94c7a",
+        "https://www.waug.com/ko/accommodations/28398"
+      ],
+      "notes": "주소는 호텔 누리집과 경주시 관광 누리집 기준이다. 체크인 15:00, 체크아웃 11:00은 호텔 누리집이 아니라 예약 사이트와 안내 자료에서 왔다. 실내외 수영장, 식당, 카페가 있다. 좌표와 숙박료는 찾지 못했다. 12월 5일 빈 방은 확인하지 않았다."
+    }
+  },
+  {
+    "id": "gj-hilton",
+    "name": "힐튼 경주",
+    "category": "stay",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 보문로 484-7",
+    "hours": null,
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "호텔",
+      "보문호",
+      "주차"
+    ],
+    "elderNote": "투숙객은 객실마다 차 1대를 무료로 댄다는 글이 있다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.hilton.com/ko/hotels/kyohitw-hilton-gyeongju/hotel-location/",
+        "https://www.trvlogue.com/ko/hilton-gyeongju-hotel-review",
+        "https://www.yeogi.com/domestic-accommodations/9854"
+      ],
+      "notes": "주소는 힐튼 누리집 기준이다. 체크인 15:00, 체크아웃 11:00과 무료 주차는 예약 사이트와 후기에서 왔다. 좌표와 숙박료는 찾지 못했다. 12월 5일 빈 방은 확인하지 않았다."
+    }
+  },
+  {
+    "id": "gj-hwangnamgwan",
+    "name": "황남관 한옥마을",
+    "category": "stay",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 포석로 1038 (황남동)",
+    "hours": null,
+    "closedDays": [],
+    "stayMinutes": null,
+    "costPerPerson": null,
+    "tags": [
+      "한옥",
+      "대릉원",
+      "온돌"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://gyeongju.go.kr/tour/page.do?sortKwd=&srchKwd=&listType=list&mnu_uid=4133&con_uid=478&cmd=2&pageNo=21",
+        "https://korean.visitkorea.or.kr/detail/rem_detail.do?cotid=9be12b8a-1492-494b-b591-b1f5caa9d290"
+      ],
+      "notes": "체크인 15:00, 체크아웃 11:00. 방은 온돌형과 침대형이 있다. 대릉원, 첨성대, 계림까지 걸어서 10분 안이다. 객실 수는 41실과 51실로 출처가 다르다. 주차는 찾지 못했다. 황리단길 안이라 주말에 차가 막힐 수 있다. 좌표와 숙박료는 찾지 못했다. 12월 5일 빈 방은 확인하지 않았다."
+    }
+  },
+  {
+    "id": "gj-bidanbeolle-car",
+    "name": "비단벌레 전동차",
+    "category": "activity",
+    "lat": null,
+    "lng": null,
+    "address": null,
+    "hours": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:00",
+        "close": "17:30"
+      }
+    ],
+    "closedDays": [],
+    "stayMinutes": 20,
+    "costPerPerson": 4000,
+    "tags": [
+      "탈것",
+      "걷지 않음",
+      "동부사적지"
+    ],
+    "elderNote": "앉아서 계림, 향교, 최부자집, 교촌마을, 월정교, 월성, 첨성대를 돈다. 중간에 내릴 수 없다. 주차는 찾지 못했다.",
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/tour/page.do?listType=&mnu_uid=2292&sortKwd=&code_uid=1012&srchKwd=&area_uid=294&cmd=2&pageNo=1",
+        "https://www.gyeongju.go.kr/reserve/exp_facilities/facility_view.jsp?mem_id=B0000035&item_id=E0000006",
+        "https://korean.visitkorea.or.kr/detail/ms_detail.do?cotid=92a37f1b-5138-4ec3-a1ed-30c03c1dfee3"
+      ],
+      "notes": "경주시 예약 화면 기준 09:00~17:30, 한 번에 약 20분, 어른 4,000원. 출발 시각표는 출처가 다르다. 예약 화면은 09:20부터 17:10까지, 여행 기사는 09:10부터 17:25까지 하루 11회다. 인터넷 예약은 금방 마감된다. 당일 09:00부터 매표소에서 선착순으로 판다. 겨울 운행 여부, 타는 곳 주소와 좌표는 찾지 못했다."
+    }
+  },
+  {
+    "id": "gj-donggungwon",
+    "name": "경주 동궁원",
+    "category": "activity",
+    "lat": null,
+    "lng": null,
+    "address": "경상북도 경주시 보문로 74-14",
+    "hours": [
+      {
+        "days": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "09:30",
+        "close": "19:00"
+      }
+    ],
+    "closedDays": [
+      1
+    ],
+    "stayMinutes": null,
+    "costPerPerson": 5000,
+    "tags": [
+      "식물원",
+      "실내",
+      "보문"
+    ],
+    "elderNote": null,
+    "verification": {
+      "status": "partial",
+      "checkedAt": "2026-11-28",
+      "sources": [
+        "https://www.gyeongju.go.kr/epg/?c=1%2F8",
+        "https://www.gyeongju.go.kr/epg/?c=3%2F19",
+        "https://access.visitkorea.or.kr/ms/detail.do?cotId=b5aee5bb-5d50-4e14-95b7-9e31cf4f699b",
+        "https://english.visitkorea.or.kr/svc/contents/contentsView.do?vcontsId=68631&menuSn=351"
+      ],
+      "notes": "동궁원 누리집 기준 09:30~19:00, 매표와 입장은 18:00까지. 월요일에 쉰다. 버드파크는 10:00~19:00이고 한국관광공사 자료에는 연중무휴로 나온다. 값 5,000원은 식물원 어른 요금이다. 요금은 출처가 다르다. 버드파크 20,000원, 다른 표 16,000원, 영문 자료 통합권 18,000원. 주소도 '경감로 233'이 함께 보인다. 좌표, 주차, 길 상태, 머무는 시간은 찾지 못했다. '동궁과 월지'와 다른 곳이다."
+    }
+  }
+]
